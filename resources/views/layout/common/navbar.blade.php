@@ -9,7 +9,7 @@
                                 <svg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M7.368 9.104C7.26133 9.17867 7.13867 9.216 7 9.216C6.86133 9.216 6.744 9.17867 6.648 9.104L0.36 4.624C0.264 4.56 0.178667 4.54933 0.104 4.592C0.04 4.624 0.00800002 4.69867 0.00800002 4.816V11.984C0.00800002 12.112 0.0506667 12.2187 0.136 12.304C0.221333 12.3893 0.322667 12.432 0.44 12.432H13.56C13.6773 12.432 13.7787 12.3893 13.864 12.304C13.96 12.2187 14.008 12.112 14.008 11.984V4.816C14.008 4.69867 13.9707 4.624 13.896 4.592C13.8213 4.54933 13.736 4.56 13.64 4.624L7.368 9.104ZM6.76 8.32C6.84533 8.37333 6.92533 8.4 7 8.4C7.08533 8.4 7.16533 8.37333 7.24 8.32L12.52 4.56C12.6373 4.464 12.696 4.352 12.696 4.224V0.783999C12.696 0.666666 12.6533 0.570666 12.568 0.495999C12.4933 0.410666 12.3973 0.367999 12.28 0.367999H1.72C1.60267 0.367999 1.50667 0.410666 1.432 0.495999C1.35733 0.570666 1.32 0.666666 1.32 0.783999V4.224C1.32 4.37333 1.37333 4.48533 1.48 4.56L6.76 8.32ZM3.784 2.064H9.96C10.088 2.064 10.1947 2.112 10.28 2.208C10.3653 2.29333 10.408 2.4 10.408 2.528C10.408 2.64533 10.3653 2.74667 10.28 2.832C10.1947 2.91733 10.088 2.96 9.96 2.96H3.784C3.656 2.96 3.54933 2.91733 3.464 2.832C3.37867 2.74667 3.336 2.64533 3.336 2.528C3.336 2.4 3.37867 2.29333 3.464 2.208C3.54933 2.112 3.656 2.064 3.784 2.064ZM3.784 3.632H9.96C10.088 3.632 10.1947 3.68 10.28 3.776C10.3653 3.86133 10.408 3.96267 10.408 4.08C10.408 4.19733 10.3653 4.304 10.28 4.4C10.1947 4.48533 10.088 4.528 9.96 4.528H3.784C3.656 4.528 3.54933 4.48533 3.464 4.4C3.37867 4.31467 3.336 4.21333 3.336 4.096C3.336 3.968 3.37867 3.86133 3.464 3.776C3.54933 3.68 3.656 3.632 3.784 3.632Z" fill="#FF2D37"/>
                                 </svg>
-                                 info@example.com</a>
+                                info@example.com</a>
                         </li>
                     </ul>
                     <div class="header__top--right d-flex align-items-center">
@@ -140,44 +140,16 @@
                         </li>
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ route('contact') }}">Contact</a></li>
                     </ul>
-                    <div class="offcanvas__account--items">
-                        <a class="offcanvas__account--items__btn d-flex align-items-center" href="login.html">
-                            <span class="offcanvas__account--items__icon">
-                                <svg xmlns="http://www.w3.org/2000/svg"  width="20.51" height="19.443" viewBox="0 0 512 512"><path d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></svg>
-                            </span>
-                            <span class="offcanvas__account--items__label">Login / Register</span>
-                        </a>
-                    </div>
-                    <div class="offcanvas__account--wrapper d-flex">
-                        <div class="offcanvas__account--currency">
-                            <a class="offcanvas__account--currency__menu d-flex align-items-center text-black" href="javascript:void(0)">
-                                <img src="{{ asset('assets/img/icon/usd-icon.webp') }}" alt="currency">
-                                <span>USD</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="9.797" height="6.05" viewBox="0 0 9.797 6.05">
-                                    <path  d="M14.646,8.59,10.9,12.329,7.151,8.59,6,9.741l4.9,4.9,4.9-4.9Z" transform="translate(-6 -8.59)" fill="currentColor" opacity="0.7"/>
-                                </svg>
-                            </a>
-                            <div class="offcanvas__account--currency__submenu">
-                                <ul>
-                                    <li class="currency__items"><a class="currency__text" href="#">CAD</a></li>
-                                    <li class="currency__items"><a class="currency__text" href="#">CNY</a></li>
-                                    <li class="currency__items"><a class="currency__text" href="#">EUR</a></li>
-                                    <li class="currency__items"><a class="currency__text" href="#">GBP</a></li>
-                                </ul>
-                            </div>
-                        </div>
                         <div class="language__currency--list">
                             <a class="offcanvas__language--switcher" href="javascript:void(0)">
-                                <span>English</span>
+                                <span>Arabic</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="9.797" height="6.05" viewBox="0 0 9.797 6.05">
                                     <path  d="M14.646,8.59,10.9,12.329,7.151,8.59,6,9.741l4.9,4.9,4.9-4.9Z" transform="translate(-6 -8.59)" fill="currentColor" opacity="0.7"/>
                                 </svg>
                             </a>
                             <div class="offcanvas__dropdown--language">
                                 <ul>
-                                    <li class="language__items"><a class="language__text" href="#">France</a></li>
-                                    <li class="language__items"><a class="language__text" href="#">Russia</a></li>
-                                    <li class="language__items"><a class="language__text" href="#">Spanish</a></li>
+                                    <li class="language__items"><a class="language__text" href="#">English</a></li>
                                 </ul>
                             </div>
                         </div>
