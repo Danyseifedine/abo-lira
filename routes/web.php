@@ -1,0 +1,59 @@
+<?php
+
+use App\Http\Controllers\BaseController;
+use App\Navigation\SuperAdminPath;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
+if (config('app.features.multi_lang')) {
+    Route::group(
+        [
+            'prefix' => LaravelLocalization::setLocale(),
+            'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath'],
+        ],
+        function () {
+            registerWebRoutes();
+        }
+    );
+} else {
+    registerWebRoutes();
+}
+
+// i need better name then defineRoutes
+function registerWebRoutes()
+{
+    Route::get('/', function () {
+        return Inertia::render('Welcome');
+    })->name('home');
+
+    Route::middleware([
+        'auth',
+        'verified',
+        'role:super-admin',
+    ])->group(function () {
+        require __DIR__ . '/super-admin.php';
+    });
+
+    require __DIR__ . '/auth.php';
+
+    Route::get('/documentation', function () {
+        return Inertia::render(SuperAdminPath::view('documentation/Index'));
+    })->name('super-admin.documentation');
+
+
+
+    // =========================================================
+    // ---------------- Start File Uploads (GLOBAL) ------------
+    // =========================================================
+
+    Route::prefix('uploads')->group(function () {
+        Route::post('/temp', [BaseController::class, 'uploadTemp'])->name('uploads.temp.store');
+        Route::delete('/temp', [BaseController::class, 'deleteTemp'])->name('uploads.temp.destroy');
+        Route::post('/temp/cleanup', [BaseController::class, 'cleanupTemp'])->name('uploads.temp.cleanup');
+    });
+
+    // =========================================================
+    // ---------------- End File Uploads (GLOBAL) --------------
+    // =========================================================
+}
