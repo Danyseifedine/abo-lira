@@ -4,6 +4,7 @@ import { useForm } from '@inertiajs/vue3';
 import { Button } from '@shared/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@shared/ui/dialog';
 import { watch } from 'vue';
+import { __ } from '@/core/utils/translations';
 
 interface Props {
     open: boolean;
@@ -69,21 +70,21 @@ watch(
                 <DialogTitle>{{ title }}</DialogTitle>
                 <DialogDescription>
                     <template v-if="itemName">
-                        Are you sure you want to delete <span class="font-semibold text-foreground">{{ itemName }}</span
-                        >? This action cannot be undone and all associated data will be permanently removed.
+                        {{ __('datatable.delete_confirmation_text') }} <span class="font-semibold text-foreground"></span
+                        >.
                     </template>
                     <template v-else>
-                        {{ description }}
+                        {{ __('datatable.delete_confirmation_text') }}
                     </template>
                 </DialogDescription>
             </DialogHeader>
 
             <DialogFooter class="gap-2">
                 <DialogClose as-child>
-                    <Button variant="secondary" @click="closeModal">Cancel</Button>
+                    <Button variant="secondary" @click="closeModal">{{ __('datatable.delete_confirmation_button_text_cancel') }}</Button>
                 </DialogClose>
 
-                <DashboardButton type="button" variant="destructive" :loading="form.processing" @click="deleteItem"> Delete </DashboardButton>
+                <DashboardButton type="button" variant="destructive" :loading="form.processing" @click="deleteItem">{{ __('datatable.delete_confirmation_button_text_delete') }}</DashboardButton>
             </DialogFooter>
         </DialogContent>
     </Dialog>

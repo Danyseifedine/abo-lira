@@ -17,6 +17,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
 <template>
     <SwitchRoot
         v-bind="forwarded"
+        style="direction: ltr;"
         :class="
             cn(
                 // Use green for checked, and a neutral for unchecked, with good contrast in both light and dark

@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="TData">
 import { useDataTable } from '@/core/composables/useDatatable';
+import { __ } from '@/core/utils/translations';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { FlexRender } from '@tanstack/vue-table';
 import { Button } from '@ui/button';
@@ -128,7 +129,7 @@ const hasActiveFilters = computed(() => {
                     }"
                 >
                     <Filter class="h-3.5 w-3.5 transition-all duration-200" :class="{ 'text-primary': isFilterPanelOpen }" />
-                    <span class="sr-only transition-colors duration-200 sm:not-sr-only">Filter</span>
+                    <span class="sr-only transition-colors duration-200 sm:not-sr-only">{{ __('datatable.filter') }}</span>
                     <ChevronDown
                         class="ml-1 h-3 w-3 transition-all duration-300 ease-out"
                         :class="{ 'rotate-180 text-primary': isFilterPanelOpen }"
@@ -139,7 +140,7 @@ const hasActiveFilters = computed(() => {
                 <DropdownMenu v-if="config?.perPageSelector">
                     <DropdownMenuTrigger as-child>
                         <Button variant="outline" size="sm" class="h-8 gap-1">
-                            <span class="hidden sm:inline">Rows</span>
+                            <span class="hidden sm:inline">{{ __('datatable.rows') }}</span>
                             {{ currentPerPage }}
                             <ChevronDown class="h-3.5 w-3.5" />
                         </Button>
@@ -151,7 +152,7 @@ const hasActiveFilters = computed(() => {
                             :checked="currentPerPage === pageSize"
                             @select="handlePerPageChange(pageSize)"
                         >
-                            {{ pageSize }} per page
+                            {{ pageSize }} {{ __('datatable.per_page') }}
                         </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -161,7 +162,7 @@ const hasActiveFilters = computed(() => {
                     <DropdownMenuTrigger as-child>
                         <Button variant="outline" size="sm" class="h-8 gap-1">
                             <Columns class="h-3.5 w-3.5" />
-                            <span class="sr-only">Columns</span>
+                            <span class="sr-only">{{ __('datatable.columns') }}</span>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" class="w-[150px]">
@@ -187,7 +188,7 @@ const hasActiveFilters = computed(() => {
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <Filter class="h-4 w-4 text-muted-foreground" />
-                                <h3 class="font-medium">Filters</h3>
+                                <h3 class="font-medium">{{ __('datatable.filters') }}</h3>
                             </div>
                             <Button @click="isFilterPanelOpen = false" variant="ghost" size="icon" class="h-7 w-7">
                                 <X class="h-4 w-4" />
@@ -236,7 +237,7 @@ const hasActiveFilters = computed(() => {
                     </template>
                     <TableRow v-else>
                         <TableCell :colspan="columns.length" class="h-24 text-center">
-                            <slot name="empty"> No results found. </slot>
+                            <slot name="empty"> {{ __('datatable.no_results_found') }} </slot>
                         </TableCell>
                     </TableRow>
                 </TableBody>
@@ -254,24 +255,24 @@ const hasActiveFilters = computed(() => {
             <div class="flex items-center space-x-2">
                 <Button variant="outline" size="icon" class="h-8 w-8" :disabled="!canPreviousPage" @click="firstPage">
                     <ChevronsLeft class="h-4 w-4" />
-                    <span class="sr-only">First page</span>
+                    <span class="sr-only">{{ __('datatable.first_page') }}</span>
                 </Button>
                 <Button variant="outline" size="icon" class="h-8 w-8" :disabled="!canPreviousPage" @click="previousPage">
                     <ChevronLeft class="h-4 w-4" />
-                    <span class="sr-only">Previous page</span>
+                    <span class="sr-only">{{ __('datatable.previous_page') }}</span>
                 </Button>
 
                 <div class="flex items-center gap-1 px-2">
-                    <span class="text-sm font-medium"> Page {{ currentPage }} of {{ pageCount }} </span>
+                    <span class="text-sm font-medium"> {{ __('datatable.page') }} {{ currentPage }} {{ __('datatable.of') }} {{ pageCount }} </span>
                 </div>
 
                 <Button variant="outline" size="icon" class="h-8 w-8" :disabled="!canNextPage" @click="nextPage">
                     <ChevronRight class="h-4 w-4" />
-                    <span class="sr-only">Next page</span>
+                    <span class="sr-only">{{ __('datatable.next_page') }}</span>
                 </Button>
                 <Button variant="outline" size="icon" class="h-8 w-8" :disabled="!canNextPage" @click="lastPage">
                     <ChevronsRight class="h-4 w-4" />
-                    <span class="sr-only">Last page</span>
+                    <span class="sr-only">{{ __('datatable.last_page') }}</span>
                 </Button>
             </div>
         </div>

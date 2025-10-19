@@ -6,7 +6,7 @@ import { usePage } from '@inertiajs/vue3';
 export const useToast = () => {
     const page = usePage<SharedData>();
 
-    const showSuccess = (message: string, description?: string, position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' = 'top-right') => {
+    const showSuccess = (message: string, description?: string, position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' = document.dir === 'ltr' ? 'top-right' : 'top-left') => {
         toast.success(message, {
             description,
             position,

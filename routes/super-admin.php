@@ -3,9 +3,9 @@
 use App\Http\Controllers\SuperAdmin\IndexController;
 use App\Http\Controllers\SuperAdmin\Privileges\PermissionsController;
 use App\Http\Controllers\SuperAdmin\Privileges\RolesController;
+use App\Http\Controllers\SuperAdmin\ProductColorsController;
 use App\Http\Controllers\SuperAdmin\Profile\PasswordController;
 use App\Http\Controllers\SuperAdmin\Profile\ProfileController;
-use App\Http\Controllers\SuperAdmin\SettingsController;
 use App\Http\Controllers\SuperAdmin\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -90,5 +90,30 @@ Route::prefix('dashboard')->name('super-admin.')->group(function () {
 
     // ================================================
     // ---------------- End Permissions --------------
+    // ================================================
+
+    // ================================================
+    // ------------ Start Product Colors -------------
+    // ================================================
+
+    Route::prefix('product-colors')->name('product-colors.')->middleware('permission:access-super-admin-product-colors')->group(function () {
+        Route::resource('/', ProductColorsController::class)
+            ->parameters(['' => 'productColor'])
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
+            ->names([
+                'index' => 'index',
+                'create' => 'create',
+                'store' => 'store',
+                'edit' => 'edit',
+                'update' => 'update',
+                'destroy' => 'destroy',
+            ]);
+
+        // Custom route for toggling color status
+        Route::patch('/{productColor}/toggle-status', [ProductColorsController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // ================================================
+    // ------------ End Product Colors ---------------
     // ================================================
 });

@@ -12,6 +12,7 @@ import {
 import { MoreHorizontal } from 'lucide-vue-next';
 import { computed } from 'vue';
 import type { ActionItem } from '../index';
+import { __ } from '@/core/utils/translations';
 
 interface Props {
     row: any;
@@ -42,12 +43,12 @@ const visibleActions = computed(() => props.actions.filter((action) => !action.s
         <DropdownMenu>
             <DropdownMenuTrigger as-child>
                 <Button variant="ghost" size="icon" class="h-8 w-8">
-                    <span class="sr-only">Open menu</span>
+                    <span class="sr-only">{{ __('datatable.open_menu') }}</span>
                     <MoreHorizontal class="h-4 w-4" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" class="w-[160px]">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuLabel>{{ __('datatable.actions') }}</DropdownMenuLabel>
                 <template v-for="(action, index) in visibleActions" :key="index">
                     <DropdownMenuSeparator v-if="action.separator" />
                     <DropdownMenuItem

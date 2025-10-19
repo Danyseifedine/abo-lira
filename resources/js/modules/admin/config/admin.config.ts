@@ -71,7 +71,7 @@ const getAdminSidebarMainItems = (): NavItem[] => [
     },
     {
         title: 'sidebar.product_colors',
-        // href: route('super-admin.product-variants.index'),
+        href: route('super-admin.product-colors.index'),
         icon: Palette,
         iconColor: '#ec4899', // pink-500 (colors/design)
         iconSize: '1.25rem',

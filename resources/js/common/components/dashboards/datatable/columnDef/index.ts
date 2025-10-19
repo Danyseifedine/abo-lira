@@ -11,7 +11,8 @@ import type {
     ActionsColumnConfig,
     CustomColumnConfig,
     ImageColumnConfig,
-    LinkColumnConfig
+    LinkColumnConfig,
+    ColorColumnConfig
 } from '../index'
 import SelectColumn from './SelectColumn.vue'
 import CounterColumn from './CounterColumn.vue'
@@ -22,13 +23,21 @@ import DateColumn from './DateColumn.vue'
 import ActionsColumn from './ActionsColumn.vue'
 import ImageColumn from './ImageColumn.vue'
 import LinkColumn from './LinkColumn.vue'
+import ColorColumn from './ColorColumn.vue'
 import SortableHeader from './SortableHeader.vue'
 
 /**
  * Create table columns from configuration
  */
 export function createColumns<TData>(configs: AnyColumnConfig[]): ColumnDef<TData>[] {
-    return configs.map(config => {
+    // Filter out columns based on showIf condition
+    const visibleConfigs = configs.filter(config => {
+        if (config.showIf === undefined) return true;
+        if (typeof config.showIf === 'function') return config.showIf();
+        return config.showIf;
+    });
+
+    return visibleConfigs.map(config => {
         // Base column configuration
         const baseColumn: ColumnDef<TData> = {
             id: config.key,
@@ -177,6 +186,15 @@ export function createColumns<TData>(configs: AnyColumnConfig[]): ColumnDef<TDat
                     openInNewTab: linkConfig.openInNewTab,
                     showIcon: linkConfig.showIcon,
                     className: config.className,
+                })
+                break
+
+            case 'color':
+                const colorConfig = config as ColorColumnConfig
+                baseColumn.cell = ({ row }) => h(ColorColumn, {
+                    value: row.getValue(config.key) as string,
+                    showCode: colorConfig.showCode,
+                    swatchSize: colorConfig.swatchSize,
                 })
                 break
         }
@@ -351,6 +369,25 @@ export function linkColumn(
         sortable: false,
         openInNewTab: false,
         showIcon: false,
+        ...options,
+    }
+}
+
+/**
+ * Helper function to create a color column
+ */
+export function colorColumn(
+    key: string,
+    label?: string,
+    options?: Partial<ColorColumnConfig>
+): ColorColumnConfig {
+    return {
+        type: 'color',
+        key,
+        label: label || key,
+        sortable: true,
+        showCode: true,
+        swatchSize: 'md',
         ...options,
     }
 }

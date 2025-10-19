@@ -53,6 +53,7 @@ export interface ColumnConfig {
     width?: number | string
     className?: string
     headerClassName?: string
+    showIf?: boolean | (() => boolean)
 }
 
 // Text column configuration
@@ -144,6 +145,13 @@ export interface ActionItem {
     separator?: boolean
 }
 
+// Color column configuration
+export interface ColorColumnConfig extends ColumnConfig {
+    type: 'color'
+    showCode?: boolean
+    swatchSize?: 'sm' | 'md' | 'lg'
+}
+
 // Union type for all column configurations
 export type AnyColumnConfig =
     | TextColumnConfig
@@ -156,3 +164,4 @@ export type AnyColumnConfig =
     | CustomColumnConfig
     | ImageColumnConfig
     | LinkColumnConfig
+    | ColorColumnConfig

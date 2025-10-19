@@ -84,7 +84,7 @@ class HandleInertiaRequests extends Middleware
         }
 
         // Load only essential PHP translation files for performance
-        $essentialFiles = ['auth', 'validation', 'passwords', 'sidebar'];
+        $essentialFiles = ['auth', 'validation', 'passwords', 'sidebar', 'datatable'];
 
         foreach ($essentialFiles as $file) {
             $filePath = lang_path("{$locale}/{$file}.php");
