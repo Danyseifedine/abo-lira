@@ -91,17 +91,4 @@ Route::prefix('super-admin')->name('super-admin.')->group(function () {
     // ================================================
     // ---------------- End Permissions --------------
     // ================================================
-
-    // ================================================
-    // ---------------- Start Settings ----------------
-    // ================================================
-
-    Route::prefix('settings')->name('settings.')->group(function () {
-        Route::get('/', [SettingsController::class, 'index'])->name('index');
-        Route::post('/update', [SettingsController::class, 'update'])->name('update');
-    });
-
-    // ================================================
-    // ---------------- End Settings ------------------
-    // ================================================
 });

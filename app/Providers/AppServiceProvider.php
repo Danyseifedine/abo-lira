@@ -21,11 +21,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Share settings with all Inertia views (excluding sensitive data)
-        Inertia::share([
-            'settings' => function () {
-                return Setting::getAllGroupedForFrontend();
-            },
-        ]);
     }
 }
