@@ -6,7 +6,7 @@
     'discount' => null,
 ])
 
-<div class="col-lg-4 col-md-4 col-sm-6 col-6 custom-col mb-30">
+<div class="swiper-slide">
     <article class="product__card">
         <div class="product__card--thumbnail">
             <a class="product__card--thumbnail__link display-block" href="{{ route('shop') }}">
