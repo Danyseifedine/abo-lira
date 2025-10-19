@@ -47,6 +47,10 @@ function registerWebRoutes()
         return view('detail');
     })->name('detail');
 
+    Route::get('/checkout', function () {
+        return view('checkout');
+    })->name('checkout');
+
     Route::middleware([
         'auth',
         'verified',

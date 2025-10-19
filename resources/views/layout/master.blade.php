@@ -74,6 +74,8 @@
 
     @include('layout.common.footer')
 
+    @include('layout.common.quickView')
+
     <!-- All Script JS Plugins here  -->
     <script src="{{ asset('assets/js/vendor/popper.js') }}" defer="defer"></script>
     <script src="{{ asset('assets/js/vendor/bootstrap.min.js') }}" defer="defer"></script>
