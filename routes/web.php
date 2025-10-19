@@ -24,7 +24,7 @@ if (config('app.features.multi_lang')) {
 function registerWebRoutes()
 {
     Route::get('/', function () {
-        return Inertia::render('Welcome');
+        return view('landing');
     })->name('home');
 
     Route::middleware([
