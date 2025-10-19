@@ -9,7 +9,7 @@
 <div class="col-lg-4 col-md-4 col-sm-6 col-6 custom-col mb-30">
     <article class="product__card">
         <div class="product__card--thumbnail">
-            <a class="product__card--thumbnail__link display-block" href="{{ route('shop') }}">
+            <a class="product__card--thumbnail__link display-block" href="{{ route('detail') }}">
                 <img class="product__card--thumbnail__img product__primary--img" src="{{ asset($primaryImage) }}" alt="{{ $name }}">
             </a>
             @if($discount)
@@ -27,7 +27,7 @@
             </ul>
         </div>
         <div class="product__card--content">
-            <h3 class="product__card--title"><a href="{{ route('shop') }}">{{ $name }}</a></h3>
+            <h3 class="product__card--title"><a href="{{ route('detail') }}">{{ $name }}</a></h3>
             <div class="product__card--price">
                 <span class="current__price">${{ $currentPrice }}</span>
                 @if($oldPrice)

@@ -43,6 +43,10 @@ function registerWebRoutes()
         return view('cart');
     })->name('cart');
 
+    Route::get('/detail', function () {
+        return view('detail');
+    })->name('detail');
+
     Route::middleware([
         'auth',
         'verified',
