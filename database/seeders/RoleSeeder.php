@@ -30,6 +30,12 @@ class RoleSeeder extends Seeder
             ],
 
             'user' => [],
+            'owner' => [
+                'access-super-admin-dashboard',
+                'update-super-admin-profile',
+                'delete-super-admin-profile',
+                'update-super-admin-password',
+            ],
         ];
 
         foreach ($roles as $roleName => $permissions) {

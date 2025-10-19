@@ -4,16 +4,11 @@ import type { NavItem } from '@/core/types';
  * Check if user can access a navigation item
  */
 export const canAccessNavItem = (
-    item: NavItem, 
-    userPermissions: string[], 
+    item: NavItem,
+    userPermissions: string[],
     userRoles: string[]
 ): boolean => {
-    // Always show sections
-    if (item.isSection) {
-        return true;
-    }
-
-    // If no restrictions, allow access
+    // If no restrictions, allow access (including sections without permissions)
     if (!item.permission && !item.role && !item.permissions && !item.roles) {
         return true;
     }
@@ -52,8 +47,8 @@ export const canAccessNavItem = (
  * Filter navigation items based on user permissions and roles
  */
 export const filterNavigation = (
-    items: NavItem[], 
-    userPermissions: string[], 
+    items: NavItem[],
+    userPermissions: string[],
     userRoles: string[]
 ): NavItem[] => {
     return items
@@ -61,21 +56,21 @@ export const filterNavigation = (
         .map(item => {
             if (item.children && item.children.length > 0) {
                 const filteredChildren = filterNavigation(
-                    item.children, 
-                    userPermissions, 
+                    item.children,
+                    userPermissions,
                     userRoles
                 );
-                
+
                 // If this is a section, keep it even if no children
                 if (item.isSection) {
                     return { ...item, children: filteredChildren };
                 }
-                
+
                 // For regular items with children, only keep if there are accessible children
                 if (filteredChildren.length > 0) {
                     return { ...item, children: filteredChildren };
                 }
-                
+
                 // If no accessible children, exclude this parent
                 return null;
             }
