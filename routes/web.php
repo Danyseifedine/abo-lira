@@ -35,6 +35,10 @@ function registerWebRoutes()
         return view('contact');
     })->name('contact');
 
+    Route::get('/shop', function () {
+        return view('shop');
+    })->name('shop');
+
     Route::middleware([
         'auth',
         'verified',
