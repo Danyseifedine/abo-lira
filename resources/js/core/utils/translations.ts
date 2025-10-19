@@ -2,6 +2,7 @@
 import { usePage } from '@inertiajs/vue3';
 
 // Simple translation function using Inertia shared data
+// NOTE: This function can only be used within Vue component setup context
 export function __(key: string, replacements: Record<string, string | number> = {}): string {
     const page = usePage();
     const translations = page.props.translations as Record<string, string> || {};

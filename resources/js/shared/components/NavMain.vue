@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { __ } from '@/core/utils/translations';
 import { filterNavigation, useGuard } from '@/guard';
 import { useGlobalLayoutStore } from '@core/stores/layout';
 import { type NavItem } from '@core/types';
@@ -217,6 +218,15 @@ const submenuItemClass = computed(() => {
 const isRTL = computed(() => {
     return document.documentElement.dir === 'rtl';
 });
+
+// Helper function to translate titles - checks if title is a translation key
+const translateTitle = (title: string): string => {
+    // If title contains a dot, it's likely a translation key
+    if (title.includes('.')) {
+        return __(title);
+    }
+    return title;
+};
 </script>
 
 <template>
@@ -225,7 +235,7 @@ const isRTL = computed(() => {
             <template v-for="(item, index) in filteredItems" :key="index">
                 <!-- Section header - only show when sidebar is expanded -->
                 <template v-if="item.isSection && sidebarState === 'expanded'">
-                    <SidebarGroupLabel class="mt-4">{{ item.title }}</SidebarGroupLabel>
+                    <SidebarGroupLabel class="mt-4">{{ translateTitle(item.title) }}</SidebarGroupLabel>
                 </template>
 
                 <!-- Regular menu item -->
@@ -235,7 +245,7 @@ const isRTL = computed(() => {
                         <SidebarMenuButton
                             as-child
                             :is-active="isActive(item.href ?? '')"
-                            :tooltip="item.title"
+                            :tooltip="translateTitle(item.title)"
                             class="transition-all duration-200 ease-in-out"
                             :class="globalLayoutStore.sidebarPadding"
                         >
@@ -252,7 +262,7 @@ const isRTL = computed(() => {
                                         [isRTL ? 'right' : 'left']: '-2px',
                                     }"
                                 />
-                                <span>{{ item.title }}</span>
+                                <span class="font-bold">{{ translateTitle(item.title) }}</span>
                             </Link>
                             <button v-else class="flex items-center gap-2">
                                 <component
@@ -266,7 +276,7 @@ const isRTL = computed(() => {
                                         [isRTL ? 'right' : 'left']: '-2px',
                                     }"
                                 />
-                                <span>{{ item.title }}</span>
+                                <span>{{ translateTitle(item.title) }}</span>
                             </button>
                         </SidebarMenuButton>
                     </template>
@@ -276,12 +286,12 @@ const isRTL = computed(() => {
                         <SidebarMenuButton
                             @click="toggleDropdown(item.title)"
                             :is-active="openDropdowns[item.title] || hasActiveChild(item)"
-                            :tooltip="item.title"
+                            :tooltip="translateTitle(item.title)"
                             class="transition-all duration-200 ease-in-out"
                             :class="globalLayoutStore.sidebarPadding"
                         >
                             <component :is="item.icon" v-if="item.icon" class="transition-transform duration-200" />
-                            <span>{{ item.title }}</span>
+                            <span>{{ translateTitle(item.title) }}</span>
                             <ChevronRight
                                 class="ml-auto h-4 w-4 transition-transform duration-300 rtl:rotate-180"
                                 :class="{ 'rotate-90 rtl:-rotate-90': openDropdowns[item.title] }"
@@ -312,7 +322,7 @@ const isRTL = computed(() => {
                                     "
                                 >
                                     <SidebarMenuSubItem v-for="(child, childIndex) in item.children" :key="childIndex" :class="submenuItemClass">
-                                        <SidebarMenuSubButton as-child :is-active="isActive(child.href ?? '')" :tooltip="child.title">
+                                        <SidebarMenuSubButton as-child :is-active="isActive(child.href ?? '')" :tooltip="translateTitle(child.title)">
                                             <Link
                                                 v-if="child.href !== '#'"
                                                 :href="child.href ?? ''"
@@ -329,7 +339,7 @@ const isRTL = computed(() => {
                                                         height: child.iconSize || '',
                                                     }"
                                                 />
-                                                <span class="text-sm">{{ child.title }}</span>
+                                                <span class="text-sm">{{ translateTitle(child.title) }}</span>
                                             </Link>
                                             <button v-else class="flex items-center gap-2">
                                                 <component
@@ -342,7 +352,7 @@ const isRTL = computed(() => {
                                                         height: child.iconSize || '',
                                                     }"
                                                 />
-                                                <span class="text-sm">{{ child.title }}</span>
+                                                <span class="text-sm">{{ translateTitle(child.title) }}</span>
                                             </button>
                                         </SidebarMenuSubButton>
                                     </SidebarMenuSubItem>

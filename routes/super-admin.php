@@ -9,7 +9,7 @@ use App\Http\Controllers\SuperAdmin\SettingsController;
 use App\Http\Controllers\SuperAdmin\UsersController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('super-admin')->name('super-admin.')->group(function () {
+Route::prefix('dashboard')->name('super-admin.')->group(function () {
 
     Route::get('/', [IndexController::class, 'index'])->name('dashboard');
 
@@ -36,7 +36,7 @@ Route::prefix('super-admin')->name('super-admin.')->group(function () {
     // ---------------- Start Users ------------------
     // ================================================
 
-    Route::prefix('users')->name('users.')->group(function () {
+    Route::prefix('users')->name('users.')->middleware('permission:access-super-admin-users')->group(function () {
         Route::resource('/', UsersController::class)
             ->parameters(['' => 'user'])
             ->only(['index', 'create', 'store', 'edit', 'show', 'update', 'destroy'])

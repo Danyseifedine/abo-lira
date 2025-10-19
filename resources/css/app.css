@@ -9,6 +9,16 @@ html {
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+/* Apply Cairo font for Arabic (RTL) */
+html[dir='rtl'] {
+    --font-sans:
+        'Cairo', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+html[dir='rtl'] body {
+    font-family: 'Cairo', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
 @layer base {
     :root {
         --background: 0 100% 100%;

@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { __ } from '@/core/utils/translations';
+import { getInitials } from '@core/composables/useInitials';
+import { useGlobalLayoutRouteStore } from '@core/stores/layout';
+import type { BreadcrumbItem, NavItem } from '@core/types';
+import { Link, usePage } from '@inertiajs/vue3';
 import AppLogo from '@shared/components/AppLogo.vue';
 import AppLogoIcon from '@shared/components/AppLogoIcon.vue';
 import Breadcrumbs from '@shared/components/Breadcrumbs.vue';
@@ -6,19 +11,9 @@ import UserMenuContent from '@shared/components/UserMenuContent.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 import { Button } from '@ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@ui/dropdown-menu';
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    navigationMenuTriggerStyle,
-} from '@ui/navigation-menu';
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, navigationMenuTriggerStyle } from '@ui/navigation-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@ui/sheet';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui/tooltip';
-import { getInitials } from '@core/composables/useInitials';
-import { useGlobalLayoutRouteStore } from '@core/stores/layout';
-import type { BreadcrumbItem, NavItem } from '@core/types';
-import { Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
 
@@ -60,6 +55,15 @@ const rightNavItems: NavItem[] = [
         icon: BookOpen,
     },
 ];
+
+// Helper function to translate titles - checks if title is a translation key
+const translateTitle = (title: string): string => {
+    // If title contains a dot, it's likely a translation key
+    if (title.includes('.')) {
+        return __(title);
+    }
+    return title;
+};
 </script>
 
 <template>
@@ -124,7 +128,7 @@ const rightNavItems: NavItem[] = [
                                         :class="[navigationMenuTriggerStyle(), activeItemStyles(item.href), 'h-9 cursor-pointer px-3']"
                                     >
                                         <component v-if="item.icon" :is="item.icon" class="mr-2 h-4 w-4" />
-                                        {{ item.title }}
+                                        {{ translateTitle(item.title) }}
                                     </NavigationMenuLink>
                                 </Link>
                                 <div

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@ui/sidebar';
+import { __ } from '@/core/utils/translations';
 import { useGlobalLayoutStore } from '@core/stores/layout';
 import { type NavItem } from '@core/types';
+import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@ui/sidebar';
 
 const globalLayoutStore = useGlobalLayoutStore();
 
@@ -11,6 +12,15 @@ interface Props {
 }
 
 defineProps<Props>();
+
+// Helper function to translate titles - checks if title is a translation key
+const translateTitle = (title: string): string => {
+    // If title contains a dot, it's likely a translation key
+    if (title.includes('.')) {
+        return __(title);
+    }
+    return title;
+};
 </script>
 
 <template>
@@ -25,7 +35,7 @@ defineProps<Props>();
                     >
                         <a :href="item.href" target="_blank" rel="noopener noreferrer">
                             <component :is="item.icon" />
-                            <span>{{ item.title }}</span>
+                            <span>{{ translateTitle(item.title) }}</span>
                         </a>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

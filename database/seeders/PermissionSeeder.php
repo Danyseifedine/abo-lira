@@ -21,6 +21,9 @@ class PermissionSeeder extends Seeder
             // Dashboard permissions
             'access-super-admin-dashboard',
 
+            // Users permissions
+            'access-super-admin-users',
+
             // Profile permissions
             'update-super-admin-profile',
             'delete-super-admin-profile',
@@ -37,6 +40,16 @@ class PermissionSeeder extends Seeder
 
             // Settings permissions
             'access-super-admin-settings',
+
+            // Products permissions
+            'access-super-admin-products',
+            'access-super-admin-product-categories',
+            'access-super-admin-product-qualities',
+            'access-super-admin-product-colors',
+            'access-super-admin-product-sizes',
+            'access-super-admin-product-bundles',
+            'access-super-admin-product-bundle-items',
+
 
             // ================================================
             // ---------------- End Super Admin ---------------

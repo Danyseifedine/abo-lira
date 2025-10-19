@@ -15,6 +15,7 @@ class RoleSeeder extends Seeder
     {
         $roles = [
             'super-admin' => [
+                'access-super-admin-users',
                 'access-super-admin-dashboard',
                 'update-super-admin-profile',
                 'delete-super-admin-profile',
@@ -27,6 +28,14 @@ class RoleSeeder extends Seeder
 
                 'access-super-admin-permission',
                 'access-super-admin-settings',
+
+                'access-super-admin-products',
+                'access-super-admin-product-categories',
+                'access-super-admin-product-qualities',
+                'access-super-admin-product-colors',
+                'access-super-admin-product-sizes',
+                'access-super-admin-product-bundles',
+                'access-super-admin-product-bundle-items',
             ],
 
             'user' => [],
@@ -35,6 +44,15 @@ class RoleSeeder extends Seeder
                 'update-super-admin-profile',
                 'delete-super-admin-profile',
                 'update-super-admin-password',
+
+                // products
+                'access-super-admin-products',
+                'access-super-admin-product-categories',
+                'access-super-admin-product-qualities',
+                'access-super-admin-product-colors',
+                'access-super-admin-product-sizes',
+                'access-super-admin-product-bundles',
+                'access-super-admin-product-bundle-items',
             ],
         ];
 
