@@ -35,14 +35,6 @@ const getAdminSidebarMainItems = (): NavItem[] => [
         isSection: true,
     },
     {
-        title: 'Settings',
-        href: route('super-admin.settings.index'),
-        icon: Settings,
-        iconColor: '#6b7280', // gray-500
-        iconSize: '1.25rem',
-        permissions: ['access-super-admin-settings'],
-    },
-    {
         title: 'Roles',
         href: route('super-admin.roles.index'),
         icon: Shield,
