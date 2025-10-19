@@ -5,15 +5,6 @@
                 <div class="header__topbar--inner d-flex align-items-center justify-content-between">
                     <ul class="header__topbar--info d-none d-lg-flex">
                         <li class="header__info--list">
-                            <a class="header__info--link text-white" href="shop.html">STORES</a>
-                        </li>
-                        <li class="header__info--list">
-                            <a class="header__info--link text-white" href="shop.html">DELIVERY</a>
-                        </li>
-                        <li class="header__info--list">
-                            <a class="header__info--link text-white" href="shop.html">GUARANTEE</a>
-                        </li>
-                        <li class="header__info--list">
                             <a class="header__info--link text-white" href="mailto:info@example.com">
                                 <svg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M7.368 9.104C7.26133 9.17867 7.13867 9.216 7 9.216C6.86133 9.216 6.744 9.17867 6.648 9.104L0.36 4.624C0.264 4.56 0.178667 4.54933 0.104 4.592C0.04 4.624 0.00800002 4.69867 0.00800002 4.816V11.984C0.00800002 12.112 0.0506667 12.2187 0.136 12.304C0.221333 12.3893 0.322667 12.432 0.44 12.432H13.56C13.6773 12.432 13.7787 12.3893 13.864 12.304C13.96 12.2187 14.008 12.112 14.008 11.984V4.816C14.008 4.69867 13.9707 4.624 13.896 4.592C13.8213 4.54933 13.736 4.56 13.64 4.624L7.368 9.104ZM6.76 8.32C6.84533 8.37333 6.92533 8.4 7 8.4C7.08533 8.4 7.16533 8.37333 7.24 8.32L12.52 4.56C12.6373 4.464 12.696 4.352 12.696 4.224V0.783999C12.696 0.666666 12.6533 0.570666 12.568 0.495999C12.4933 0.410666 12.3973 0.367999 12.28 0.367999H1.72C1.60267 0.367999 1.50667 0.410666 1.432 0.495999C1.35733 0.570666 1.32 0.666666 1.32 0.783999V4.224C1.32 4.37333 1.37333 4.48533 1.48 4.56L6.76 8.32ZM3.784 2.064H9.96C10.088 2.064 10.1947 2.112 10.28 2.208C10.3653 2.29333 10.408 2.4 10.408 2.528C10.408 2.64533 10.3653 2.74667 10.28 2.832C10.1947 2.91733 10.088 2.96 9.96 2.96H3.784C3.656 2.96 3.54933 2.91733 3.464 2.832C3.37867 2.74667 3.336 2.64533 3.336 2.528C3.336 2.4 3.37867 2.29333 3.464 2.208C3.54933 2.112 3.656 2.064 3.784 2.064ZM3.784 3.632H9.96C10.088 3.632 10.1947 3.68 10.28 3.776C10.3653 3.86133 10.408 3.96267 10.408 4.08C10.408 4.19733 10.3653 4.304 10.28 4.4C10.1947 4.48533 10.088 4.528 9.96 4.528H3.784C3.656 4.528 3.54933 4.48533 3.464 4.4C3.37867 4.31467 3.336 4.21333 3.336 4.096C3.336 3.968 3.37867 3.86133 3.464 3.776C3.54933 3.68 3.656 3.632 3.784 3.632Z" fill="#FF2D37"/>
@@ -23,12 +14,6 @@
                     </ul>
                     <div class="header__top--right d-flex align-items-center">
                         <ul class="header__top--link d-flex align-items-center">
-                            <li class="header__link--menu"><a class="header__link--menu__text text-white" href="wishlist.html">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=" -heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> Wishlist</a>
-                            </li>
-                            <li class="header__link--menu"><a class="header__link--menu__text text-white" href="compare.html">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M400 304l48 48-48 48M400 112l48 48-48 48M64 352h85.19a80 80 0 0066.56-35.62L256 256"/><path d="M64 160h85.19a80 80 0 0166.56 35.62l80.5 120.76A80 80 0 00362.81 352H416M416 160h-53.19a80 80 0 00-66.56 35.62L288 208" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>Compare</a>
-                            </li>
                         </ul>
                         <ul class="social__share style5 d-flex">
                             <li class="social__share--list">
@@ -98,21 +83,7 @@
                                     <a class="header__menu--link" href="{{ route('shop') }}">Shop</a>
                                 </li>
                                 <li class="header__menu--items">
-                                    <a class="header__menu--link" href="#">Pages
-                                        <svg class="menu__arrowdown--icon" xmlns="http://www.w3.org/2000/svg" width="12" height="7.41" viewBox="0 0 12 7.41">
-                                            <path  d="M16.59,8.59,12,13.17,7.41,8.59,6,10l6,6,6-6Z" transform="translate(-6 -8.59)" fill="currentColor" opacity="0.7"/>
-                                        </svg>
-                                    </a>
-                                    <ul class="header__sub--menu">
-                                        <li class="header__sub--menu__items"><a href="{{ route('about') }}" class="header__sub--menu__link">About Us</a></li>
-                                        <li class="header__sub--menu__items"><a href="{{ route('contact') }}" class="header__sub--menu__link">Contact Us</a></li>
-                                        <li class="header__sub--menu__items"><a href="cart.html" class="header__sub--menu__link">Cart Page</a></li>
-                                        <li class="header__sub--menu__items"><a href="portfolio.html" class="header__sub--menu__link">Portfolio Page</a></li>
-                                        <li class="header__sub--menu__items"><a href="wishlist.html" class="header__sub--menu__link">Wishlist Page</a></li>
-                                        <li class="header__sub--menu__items"><a href="privacy-policy.html" class="header__sub--menu__link">Privacy Policy</a></li>
-                                        <li class="header__sub--menu__items"><a href="login.html" class="header__sub--menu__link">Login Page</a></li>
-                                        <li class="header__sub--menu__items"><a href="404.html" class="header__sub--menu__link">Error Page</a></li>
-                                    </ul>
+                                    <a class="header__menu--link" href="{{ route('about') }}">About Us</a>
                                 </li>
                                 <li class="header__menu--items">
                                     <a class="header__menu--link" href="{{ route('contact') }}">Contact </a>
@@ -126,18 +97,6 @@
                                 <a class="header__account--btn search__open--btn" href="javascript:void(0)" data-offcanvas>
                                     <svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg" width="22.51" height="20.443" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
                                     <span class="visually-hidden">Search</span>
-                                </a>
-                            </li>
-                            <li class="header__account--items d-none d-lg-block">
-                                <a class="header__account--btn" href="my-account.html">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=" -user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                    <span class="visually-hidden">My account</span>
-                                </a>
-                            </li>
-                            <li class="header__account--items d-none d-lg-block">
-                                <a class="header__account--btn" href="wishlist.html">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=" -heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                                    <span class="items__count">3</span>
                                 </a>
                             </li>
                             <li class="header__account--items header__minicart--items">
@@ -177,18 +136,8 @@
                             <a class="offcanvas__menu_item" href="{{ route('shop') }}">Shop</a>
                         </li>
                         <li class="offcanvas__menu_li">
-                            <a class="offcanvas__menu_item" href="#">Pages</a>
-                            <ul class="offcanvas__sub_menu">
-                                <li class="offcanvas__sub_menu_li"><a href="{{ route('about') }}" class="offcanvas__sub_menu_item">About Us</a></li>
-                                <li class="offcanvas__sub_menu_li"><a href="{{ route('contact') }}" class="offcanvas__sub_menu_item">Contact Us</a></li>
-                                <li class="offcanvas__sub_menu_li"><a href="cart.html" class="offcanvas__sub_menu_item">Cart Page</a></li>
-                                <li class="offcanvas__sub_menu_li"><a href="portfolio.html" class="offcanvas__sub_menu_item">Portfolio Page</a></li>
-                                <li class="offcanvas__sub_menu_li"><a href="wishlist.html" class="offcanvas__sub_menu_item">Wishlist Page</a></li>
-                                <li class="offcanvas__sub_menu_li"><a href="login.html" class="offcanvas__sub_menu_item">Login Page</a></li>
-                                <li class="offcanvas__sub_menu_li"><a href="404.html" class="offcanvas__sub_menu_item">Error Page</a></li>
-                            </ul>
+                            <a class="offcanvas__menu_item" href="{{ route('about') }}">About Us</a>
                         </li>
-                        <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ route('about') }}">About</a></li>
                         <li class="offcanvas__menu_li"><a class="offcanvas__menu_item" href="{{ route('contact') }}">Contact</a></li>
                     </ul>
                     <div class="offcanvas__account--items">
@@ -279,15 +228,6 @@
                             </svg>
                         </span>
                         <span class="offcanvas__stikcy--toolbar__label">Cart</span>
-                        <span class="items__count">3</span>
-                    </a>
-                </li>
-                <li class="offcanvas__stikcy--toolbar__list">
-                    <a class="offcanvas__stikcy--toolbar__btn" href="wishlist.html">
-                        <span class="offcanvas__stikcy--toolbar__icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=" -heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                        </span>
-                        <span class="offcanvas__stikcy--toolbar__label">Wishlist</span>
                         <span class="items__count">3</span>
                     </a>
                 </li>
