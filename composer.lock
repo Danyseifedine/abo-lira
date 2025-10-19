@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7987d59439bb0fc37ba15dfef3721db6",
+    "content-hash": "bdfb3ee53fbd714440f9c780473571ca",
     "packages": [
         {
             "name": "brick/math",
@@ -1257,6 +1257,81 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "hnooz/laravel-shopping-cart",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hnooz/laravel-shopping-cart.git",
+                "reference": "1bee364dc614e8c710771efd649b8a64c2b3a241"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hnooz/laravel-shopping-cart/zipball/1bee364dc614e8c710771efd649b8a64c2b3a241",
+                "reference": "1bee364dc614e8c710771efd649b8a64c2b3a241",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^10.0||^11.0||^12.0",
+                "php": "^8.3",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.14",
+                "nunomaduro/collision": "^8.1.1||^7.10.0",
+                "orchestra/testbench": "^10.0.0||^9.0.0||^8.22.0",
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin-arch": "^3.0",
+                "pestphp/pest-plugin-laravel": "^3.0",
+                "rector/rector": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Cart": "Hnooz\\LaravelCart\\Facades\\Cart"
+                    },
+                    "providers": [
+                        "Hnooz\\LaravelCart\\CartServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hnooz\\LaravelCart\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mohamed Idris",
+                    "email": "mohammededris23@gmail.com",
+                    "role": "Owner"
+                }
+            ],
+            "description": "A lightweight and flexible Laravel package for managing shopping carts with full support for cart items, session storage, and database persistence.",
+            "homepage": "https://github.com/hnooz/laravel-shopping-cart",
+            "keywords": [
+                "cart",
+                "hnooz",
+                "laravel",
+                "laravel-cart"
+            ],
+            "support": {
+                "issues": "https://github.com/hnooz/laravel-shopping-cart/issues",
+                "source": "https://github.com/hnooz/laravel-shopping-cart/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Hnooz",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-05-24T20:33:21+00:00"
         },
         {
             "name": "inertiajs/inertia-laravel",

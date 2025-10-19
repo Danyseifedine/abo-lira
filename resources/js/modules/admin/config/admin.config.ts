@@ -6,7 +6,6 @@ import {
     User,
     LayoutGrid,
     Shield,
-    Settings,
 } from "lucide-vue-next";
 
 const getAdminSidebarMainItems = (): NavItem[] => [
