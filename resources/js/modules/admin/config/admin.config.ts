@@ -32,6 +32,7 @@ const getAdminSidebarMainItems = (): NavItem[] => [
     {
         title: 'Settings & Security',
         isSection: true,
+        permissions: ['access-super-admin-role'],
     },
     {
         title: 'Roles',
@@ -68,11 +69,11 @@ export const adminDashboardConfig: DashboardConfig = {
         containerVariant: 'sidebar',
         sidebarDirection: document.documentElement.dir === 'rtl' ? "right" : "left",
         sidebarVariant: 'inset',
-        sidebarCollapseButton: true,
-        navbarAppearanceButton: true,
+        sidebarCollapseButton: false,
+        navbarAppearanceButton: false,
         navbarLogoutButton: true,
-        navbarSettingsButton: true,
-        navbarLanguageDropdown: false,
+        navbarSettingsButton: false,
+        navbarLanguageDropdown: true,
         sidebarTitleExist: true,
         sidebarTitle: 'Dashboard',
         sidebarPadding: 'py-5',

@@ -30,7 +30,7 @@ function registerWebRoutes()
     Route::middleware([
         'auth',
         'verified',
-        'role:super-admin',
+        'role:owner|super-admin',
     ])->group(function () {
         require __DIR__ . '/super-admin.php';
     });
