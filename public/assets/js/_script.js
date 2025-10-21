@@ -6,9 +6,9 @@
 
 
   ----------------------------
-  [Table of contents CSS] 
+  [Table of contents CSS]
   ----------------------------
-  
+
   1. slider swiper activation
   2. product swiper column4 activation
   3. product swiper column4 style2 activation
@@ -143,287 +143,382 @@ if (scrollTop) {
 /*
   1. slider swiper activation
 */
-var swiper = new Swiper(".hero__slider--activation", {
-  slidesPerView: 1,
-  loop: true,
-  clickable: true,
-  speed: 500,
-  spaceBetween: 30,
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    if (document.querySelector(".hero__slider--activation")) {
+      var swiper = new Swiper(".hero__slider--activation", {
+        slidesPerView: 1,
+        loop: true,
+        clickable: true,
+        speed: 500,
+        spaceBetween: 30,
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+      });
+    }
+  } catch (error) {
+    console.log("Hero slider initialization failed:", error);
+  }
 });
 
 /*
   2. product swiper column4 activation
 */
-var swiper = new Swiper(".product__swiper--activation", {
-  slidesPerView: 4,
-  loop: true,
-  clickable: true,
-  spaceBetween: 30,
-  breakpoints: {
-    992: {
-      slidesPerView: 4,
-    },
-    768: {
-      slidesPerView: 3,
-      spaceBetween: 30,
-    },
-    480: {
-      slidesPerView: 2,
-      spaceBetween: 20,
-    },
-    0: {
-      slidesPerView: 1,
-    },
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    const productSwipers = document.querySelectorAll(".product__swiper--activation");
+    if (productSwipers.length > 0) {
+      productSwipers.forEach((swiperElement) => {
+        // Check if swiper has wrapper and at least one slide
+        const wrapper = swiperElement.querySelector('.swiper-wrapper');
+        const slides = wrapper ? wrapper.querySelectorAll('.swiper-slide') : [];
+
+        // Skip initialization if no slides or wrapper
+        if (!wrapper || slides.length === 0) {
+          console.log("Skipping swiper initialization - no slides found");
+          return;
+        }
+
+        if (wrapper && slides.length > 0) {
+          // Check if navigation buttons exist - look in parent container
+          const parent = swiperElement.parentElement;
+          const nextBtn = parent ? parent.querySelector('.swiper-button-next') : null;
+          const prevBtn = parent ? parent.querySelector('.swiper-button-prev') : null;
+
+          const swiperConfig = {
+            slidesPerView: 4,
+            loop: slides.length > 4,
+            clickable: true,
+            spaceBetween: 30,
+            breakpoints: {
+              992: {
+                slidesPerView: 4,
+              },
+              768: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+              },
+              480: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              0: {
+                slidesPerView: 1,
+              },
+            },
+          };
+
+          // Only add navigation if both buttons exist
+          if (nextBtn && prevBtn) {
+            swiperConfig.navigation = {
+              nextEl: nextBtn,
+              prevEl: prevBtn,
+            };
+          }
+
+          new Swiper(swiperElement, swiperConfig);
+        }
+      });
+    }
+  } catch (error) {
+    console.log("Product swiper initialization failed:", error);
+  }
 });
 
 /*
   3. product swiper column4 style2 activation
 */
-var swiper = new Swiper(".product__swiper--column4__style2", {
-  slidesPerView: 4,
-  loop: true,
-  clickable: true,
-  spaceBetween: 30,
-  breakpoints: {
-    1366: {
+try {
+  if (document.querySelector(".product__swiper--column4__style2")) {
+    var swiper = new Swiper(".product__swiper--column4__style2", {
       slidesPerView: 4,
-    },
-    1200: {
-      slidesPerView: 3,
-    },
-    992: {
-      slidesPerView: 2,
-    },
-    768: {
-      slidesPerView: 3,
+      loop: true,
+      clickable: true,
       spaceBetween: 30,
-    },
-    480: {
-      slidesPerView: 2,
-      spaceBetween: 20,
-    },
-    0: {
-      slidesPerView: 1,
-    },
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-});
+      breakpoints: {
+        1366: {
+          slidesPerView: 4,
+        },
+        1200: {
+          slidesPerView: 3,
+        },
+        992: {
+          slidesPerView: 2,
+        },
+        768: {
+          slidesPerView: 3,
+          spaceBetween: 30,
+        },
+        480: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        0: {
+          slidesPerView: 1,
+        },
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+  }
+} catch (error) {
+  console.log("Product swiper style2 initialization failed:", error);
+}
 
 /*
   4. single product nav activation
 */
-var swiper = new Swiper(".single__product--nav", {
-  loop: true,
-  spaceBetween: 20,
-  slidesPerView: 5,
-  freeMode: true,
-  watchSlidesProgress: true,
-  breakpoints: {
-    992: {
+try {
+  if (document.querySelector(".single__product--nav")) {
+    var swiper = new Swiper(".single__product--nav", {
+      loop: true,
       spaceBetween: 20,
-    },
-    768: {
       slidesPerView: 5,
-      spaceBetween: 15,
-    },
-    480: {
-      slidesPerView: 4,
-    },
-    320: {
-      slidesPerView: 3,
-    },
-    200: {
-      slidesPerView: 2,
-    },
-    0: {
-      slidesPerView: 1,
-    },
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-});
-var swiper2 = new Swiper(".single__product--preview", {
-  loop: true,
-  spaceBetween: 10,
-  thumbs: {
-    swiper: swiper,
-  },
-});
+      freeMode: true,
+      watchSlidesProgress: true,
+      breakpoints: {
+        992: {
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 5,
+          spaceBetween: 15,
+        },
+        480: {
+          slidesPerView: 4,
+        },
+        320: {
+          slidesPerView: 3,
+        },
+        200: {
+          slidesPerView: 2,
+        },
+        0: {
+          slidesPerView: 1,
+        },
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+    if (document.querySelector(".single__product--preview")) {
+      var swiper2 = new Swiper(".single__product--preview", {
+        loop: true,
+        spaceBetween: 10,
+        thumbs: {
+          swiper: swiper,
+        },
+      });
+    }
+  }
+} catch (error) {
+  console.log("Single product swiper initialization failed:", error);
+}
 
 /*
   5. product swiper column1 activation
 */
-var swiper = new Swiper(".product__swiper--column1", {
-  slidesPerView: 4,
-  loop: false,
-  clickable: true,
-  spaceBetween: 15,
-  direction: "vertical",
-  navigation: {
-    nextEl: ".small__product .swiper-button-next",
-    prevEl: ".small__product .swiper-button-prev",
-  },
-});
+try {
+  if (document.querySelector(".product__swiper--column1")) {
+    var swiper = new Swiper(".product__swiper--column1", {
+      slidesPerView: 4,
+      loop: false,
+      clickable: true,
+      spaceBetween: 15,
+      direction: "vertical",
+      navigation: {
+        nextEl: ".small__product .swiper-button-next",
+        prevEl: ".small__product .swiper-button-prev",
+      },
+    });
+  }
+} catch (error) {
+  console.log("Product swiper column1 initialization failed:", error);
+}
 
 /*
   6. blog swiper activation
 */
-var swiper = new Swiper(".blog__swiper--activation", {
-  slidesPerView: 3,
-  loop: true,
-  clickable: true,
-  spaceBetween: 30,
-  breakpoints: {
-    992: {
+try {
+  if (document.querySelector(".blog__swiper--activation")) {
+    var swiper = new Swiper(".blog__swiper--activation", {
       slidesPerView: 3,
-    },
-    768: {
-      slidesPerView: 2,
+      loop: true,
+      clickable: true,
       spaceBetween: 30,
-    },
-    560: {
-      slidesPerView: 2,
-      spaceBetween: 20,
-    },
-    0: {
-      slidesPerView: 1,
-    },
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-});
+      breakpoints: {
+        992: {
+          slidesPerView: 3,
+        },
+        768: {
+          slidesPerView: 2,
+          spaceBetween: 30,
+        },
+        560: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        0: {
+          slidesPerView: 1,
+        },
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+  }
+} catch (error) {
+  console.log("Blog swiper initialization failed:", error);
+}
 
 /*
   7. testimonial swiper activation
 */
-var swiper = new Swiper(".testimonial__swiper--activation", {
-  slidesPerView: 2,
-  loop: true,
-  clickable: true,
-  spaceBetween: 30,
-  breakpoints: {
-    576: {
+try {
+  if (document.querySelector(".testimonial__swiper--activation")) {
+    var swiper = new Swiper(".testimonial__swiper--activation", {
       slidesPerView: 2,
-      spaceBetween: 20,
-    },
-
-    0: {
-      slidesPerView: 1,
-    },
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-});
+      loop: true,
+      clickable: true,
+      spaceBetween: 30,
+      breakpoints: {
+        576: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        0: {
+          slidesPerView: 1,
+        },
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+  }
+} catch (error) {
+  console.log("Testimonial swiper initialization failed:", error);
+}
 
 /*
   8. quickview swiper activation
 */
-var swiper = new Swiper(".quickview__swiper--activation", {
-  slidesPerView: 1,
-  loop: true,
-  clickable: true,
-  spaceBetween: 30,
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-});
+try {
+  if (document.querySelector(".quickview__swiper--activation")) {
+    var swiper = new Swiper(".quickview__swiper--activation", {
+      slidesPerView: 1,
+      loop: true,
+      clickable: true,
+      spaceBetween: 30,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+    });
+  }
+} catch (error) {
+  console.log("Quickview swiper initialization failed:", error);
+}
 
 /*
   9. product details media swiper activation
 */
-var swiper = new Swiper(".product__media--nav", {
-  loop: true,
-  spaceBetween: 10,
-  slidesPerView: 4,
-  freeMode: true,
-  watchSlidesProgress: true,
-  breakpoints: {
-    480: {
+try {
+  if (document.querySelector(".product__media--nav")) {
+    var swiper = new Swiper(".product__media--nav", {
+      loop: true,
+      spaceBetween: 10,
       slidesPerView: 4,
-    },
-    200: {
-      slidesPerView: 3,
-    },
-    0: {
-      slidesPerView: 1,
-    },
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-});
-var swiper2 = new Swiper(".product__media--preview", {
-  loop: true,
-  spaceBetween: 10,
-  thumbs: {
-    swiper: swiper,
-  },
-});
+      freeMode: true,
+      watchSlidesProgress: true,
+      breakpoints: {
+        480: {
+          slidesPerView: 4,
+        },
+        200: {
+          slidesPerView: 3,
+        },
+        0: {
+          slidesPerView: 1,
+        },
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+    if (document.querySelector(".product__media--preview")) {
+      var swiper2 = new Swiper(".product__media--preview", {
+        loop: true,
+        spaceBetween: 10,
+        thumbs: {
+          swiper: swiper,
+        },
+      });
+    }
+  }
+} catch (error) {
+  console.log("Product media swiper initialization failed:", error);
+}
 
 /*
   10. testimonial active one activation
 */
-var swiper3 = new Swiper(".testimonial__active--one", {
-  loop: true,
-  spaceBetween: 20,
-  slidesPerView: 5,
-  centeredSlides: true,
-  freeMode: true,
-  watchSlidesProgress: true,
-  breakpoints: {
-    768: {
+try {
+  if (document.querySelector(".testimonial__active--one")) {
+    var swiper3 = new Swiper(".testimonial__active--one", {
+      loop: true,
+      spaceBetween: 20,
       slidesPerView: 5,
-    },
-    576: {
-      slidesPerView: 3,
-    },
-    200: {
-      slidesPerView: 3,
-    },
-    0: {
-      slidesPerView: 1,
-    },
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-});
-var swiper2 = new Swiper(".testimonial__active--two", {
-  loop: true,
-  spaceBetween: 10,
-  thumbs: {
-    swiper: swiper3,
-  },
-});
+      centeredSlides: true,
+      freeMode: true,
+      watchSlidesProgress: true,
+      breakpoints: {
+        768: {
+          slidesPerView: 5,
+        },
+        576: {
+          slidesPerView: 3,
+        },
+        200: {
+          slidesPerView: 3,
+        },
+        0: {
+          slidesPerView: 1,
+        },
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+    if (document.querySelector(".testimonial__active--two")) {
+      var swiper2 = new Swiper(".testimonial__active--two", {
+        loop: true,
+        spaceBetween: 10,
+        thumbs: {
+          swiper: swiper3,
+        },
+      });
+    }
+  }
+} catch (error) {
+  console.log("Testimonial active swiper initialization failed:", error);
+}
 
 /*
   11. tab activation

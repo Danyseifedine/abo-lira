@@ -83,7 +83,7 @@
     <script src="{{ asset('assets/js/plugins/glightbox.min.js') }}"></script>
 
     <!-- Customscript js -->
-    <script src="{{ asset('assets/js/script.js') }}"></script>
+    <script src="{{ asset('assets/js/_script.js') }}"></script>
 
     @stack('scripts')
 </body>
