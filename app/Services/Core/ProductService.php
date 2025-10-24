@@ -11,7 +11,7 @@ class ProductService
     public function getBaseQuery(): Builder
     {
         return Product::with(['category', 'quality'])
-            ->select('id', 'sku', 'category_id', 'quality_id', 'name_en', 'name_ar', 'slug', 'price', 'stock_quantity', 'has_variants', 'is_new', 'status', 'created_at');
+            ->select('id', 'sku', 'category_id', 'quality_id', 'name_en', 'name_ar', 'slug', 'price', 'stock_quantity', 'out_of_stock', 'has_variants', 'is_new', 'status', 'created_at');
     }
 
     public function getDataTableConfig(): array
@@ -39,6 +39,9 @@ class ProductService
                 'is_new' => function ($query, $value) {
                     $query->where('is_new', $value === 'yes' ? 1 : 0);
                 },
+                'out_of_stock' => function ($query, $value) {
+                    $query->where('out_of_stock', $value === 'yes' ? 1 : 0);
+                },
                 'created_from' => function ($query, $value) {
                     $query->whereDate('created_at', '>=', $value);
                 },
@@ -52,6 +55,16 @@ class ProductService
     public function toggleStatus(Product $product): bool
     {
         return $product->update(['status' => ! $product->status]);
+    }
+
+    public function toggleIsNew(Product $product): bool
+    {
+        return $product->update(['is_new' => ! $product->is_new]);
+    }
+
+    public function toggleOutOfStock(Product $product): bool
+    {
+        return $product->update(['out_of_stock' => ! $product->out_of_stock]);
     }
 
     public function findById(int $id): ?Product
@@ -116,18 +129,5 @@ class ProductService
         $product->clearMediaCollection('products');
 
         return $product->delete();
-    }
-
-    public function syncMedia(Product $product, array $tempFiles): void
-    {
-        // Clear existing media
-        $product->clearMediaCollection('products');
-
-        // Add new media from temp files
-        foreach ($tempFiles as $tempFile) {
-            $product->addMedia(storage_path('app/' . $tempFile['temp_path']))
-                ->preservingOriginal()
-                ->toMediaCollection('products');
-        }
     }
 }

@@ -28,7 +28,7 @@ interface ProductQuality {
     name_ar: string;
 }
 
-defineProps<{
+const props = defineProps<{
     categories: ProductCategory[];
     qualities: ProductQuality[];
 }>();
@@ -47,27 +47,41 @@ const form = useForm({
     out_of_stock: false,
     has_variants: false,
     is_new: false,
-    featured: false,
-    meta_title_en: '',
-    meta_title_ar: '',
-    meta_description_en: '',
-    meta_description_ar: '',
     status: true,
-    images: [] as File[],
+    temp_files: [] as any[],
+    placement_image: [] as any[],
 });
 
 // Auto-generate slug from English name
 watch(
     () => form.name_en,
     (newValue) => {
-        if (newValue && !form.slug) {
+        if (newValue) {
             form.slug = newValue
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
                 .replace(/^-+|-+$/g, '');
+        } else {
+            form.slug = '';
         }
     },
 );
+
+// Auto-generate SKU when category and quality are selected
+watch([() => form.category_id, () => form.quality_id], ([categoryId, qualityId]) => {
+    if (categoryId && qualityId) {
+        const category = props.categories.find((c: ProductCategory) => c.id === categoryId);
+        const quality = props.qualities.find((q: ProductQuality) => q.id === qualityId);
+
+        if (category && quality) {
+            // Generate SKU: CAT-QUA-TIMESTAMP
+            const catPrefix = category.name_en.substring(0, 3).toUpperCase();
+            const qualPrefix = quality.name_en.substring(0, 3).toUpperCase();
+            const timestamp = Date.now().toString().slice(-6);
+            form.sku = `${catPrefix}-${qualPrefix}-${timestamp}`;
+        }
+    }
+});
 
 // Watch has_variants to clear fields when toggled
 watch(
@@ -80,10 +94,6 @@ watch(
         }
     },
 );
-
-const handleImageChange = (files: File[]) => {
-    form.images = files;
-};
 
 const submit = () => {
     form.post(route('super-admin.products.store'));
@@ -111,6 +121,27 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
 
         <!-- Form -->
         <form @submit.prevent="submit" class="space-y-6">
+            <!-- Product Type Card -->
+            <div class="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/10 p-4">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                            />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-sm font-semibold">{{ __('datatable.simple_product') }}</h3>
+                        <p class="text-xs text-muted-foreground">{{ __('datatable.simple_product_description') }}</p>
+                    </div>
+                    <DashboardToggle id="has_variants" v-model="form.has_variants" disabled :label="__('datatable.variants_disabled')" size="small" />
+                </div>
+            </div>
+
             <!-- English & Arabic Name -->
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 <div class="space-y-2">
@@ -143,7 +174,7 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                 </div>
             </div>
 
-            <!-- Slug & SKU -->
+            <!-- Slug & SKU (Auto-generated) -->
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 <div class="space-y-2">
                     <Label for="slug" required>{{ __('datatable.slug') }}</Label>
@@ -153,23 +184,24 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                         type="text"
                         :placeholder="__('datatable.slug_placeholder')"
                         :error="form.errors.slug"
-                        required
+                        disabled
                     />
                     <InputError :message="form.errors.slug" />
-                    <Hint :text="__('datatable.slug_hint')" />
+                    <Hint :text="__('datatable.slug_auto_hint')" />
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="sku">{{ __('datatable.sku') }}</Label>
+                    <Label for="sku" required>{{ __('datatable.sku') }}</Label>
                     <DashboardTextInput
                         id="sku"
                         v-model="form.sku"
                         type="text"
                         :placeholder="__('datatable.sku_placeholder')"
                         :error="form.errors.sku"
+                        disabled
                     />
                     <InputError :message="form.errors.sku" />
-                    <Hint :text="__('datatable.sku_hint')" />
+                    <Hint :text="__('datatable.sku_auto_hint')" />
                 </div>
             </div>
 
@@ -241,19 +273,6 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                 </div>
             </div>
 
-            <!-- Has Variants Toggle -->
-            <div class="space-y-2">
-                <Label for="has_variants">{{ __('datatable.has_variants') }}</Label>
-                <DashboardToggle
-                    id="has_variants"
-                    v-model="form.has_variants"
-                    :error="form.errors.has_variants"
-                    :label="form.has_variants ? __('datatable.active') : __('datatable.inactive')"
-                    :hint="__('datatable.has_variants_hint')"
-                />
-                <InputError :message="form.errors.has_variants" />
-            </div>
-
             <!-- Conditional Price and Stock Fields -->
             <template v-if="showPriceAndStockFields">
                 <!-- Price & Stock Quantity -->
@@ -301,40 +320,50 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                     <InputError :message="form.errors.out_of_stock" />
                 </div>
 
-                <!-- Image Upload -->
+                <!-- Featured Image Upload -->
                 <div class="space-y-2">
-                    <Label for="images">{{ __('datatable.images') }}</Label>
-                    <DashboardFileUpload id="images" :multiple="true" accept="image/*" @change="handleImageChange" :error="form.errors.images" />
-                    <InputError :message="form.errors.images" />
-                    <Hint :text="__('datatable.images_hint')" />
+                    <Label for="featured_image">{{ __('datatable.featured_image') }}</Label>
+                    <DashboardFileUpload
+                        id="featured_image"
+                        v-model="form.temp_files"
+                        :multiple="false"
+                        accept="image/*"
+                        :file-limit="1"
+                        context="products"
+                    />
+                    <InputError :message="form.errors.temp_files" />
+                    <Hint :text="__('datatable.featured_image_hint')" />
                 </div>
             </template>
 
-            <!-- Is New & Featured Toggles -->
-            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                <div class="space-y-2">
-                    <Label for="is_new">{{ __('datatable.is_new') }}</Label>
-                    <DashboardToggle
-                        id="is_new"
-                        v-model="form.is_new"
-                        :error="form.errors.is_new"
-                        :label="form.is_new ? __('datatable.active') : __('datatable.inactive')"
-                        :hint="__('datatable.is_new_hint')"
-                    />
-                    <InputError :message="form.errors.is_new" />
-                </div>
+            <!-- Product Placement Image (Optional) -->
+            <div class="space-y-2">
+                <Label for="placement_image"
+                    >{{ __('datatable.placement_image') }} <span class="text-xs text-muted-foreground">({{ __('datatable.optional') }})</span></Label
+                >
+                <DashboardFileUpload
+                    id="placement_image"
+                    v-model="form.placement_image"
+                    :multiple="false"
+                    accept="image/*"
+                    :file-limit="1"
+                    context="products-placement"
+                />
+                <InputError :message="form.errors.placement_image" />
+                <Hint :text="__('datatable.placement_image_hint')" />
+            </div>
 
-                <div class="space-y-2">
-                    <Label for="featured">{{ __('datatable.featured') }}</Label>
-                    <DashboardToggle
-                        id="featured"
-                        v-model="form.featured"
-                        :error="form.errors.featured"
-                        :label="form.featured ? __('datatable.active') : __('datatable.inactive')"
-                        :hint="__('datatable.featured_hint')"
-                    />
-                    <InputError :message="form.errors.featured" />
-                </div>
+            <!-- Is New Toggle -->
+            <div class="space-y-2">
+                <Label for="is_new">{{ __('datatable.is_new') }}</Label>
+                <DashboardToggle
+                    id="is_new"
+                    v-model="form.is_new"
+                    :error="form.errors.is_new"
+                    :label="form.is_new ? __('datatable.active') : __('datatable.inactive')"
+                    :hint="__('datatable.is_new_hint')"
+                />
+                <InputError :message="form.errors.is_new" />
             </div>
 
             <!-- Status Toggle -->

@@ -3,7 +3,6 @@ import {
     counterColumn,
     toggleColumn,
     textColumn,
-    dateColumn,
     actionsColumn,
     badgeColumn,
 } from '@/common/components/dashboards/datatable/columnDef'
@@ -22,7 +21,7 @@ import { __ } from '@/core/utils/translations';
  */
 export function createProductColumns(
     openDeleteDialog: (product: Product) => void,
-    labels: { number: string; sku: string; name_en: string; name_ar: string; category: string; quality: string; price: string; stock: string; active: string; created: string }
+    labels: { number: string; name_en: string; name_ar: string; category: string; quality: string; price: string; stock: string; active: string; is_new: string; out_of_stock: string }
 ) {
     const { showCopyToClipboardToast } = useToast();
     const isToggleLoading = ref(false);
@@ -34,21 +33,12 @@ export function createProductColumns(
             startFrom: 1,
         }),
 
-        // SKU
-        textColumn('sku', labels.sku, {
-            sortable: true,
-            searchable: true,
-            className: 'font-mono text-sm text-muted-foreground',
-            headerClassName: 'text-start px-0',
-        }),
-
         // English Name
         textColumn('name_en', labels.name_en, {
             sortable: true,
             searchable: true,
             visible: true,
             className: 'font-medium font-bold',
-            headerClassName: 'text-start px-0',
             showIf: () => document.dir === 'ltr',
         }),
 
@@ -61,71 +51,53 @@ export function createProductColumns(
             showIf: () => document.dir === 'rtl',
         }),
 
-        // Category
-        {
-            type: 'custom',
-            key: 'category',
-            label: labels.category,
+        // Category (English)
+        badgeColumn('category.name_en', labels.category, {
             sortable: false,
-            headerClassName: 'text-start px-0',
-            render: (product: Product) => {
-                if (product.category) {
-                    const name = document.dir === 'rtl' ? product.category.name_ar : product.category.name_en;
-                    return name;
-                }
-                return '-';
-            },
-        },
+            className: 'text-start',
+            showIf: () => document.dir === 'ltr',
+        }),
 
-        // Quality
-        {
-            type: 'custom',
-            key: 'quality',
-            label: labels.quality,
+        // Category (Arabic)
+        badgeColumn('category.name_ar', labels.category, {
             sortable: false,
             headerClassName: 'text-start px-0',
-            render: (product: Product) => {
-                if (product.quality) {
-                    const name = document.dir === 'rtl' ? product.quality.name_ar : product.quality.name_en;
-                    return name;
-                }
-                return '-';
-            },
-        },
+            className: 'text-start px-0',
+            showIf: () => document.dir === 'rtl',
+        }),
+
+        // Quality (English)
+        badgeColumn('quality.name_en', labels.quality, {
+            sortable: false,
+            showIf: () => document.dir === 'ltr',
+        }),
+
+        // Quality (Arabic)
+        badgeColumn('quality.name_ar', labels.quality, {
+            sortable: false,
+            className: 'text-start px-0',
+            headerClassName: 'text-start px-0',
+            showIf: () => document.dir === 'rtl',
+        }),
 
         // Price
-        {
-            type: 'custom',
-            key: 'price',
-            label: labels.price,
+        textColumn('price', labels.price, {
             sortable: true,
+            className: 'font-medium text-start px-2',
             headerClassName: 'text-start px-0',
-            render: (product: Product) => {
-                if (product.has_variants) {
-                    return __('datatable.has_variants');
-                }
-                return product.price ? `$${Number(product.price).toFixed(2)}` : '-';
-            },
-        },
+        }),
 
         // Stock
-        {
-            type: 'custom',
-            key: 'stock_quantity',
-            label: labels.stock,
+        textColumn('stock_quantity', labels.stock, {
             sortable: true,
             headerClassName: 'text-start px-0',
-            render: (product: Product) => {
-                if (product.has_variants) {
-                    return __('datatable.has_variants');
-                }
-                return product.stock_quantity !== null ? product.stock_quantity.toString() : '-';
-            },
-        },
+            className: 'text-start px-3',
+        }),
 
         // Status toggle
         toggleColumn('status', labels.active, {
-            headerClassName: 'text-start px-6',
+            headerClassName: 'text-center px-0',
+
             onToggle: (value: boolean, product: Product, control) => {
                 router.patch(route('super-admin.products.toggle-status', product.id), { status: value }, {
                     preserveScroll: true,
@@ -151,14 +123,72 @@ export function createProductColumns(
                 return convertToBoolean(value);
             },
             size: 'sm',
-            className: 'flex justify-start',
         }),
 
-        // Created date
-        dateColumn('created_at', labels.created, {
-            relative: true,
-            className: 'text-center',
+        // Is New toggle
+        toggleColumn('is_new', labels.is_new, {
             headerClassName: 'text-center px-0',
+            onToggle: (value: boolean, product: Product, control) => {
+                router.patch(route('super-admin.products.toggle-is-new', product.id), { is_new: value }, {
+                    preserveScroll: true,
+                    preserveState: true,
+                    onStart: () => {
+                        isToggleLoading.value = true;
+                    },
+                    onFinish: () => {
+                        isToggleLoading.value = false;
+                    },
+                    onSuccess: (page) => {
+                        const response = (page.props as any).flash?.toast;
+                        if (response?.success === false) {
+                            control.revert();
+                        }
+                    }
+                });
+            },
+            disabled: () => {
+                return isToggleLoading.value;
+            },
+            toggledWhen: (value: any) => {
+                return convertToBoolean(value);
+            },
+            size: 'sm',
+        }),
+
+        // Out of Stock toggle
+        toggleColumn('out_of_stock', labels.out_of_stock, {
+            headerClassName: 'text-center px-0',
+            onToggle: (value: boolean, product: Product, control) => {
+                // Only allow toggle if product doesn't have variants
+                if (product.has_variants) {
+                    control.revert();
+                    return;
+                }
+
+                router.patch(route('super-admin.products.toggle-out-of-stock', product.id), { out_of_stock: value }, {
+                    preserveScroll: true,
+                    preserveState: true,
+                    onStart: () => {
+                        isToggleLoading.value = true;
+                    },
+                    onFinish: () => {
+                        isToggleLoading.value = false;
+                    },
+                    onSuccess: (page) => {
+                        const response = (page.props as any).flash?.toast;
+                        if (response?.success === false) {
+                            control.revert();
+                        }
+                    }
+                });
+            },
+            disabled: (product: Product) => {
+                return isToggleLoading.value || product.has_variants;
+            },
+            toggledWhen: (value: any) => {
+                return convertToBoolean(value);
+            },
+            size: 'sm',
         }),
 
         // Actions menu

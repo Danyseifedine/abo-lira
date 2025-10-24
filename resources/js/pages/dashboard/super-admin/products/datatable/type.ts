@@ -6,10 +6,14 @@ export interface Product {
     name_en: string
     name_ar: string
     slug: string
+    description_en?: string | null
+    description_ar?: string | null
     price: number | null
     stock_quantity: number | null
+    out_of_stock: boolean
     has_variants: boolean
     is_new: boolean
+    featured: boolean
     status: boolean
     created_at: string
     category?: {

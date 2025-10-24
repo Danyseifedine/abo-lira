@@ -15,12 +15,12 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sku' => 'nullable|string|max:255|unique:' . Product::class,
+            'sku' => 'nullable|string|max:255|unique:'.Product::class,
             'category_id' => 'required|exists:product_categories,id',
             'quality_id' => 'required|exists:product_qualities,id',
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:' . Product::class,
+            'slug' => 'required|string|max:255|unique:'.Product::class,
             'description_en' => 'nullable|string',
             'description_ar' => 'nullable|string',
             'has_variants' => 'boolean',
@@ -30,8 +30,11 @@ class StoreProductRequest extends FormRequest
             'price' => 'nullable|numeric|min:0',
             'stock_quantity' => 'nullable|integer|min:0',
             'out_of_stock' => 'boolean',
-            // Media files
-            'temp_files' => 'nullable|array',
+            // Media files (temp_files contains array of temp file objects)
+            'temp_files' => 'required|array|max:1',
+            'temp_files.*.temp_path' => 'required|string',
+            'placement_image' => 'nullable|array|max:1',
+            'placement_image.*.temp_path' => 'nullable|string',
         ];
     }
 }

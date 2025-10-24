@@ -213,8 +213,10 @@ Route::prefix('dashboard')->name('super-admin.')->group(function () {
                 'destroy' => 'destroy',
             ]);
 
-        // Custom route for toggling product status
+        // Custom routes for toggling product properties
         Route::patch('/{product}/toggle-status', [ProductsController::class, 'toggleStatus'])->name('toggle-status');
+        Route::patch('/{product}/toggle-is-new', [ProductsController::class, 'toggleIsNew'])->name('toggle-is-new');
+        Route::patch('/{product}/toggle-out-of-stock', [ProductsController::class, 'toggleOutOfStock'])->name('toggle-out-of-stock');
     });
 
     // ================================================
