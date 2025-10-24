@@ -24,8 +24,32 @@ if (config('app.features.multi_lang')) {
 function registerWebRoutes()
 {
     Route::get('/', function () {
-        return Inertia::render('Welcome');
+        return view('landing');
     })->name('home');
+
+    Route::get('/about', function () {
+        return view('about');
+    })->name('about');
+
+    Route::get('/contact', function () {
+        return view('contact');
+    })->name('contact');
+
+    Route::get('/shop', function () {
+        return view('shop');
+    })->name('shop');
+
+    Route::get('/cart', function () {
+        return view('cart');
+    })->name('cart');
+
+    Route::get('/detail', function () {
+        return view('detail');
+    })->name('detail');
+
+    Route::get('/checkout', function () {
+        return view('checkout');
+    })->name('checkout');
 
     Route::middleware([
         'auth',
