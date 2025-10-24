@@ -85,6 +85,9 @@ export function createProductColumns(
             sortable: true,
             className: 'font-medium text-start px-2',
             headerClassName: 'text-start px-0',
+            format: (value: number) => {
+                return value ? value.toString() : '_';
+            },
         }),
 
         // Stock
@@ -92,6 +95,9 @@ export function createProductColumns(
             sortable: true,
             headerClassName: 'text-start px-0',
             className: 'text-start px-3',
+            format: (value: number) => {
+                return value ? value.toString() : '_';
+            },
         }),
 
         // Status toggle
@@ -205,7 +211,13 @@ export function createProductColumns(
             {
                 label: __('datatable.edit'),
                 icon: Edit,
-                href: (product) => route('super-admin.products.edit', product.id),
+                href: (product) => {
+                    // Check if product has variants and redirect accordingly
+                    if (product.has_variants) {
+                        return route('super-admin.products.edit-complex', product.id);
+                    }
+                    return route('super-admin.products.edit', product.id);
+                },
             },
             { separator: true, label: __('datatable.separator') },
             {

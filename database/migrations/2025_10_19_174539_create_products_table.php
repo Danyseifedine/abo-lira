@@ -37,7 +37,7 @@ return new class extends Migration
 
             $table->text('description_en')->nullable();
             $table->text('description_ar')->nullable();
-            $table->decimal('price', 10, 2)->comment('Null if has_variants is true');
+            $table->decimal('price', 10, 2)->nullable()->comment('Null if has_variants is true');
             $table->boolean('status')->default(true);
             $table->timestamps();
 

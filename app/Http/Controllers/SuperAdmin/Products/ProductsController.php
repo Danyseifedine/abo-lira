@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\SuperAdmin\Products;
 
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\Product\StoreComplexProductRequest;
 use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Requests\Product\UpdateComplexProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -55,6 +57,64 @@ class ProductsController extends BaseController
         ]);
     }
 
+    public function createComplex()
+    {
+        $categories = ProductCategory::active()->orderBy('name_en')->get(['id', 'name_en', 'name_ar']);
+        $qualities = ProductQuality::active()->orderBy('name_en')->get(['id', 'name_en', 'name_ar']);
+        $colors = \App\Models\ProductVariantColor::active()->orderBy('name_en')->get(['id', 'name_en', 'name_ar', 'code']);
+        $sizes = \App\Models\ProductVariantSize::active()->orderBy('name_en')->get(['id', 'name_en', 'name_ar']);
+
+        return Inertia::render(SuperAdminPath::view('products/actions/CreateComplex'), [
+            'categories' => $categories,
+            'qualities' => $qualities,
+            'colors' => $colors,
+            'sizes' => $sizes,
+        ]);
+    }
+
+    public function editComplex(Product $product)
+    {
+        $categories = ProductCategory::active()->orderBy('name_en')->get(['id', 'name_en', 'name_ar']);
+        $qualities = ProductQuality::active()->orderBy('name_en')->get(['id', 'name_en', 'name_ar']);
+        $colors = \App\Models\ProductVariantColor::active()->orderBy('name_en')->get(['id', 'name_en', 'name_ar', 'code']);
+        $sizes = \App\Models\ProductVariantSize::active()->orderBy('name_en')->get(['id', 'name_en', 'name_ar']);
+
+        // Load product with variants and their media
+        $product->load(['variants' => function ($query) {
+            $query->orderBy('id');
+        }, 'variants.color', 'variants.size']);
+
+        // Get existing files for each variant using BaseController method
+        $existingVariants = $product->variants->map(function ($variant) {
+            $existingMedia = $this->getExistingFilesForEdit($variant, 'variant-image');
+
+            return [
+                'id' => $variant->id,
+                'sku' => $variant->sku,
+                'color_id' => $variant->color_id,
+                'size_id' => $variant->size_id,
+                'price' => $variant->price,
+                'stock_quantity' => $variant->stock_quantity,
+                'out_of_stock' => $variant->out_of_stock,
+                'status' => $variant->status,
+                'existing_media' => $existingMedia,
+            ];
+        });
+
+        // Get existing placement image
+        $existingPlacementFiles = $this->getExistingFilesForEdit($product, 'placement');
+
+        return Inertia::render(SuperAdminPath::view('products/actions/EditComplex'), [
+            'product' => $product,
+            'categories' => $categories,
+            'qualities' => $qualities,
+            'colors' => $colors,
+            'sizes' => $sizes,
+            'existingVariants' => $existingVariants,
+            'existingPlacementFiles' => $existingPlacementFiles,
+        ]);
+    }
+
     public function store(StoreProductRequest $request)
     {
         DB::beginTransaction();
@@ -97,6 +157,215 @@ class ProductsController extends BaseController
 
             return back()->withErrors([
                 'temp_files' => 'Failed to create product: ' . $e->getMessage(),
+            ])->withInput();
+        }
+    }
+
+    public function storeComplex(StoreComplexProductRequest $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Prepare product data
+            $productData = $request->only([
+                'name_en',
+                'name_ar',
+                'slug',
+                'description_en',
+                'description_ar',
+                'category_id',
+                'quality_id',
+                'sku',
+                'status',
+            ]);
+
+            // Create product with variants
+            $product = $this->productService->createWithVariants($productData, $request->variants);
+
+            // Reload product with variants
+            $product->load('variants');
+
+            // Handle variant images
+            if ($request->has('variants') && is_array($request->variants)) {
+                $createdVariants = $product->variants->all(); // Get all variants as array
+
+                \Log::info('Processing variant images', [
+                    'total_variants' => count($createdVariants),
+                    'request_variants' => count($request->variants),
+                ]);
+
+                foreach ($request->variants as $index => $variantData) {
+                    if (isset($variantData['temp_files']) && is_array($variantData['temp_files']) && ! empty($variantData['temp_files'])) {
+                        // Get the variant at this index
+                        if (isset($createdVariants[$index])) {
+                            $variant = $createdVariants[$index];
+
+                            \Log::info('Attaching image to variant', [
+                                'variant_id' => $variant->id,
+                                'index' => $index,
+                                'temp_files_count' => count($variantData['temp_files']),
+                            ]);
+
+                            $filesAdded = $this->fileUploadService->moveToMediaLibrary(
+                                $variant,
+                                $variantData['temp_files'],
+                                'variant-image'
+                            );
+
+                            \Log::info('Files added to variant', [
+                                'variant_id' => $variant->id,
+                                'files_added' => $filesAdded,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            // Handle placement image if provided
+            if ($request->has('placement_image') && is_array($request->placement_image) && ! empty($request->placement_image)) {
+                $this->fileUploadService->moveToMediaLibrary(
+                    $product,
+                    $request->placement_image,
+                    'placement'
+                );
+            }
+
+            DB::commit();
+
+            return $this->successWithToast(__('toast.created_successfully'), __('toast.success'), 'super-admin.products.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Clean up temporary files on error
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variantData) {
+                    if (isset($variantData['temp_files'])) {
+                        $this->fileUploadService->cleanupTempFiles($variantData['temp_files']);
+                    }
+                }
+            }
+            if ($request->has('placement_image')) {
+                $this->fileUploadService->cleanupTempFiles($request->placement_image);
+            }
+
+            return back()->withErrors([
+                'variants' => 'Failed to create product: ' . $e->getMessage(),
+            ])->withInput();
+        }
+    }
+
+    public function updateComplex(UpdateComplexProductRequest $request, Product $product)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Update product data
+            $productData = $request->only([
+                'name_en',
+                'name_ar',
+                'slug',
+                'description_en',
+                'description_ar',
+                'category_id',
+                'quality_id',
+                'sku',
+                'status',
+            ]);
+
+            $product->update($productData);
+
+            // Track existing variant IDs
+            $existingVariantIds = [];
+
+            // Process variants
+            foreach ($request->variants as $variantData) {
+                if (isset($variantData['id']) && $variantData['id']) {
+                    // Update existing variant
+                    $variant = $product->variants()->find($variantData['id']);
+                    if ($variant) {
+                        $variant->update([
+                            'color_id' => $variantData['color_id'] ?? null,
+                            'size_id' => $variantData['size_id'] ?? null,
+                            'price' => $variantData['price'],
+                            'stock_quantity' => $variantData['stock_quantity'],
+                            'out_of_stock' => $variantData['out_of_stock'] ?? false,
+                            'status' => $variantData['status'] ?? true,
+                        ]);
+
+                        $existingVariantIds[] = $variant->id;
+
+                        // Handle variant images if new files are uploaded
+                        if (isset($variantData['temp_files']) && is_array($variantData['temp_files']) && ! empty($variantData['temp_files'])) {
+                            // Filter only new temp files (those with temp_path)
+                            $newTempFiles = array_filter($variantData['temp_files'], function ($file) {
+                                return isset($file['temp_path']) && ! empty($file['temp_path']);
+                            });
+
+                            if (! empty($newTempFiles)) {
+                                $this->fileUploadService->moveToMediaLibrary(
+                                    $variant,
+                                    $newTempFiles,
+                                    'variant-image'
+                                );
+                            }
+                        }
+                    }
+                } else {
+                    // Create new variant
+                    $newVariant = $product->variants()->create([
+                        'color_id' => $variantData['color_id'] ?? null,
+                        'size_id' => $variantData['size_id'] ?? null,
+                        'price' => $variantData['price'],
+                        'stock_quantity' => $variantData['stock_quantity'],
+                        'out_of_stock' => $variantData['out_of_stock'] ?? false,
+                        'status' => $variantData['status'] ?? true,
+                    ]);
+
+                    $existingVariantIds[] = $newVariant->id;
+
+                    // Handle variant images for new variant
+                    if (isset($variantData['temp_files']) && is_array($variantData['temp_files']) && ! empty($variantData['temp_files'])) {
+                        $this->fileUploadService->moveToMediaLibrary(
+                            $newVariant,
+                            $variantData['temp_files'],
+                            'variant-image'
+                        );
+                    }
+                }
+            }
+
+            // Delete variants that were removed
+            $product->variants()->whereNotIn('id', $existingVariantIds)->delete();
+
+            // Handle placement image updates if provided
+            if ($request->has('placement_image') && is_array($request->placement_image)) {
+                $this->updateMediaFiles(
+                    $product,
+                    $request->placement_image,
+                    'placement'
+                );
+            }
+
+            DB::commit();
+
+            return $this->successWithToast(__('toast.updated_successfully'), __('toast.success'), 'super-admin.products.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Clean up temporary files on error
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variantData) {
+                    if (isset($variantData['temp_files'])) {
+                        $this->fileUploadService->cleanupTempFiles($variantData['temp_files']);
+                    }
+                }
+            }
+            if ($request->has('placement_image')) {
+                $this->fileUploadService->cleanupTempFiles($request->placement_image);
+            }
+
+            return back()->withErrors([
+                'variants' => 'Failed to update product: ' . $e->getMessage(),
             ])->withInput();
         }
     }

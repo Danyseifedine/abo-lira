@@ -15,12 +15,12 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sku' => 'nullable|string|max:255|unique:'.Product::class,
+            'sku' => 'nullable|string|max:255|unique:' . Product::class,
             'category_id' => 'required|exists:product_categories,id',
             'quality_id' => 'required|exists:product_qualities,id',
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:'.Product::class,
+            'slug' => 'required|string|max:255|unique:' . Product::class,
             'description_en' => 'nullable|string',
             'description_ar' => 'nullable|string',
             'has_variants' => 'boolean',

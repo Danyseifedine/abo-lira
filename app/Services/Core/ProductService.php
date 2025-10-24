@@ -130,4 +130,60 @@ class ProductService
 
         return $product->delete();
     }
+
+    /**
+     * Create a complex product with variants
+     */
+    public function createWithVariants(array $data, array $variants): Product
+    {
+        // Auto-generate slug from name_en if not provided
+        if (! isset($data['slug']) || empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['name_en']);
+        }
+
+        // Set has_variants to true
+        $data['has_variants'] = true;
+
+        // Price, stock, and out_of_stock should be null for products with variants
+        $data['price'] = null;
+        $data['stock_quantity'] = null;
+        $data['out_of_stock'] = false;
+
+        // Keep discount fields as null
+        $data['discount_price'] = null;
+        $data['discount_start_date'] = null;
+        $data['discount_end_date'] = null;
+        $data['has_limited_time'] = false;
+
+        // Create the product
+        $product = Product::create($data);
+
+        // Create variants in order
+        $createdVariants = [];
+        foreach ($variants as $variantData) {
+            $createdVariants[] = $this->createVariant($product, $variantData);
+        }
+
+        // Reload product with variants
+        $product->load('variants');
+
+        return $product;
+    }
+
+    /**
+     * Create a single variant for a product
+     */
+    public function createVariant(Product $product, array $data): \App\Models\ProductVariant
+    {
+        $variant = $product->variants()->create([
+            'color_id' => $data['color_id'] ?? null,
+            'size_id' => $data['size_id'] ?? null,
+            'price' => $data['price'],
+            'stock_quantity' => $data['stock_quantity'],
+            'out_of_stock' => $data['out_of_stock'] ?? false,
+            'status' => $data['status'] ?? true,
+        ]);
+
+        return $variant;
+    }
 }

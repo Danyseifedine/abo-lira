@@ -5,9 +5,11 @@ import { Link } from '@inertiajs/vue3';
 import Heading from '@shared/components/Heading.vue';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@ui/card';
 import { Separator } from '@ui/separator';
-import { ArrowLeft, Loader2 } from 'lucide-vue-next';
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AdminLayout from './AdminLayout.vue';
+import { __ } from '@/core/utils/translations';
+import { usePage } from '@inertiajs/vue3';
 
 export type ActionType = 'create' | 'edit' | 'show';
 
@@ -87,6 +89,8 @@ const props = withDefaults(defineProps<Props>(), {
     maxWidth: undefined,
 });
 
+const page = usePage();
+
 // Computed properties
 const computedMaxWidth = computed(() => {
     if (props.maxWidth) return props.maxWidth;
@@ -122,8 +126,11 @@ const maxWidthClass = computed(() => {
                 <!-- Back Button -->
                 <DashboardButton v-if="backHref" variant="ghost" size="sm" as-child>
                     <Link :href="backHref">
-                        <ArrowLeft class="h-4 w-4" />
-                        {{ backLabel }}
+
+
+                        <ArrowLeft class="h-4 w-4" v-if="$page.props.locale === 'en'" />
+                        <ArrowRight class="h-4 w-4" v-if="$page.props.locale === 'ar'" />
+                        {{ __('datatable.back') }}
                     </Link>
                 </DashboardButton>
 

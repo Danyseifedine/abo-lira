@@ -201,6 +201,12 @@ Route::prefix('dashboard')->name('super-admin.')->group(function () {
     // ================================================
 
     Route::prefix('products')->name('products.')->middleware('permission:access-super-admin-products')->group(function () {
+        // Complex product routes (must be before resource routes)
+        Route::get('/create-complex', [ProductsController::class, 'createComplex'])->name('create-complex');
+        Route::post('/store-complex', [ProductsController::class, 'storeComplex'])->name('store-complex');
+        Route::get('/{product}/edit-complex', [ProductsController::class, 'editComplex'])->name('edit-complex');
+        Route::put('/{product}/update-complex', [ProductsController::class, 'updateComplex'])->name('update-complex');
+
         Route::resource('/', ProductsController::class)
             ->parameters(['' => 'product'])
             ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])

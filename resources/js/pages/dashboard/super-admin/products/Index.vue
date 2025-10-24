@@ -52,7 +52,6 @@ const props = defineProps<{
     filters: DataTablePageProps<Product, ProductFilters>['filters'];
     columnLabels: {
         number: string;
-        sku: string;
         name_en: string;
         name_ar: string;
         category: string;
@@ -60,7 +59,8 @@ const props = defineProps<{
         price: string;
         stock: string;
         active: string;
-        created: string;
+        is_new: string;
+        out_of_stock: string;
     };
     categories: ProductCategory[];
     qualities: ProductQuality[];
@@ -104,18 +104,18 @@ watch(
 
 // Filter options
 const statusOptions = [
-    { name: 'Active', code: 'active' },
-    { name: 'Inactive', code: 'inactive' },
+    { name: __('datatable.active'), code: 'active' },
+    { name: __('datatable.inactive'), code: 'inactive' },
 ];
 
 const hasVariantsOptions = [
-    { name: 'Yes', code: 'yes' },
-    { name: 'No', code: 'no' },
+    { name: __('datatable.yes'), code: 'yes' },
+    { name: __('datatable.no'), code: 'no' },
 ];
 
 const isNewOptions = [
-    { name: 'Yes', code: 'yes' },
-    { name: 'No', code: 'no' },
+    { name: __('datatable.yes'), code: 'yes' },
+    { name: __('datatable.no'), code: 'no' },
 ];
 
 // Custom filter logic for date formatting
@@ -183,10 +183,16 @@ const productColumns = createProductColumns(openDeleteDialog, props.columnLabels
                     <h1 class="text-3xl font-bold">{{ __('datatable.products.title') }}</h1>
                     <p class="mt-1 text-muted-foreground">{{ __('datatable.products.description') }}</p>
                 </div>
-                <DashboardButton variant="default" @click="() => router.get(route('super-admin.products.create'))">
-                    <Plus class="mr-2 h-4 w-4" />
-                    {{ __('datatable.add') }} {{ __('sidebar.products') }}
-                </DashboardButton>
+                <div class="flex gap-2">
+                    <DashboardButton variant="default" @click="() => router.get(route('super-admin.products.create'))">
+                        <Plus class="mr-2 h-4 w-4" />
+                        {{ __('datatable.add_simple_product') }}
+                    </DashboardButton>
+                    <DashboardButton variant="outline" @click="() => router.get(route('super-admin.products.create-complex'))">
+                        <Plus class="mr-2 h-4 w-4" />
+                        {{ __('datatable.add_complex_product') }}
+                    </DashboardButton>
+                </div>
             </div>
 
             <DataTable :columns="productColumns" :data="products.data" :config="tableConfig" @selection-change="handleSelectionChange">
@@ -211,7 +217,7 @@ const productColumns = createProductColumns(openDeleteDialog, props.columnLabels
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
                             <!-- Status Filter -->
                             <div class="space-y-2">
-                                <label class="text-sm font-medium">{{ __('datatable.columns.status') }}</label>
+                                <label class="text-sm font-medium">{{ __('datatable.status') }}</label>
                                 <DashboardSelect
                                     v-model="localFilters.status"
                                     :options="statusOptions"
