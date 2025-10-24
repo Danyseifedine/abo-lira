@@ -6,7 +6,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
+    {{-- SEO Component --}}
+    <x-seo :title="get_seo_data('title')"
+           :description="get_seo_data('description')"
+           :keywords="get_seo_data('keywords')"
+           :image="get_seo_data('image')"
+           :type="get_seo_data('type', 'website')"
+           :price="get_seo_data('price')"
+           :currency="get_seo_data('currency')"
+           :availability="get_seo_data('availability')"
+           :brand="get_seo_data('brand')"
+           :rating="get_seo_data('rating')"
+           :reviewCount="get_seo_data('reviewCount')"
+           :breadcrumbs="get_seo_data('breadcrumbs')"
+           :noindex="get_seo_data('noindex', false)" />
 
     <!-- ======= All CSS Plugins here ======== -->
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/swiper-bundle.min.css') }}">
