@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model implements HasMedia
 {
@@ -83,5 +84,15 @@ class Product extends Model implements HasMedia
     public function bundleItems(): HasMany
     {
         return $this->hasMany(ProductBundleItem::class);
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', true);
+    }
+
+    public function scopeInActive(Builder $query): Builder
+    {
+        return $query->where('status', false);
     }
 }

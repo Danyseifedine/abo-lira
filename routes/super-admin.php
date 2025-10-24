@@ -6,6 +6,7 @@ use App\Http\Controllers\SuperAdmin\Privileges\RolesController;
 use App\Http\Controllers\SuperAdmin\Products\ProductCategoriesController;
 use App\Http\Controllers\SuperAdmin\Products\ProductColorsController;
 use App\Http\Controllers\SuperAdmin\Products\ProductQualitiesController;
+use App\Http\Controllers\SuperAdmin\Products\ProductsController;
 use App\Http\Controllers\SuperAdmin\Products\ProductSizesController;
 use App\Http\Controllers\SuperAdmin\Profile\PasswordController;
 use App\Http\Controllers\SuperAdmin\Profile\ProfileController;
@@ -193,5 +194,30 @@ Route::prefix('dashboard')->name('super-admin.')->group(function () {
 
     // ================================================
     // ------------ End Product Categories -----------
+    // ================================================
+
+    // ================================================
+    // ------------ Start Products -------------------
+    // ================================================
+
+    Route::prefix('products')->name('products.')->middleware('permission:access-super-admin-products')->group(function () {
+        Route::resource('/', ProductsController::class)
+            ->parameters(['' => 'product'])
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
+            ->names([
+                'index' => 'index',
+                'create' => 'create',
+                'store' => 'store',
+                'edit' => 'edit',
+                'update' => 'update',
+                'destroy' => 'destroy',
+            ]);
+
+        // Custom route for toggling product status
+        Route::patch('/{product}/toggle-status', [ProductsController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // ================================================
+    // ------------ End Products ---------------------
     // ================================================
 });

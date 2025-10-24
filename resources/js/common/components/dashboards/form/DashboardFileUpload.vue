@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { __ } from '@/core/utils/translations';
 import { usePage } from '@inertiajs/vue3';
 import { CheckCircle2, FileIcon, FileText, ImageIcon, Upload, X } from 'lucide-vue-next';
 import FileUpload, { type FileUploadSelectEvent, type FileUploadUploaderEvent } from 'primevue/fileupload';
@@ -186,7 +187,9 @@ const getErrorMessage = (error: any, file?: File): string => {
 const onSelect = async (event: FileUploadSelectEvent) => {
     // Check file limit before processing
     if (props.fileLimit && tempFiles.value.length >= props.fileLimit) {
-        showError(`Maximum ${props.fileLimit} ${props.fileLimit === 1 ? 'file' : 'files'} allowed`);
+        const unit = props.fileLimit === 1 ? __('datatable.file_upload.file') : __('datatable.file_upload.files');
+        const message = __('datatable.file_upload.maximum_files_allowed').replace(':count', props.fileLimit.toString()).replace(':unit', unit);
+        showError(message);
         return;
     }
 
@@ -205,7 +208,9 @@ const uploadToTemp = async (files: File[]) => {
 
     // Check file limit before uploading
     if (props.fileLimit && tempFiles.value.length >= props.fileLimit) {
-        showError(`Maximum ${props.fileLimit} ${props.fileLimit === 1 ? 'file' : 'files'} allowed`);
+        const unit = props.fileLimit === 1 ? __('datatable.file_upload.file') : __('datatable.file_upload.files');
+        const message = __('datatable.file_upload.maximum_files_allowed').replace(':count', props.fileLimit.toString()).replace(':unit', unit);
+        showError(message);
         return;
     }
 
@@ -524,15 +529,28 @@ defineExpose({
 
                         <div class="w-full space-y-2">
                             <h3 class="text-lg font-semibold text-foreground">
-                                <span v-if="isFileLimitReached">File limit reached</span>
-                                <span v-else-if="tempFiles.length === 0">Click to upload files</span>
-                                <span v-else>Click to add more files</span>
+                                <span v-if="isFileLimitReached">{{ __('datatable.file_upload.file_limit_reached') }}</span>
+                                <span v-else-if="tempFiles.length === 0">{{ __('datatable.file_upload.click_to_upload') }}</span>
+                                <span v-else>{{ __('datatable.file_upload.click_to_add_more') }}</span>
                             </h3>
                             <p class="text-sm text-muted-foreground">
                                 <span v-if="isFileLimitReached">
-                                    Maximum {{ props.fileLimit }} {{ props.fileLimit === 1 ? 'file' : 'files' }} allowed
+                                    {{
+                                        __('datatable.file_upload.maximum_files_allowed')
+                                            .replace(':count', props.fileLimit?.toString() || '')
+                                            .replace(
+                                                ':unit',
+                                                props.fileLimit === 1 ? __('datatable.file_upload.file') : __('datatable.file_upload.files'),
+                                            )
+                                    }}
                                 </span>
-                                <span v-else> Drag and drop or click to select {{ tempFiles.length > 0 ? 'additional ' : '' }}files </span>
+                                <span v-else>
+                                    {{
+                                        tempFiles.length > 0
+                                            ? __('datatable.file_upload.drag_and_drop_additional')
+                                            : __('datatable.file_upload.drag_and_drop')
+                                    }}
+                                </span>
                             </p>
                         </div>
 
@@ -549,9 +567,9 @@ defineExpose({
 
                         <!-- File Count Info -->
                         <div v-if="tempFiles.length > 0 || files.length > 0" class="flex items-center gap-4 text-xs text-muted-foreground">
-                            <span v-if="files.length > 0">{{ files.length }} selected</span>
-                            <span v-if="tempFiles.length > 0">{{ tempFiles.length }} uploaded</span>
-                            <span v-if="props.fileLimit">{{ tempFiles.length }}/{{ props.fileLimit }} files</span>
+                            <span v-if="files.length > 0">{{ files.length }} {{ __('datatable.file_upload.selected') }}</span>
+                            <span v-if="tempFiles.length > 0">{{ tempFiles.length }} {{ __('datatable.file_upload.uploaded') }}</span>
+                            <span v-if="props.fileLimit">{{ tempFiles.length }}/{{ props.fileLimit }} {{ __('datatable.file_upload.files') }}</span>
                         </div>
 
                         <!-- Clear All Button (only show when we have files) -->
@@ -564,11 +582,11 @@ defineExpose({
                             >
                                 <span v-if="!isDeleting" class="flex items-center gap-2">
                                     <X class="h-4 w-4" />
-                                    Clear All
+                                    {{ __('datatable.file_upload.clear_all') }}
                                 </span>
                                 <span v-else class="flex items-center gap-2">
                                     <div class="h-4 w-4 animate-spin rounded-full border-2 border-red-400 border-t-transparent"></div>
-                                    Clearing...
+                                    {{ __('datatable.file_upload.clearing') }}
                                 </span>
                             </button>
                         </div>
@@ -584,7 +602,7 @@ defineExpose({
                             </div>
                         </div>
                         <div class="flex-1">
-                            <p class="text-sm font-medium text-red-800 dark:text-red-200">Upload Error</p>
+                            <p class="text-sm font-medium text-red-800 dark:text-red-200">{{ __('datatable.file_upload.upload_error') }}</p>
                             <p class="mt-1 text-sm text-red-700 dark:text-red-300">{{ currentError }}</p>
                         </div>
                         <button
@@ -604,8 +622,8 @@ defineExpose({
                     <div v-if="files.length > 0" class="mb-6">
                         <h4 class="mb-3 flex items-center gap-2 text-sm font-semibold">
                             <Upload class="h-4 w-4 text-blue-600" />
-                            <span v-if="!isUploading">Selected Files</span>
-                            <span v-else>Uploading Files</span>
+                            <span v-if="!isUploading">{{ __('datatable.file_upload.selected_files') }}</span>
+                            <span v-else>{{ __('datatable.file_upload.uploading_files') }}</span>
                             <div v-if="isUploading" class="ml-2">
                                 <div class="h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"></div>
                             </div>
@@ -691,7 +709,7 @@ defineExpose({
                                     </p>
                                     <div v-if="isUploading" class="mt-2 flex items-center gap-2 text-xs text-blue-600">
                                         <div class="h-2 w-2 animate-pulse rounded-full bg-blue-600"></div>
-                                        Uploading...
+                                        {{ __('datatable.file_upload.uploading') }}
                                     </div>
                                 </div>
                             </div>
@@ -702,7 +720,7 @@ defineExpose({
                     <div v-if="tempFiles.length > 0">
                         <h4 class="mb-3 flex items-center gap-2 text-sm font-semibold">
                             <CheckCircle2 class="h-4 w-4 text-green-600" />
-                            Uploaded Files
+                            {{ __('datatable.file_upload.uploaded_files') }}
                         </h4>
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                             <div

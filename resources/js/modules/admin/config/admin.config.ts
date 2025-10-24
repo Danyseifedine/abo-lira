@@ -47,7 +47,7 @@ const getAdminSidebarMainItems = (): NavItem[] => [
 
     {
         title: 'sidebar.products',
-        // href: route('super-admin.products.index'),
+        href: route('super-admin.products.index'),
         icon: Package2,
         iconColor: '#f97316', // orange-500 (products/inventory)
         iconSize: '1.25rem',

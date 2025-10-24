@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionSeeder::class,
             RoleSeeder::class,
+            ProductCategorySeeder::class,
+            ProductSizeSeeder::class,
+            ProductColorSeeder::class,
+            ProductQualitySeeder::class,
         ]);
 
         $users = [
@@ -30,7 +34,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Owner',
                 'email' => 'amin@aboulira.com',
                 'role' => 'owner',
-            ]
+            ],
         ];
 
         foreach ($users as $userData) {
@@ -43,7 +47,7 @@ class DatabaseSeeder extends Seeder
                 ]
             );
 
-            if (!$user->hasRole($userData['role'])) {
+            if (! $user->hasRole($userData['role'])) {
                 $user->assignRole($userData['role']);
                 if ($userData['role'] == 'super-admin') {
                     $user->assignRole('user');
