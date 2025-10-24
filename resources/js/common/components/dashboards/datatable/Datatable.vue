@@ -78,9 +78,9 @@ const selectedRowsText = computed(() => {
     const totalCount = props.config?.pagination?.total || table.getFilteredRowModel().rows.length;
 
     if (selectedCount === 0) {
-        return `${totalCount} row(s)`;
+        return `${totalCount} ${__('datatable.rows')}`;
     }
-    return `${selectedCount} of ${totalCount} row(s) selected`;
+    return `${selectedCount} of ${totalCount} ${__('datatable.rows')} selected`;
 });
 
 const showPagination = computed(() => {
@@ -252,26 +252,37 @@ const hasActiveFilters = computed(() => {
             </div>
 
             <!-- Pagination controls -->
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                <!-- First Page Button -->
                 <Button variant="outline" size="icon" class="h-8 w-8" :disabled="!canPreviousPage" @click="firstPage">
-                    <ChevronsLeft class="h-4 w-4" />
+                    <ChevronsLeft class="h-4 w-4 rtl:hidden" />
+                    <ChevronsRight class="hidden h-4 w-4 rtl:block" />
                     <span class="sr-only">{{ __('datatable.first_page') }}</span>
                 </Button>
+
+                <!-- Previous Page Button -->
                 <Button variant="outline" size="icon" class="h-8 w-8" :disabled="!canPreviousPage" @click="previousPage">
-                    <ChevronLeft class="h-4 w-4" />
+                    <ChevronLeft class="h-4 w-4 rtl:hidden" />
+                    <ChevronRight class="hidden h-4 w-4 rtl:block" />
                     <span class="sr-only">{{ __('datatable.previous_page') }}</span>
                 </Button>
 
+                <!-- Page Info -->
                 <div class="flex items-center gap-1 px-2">
                     <span class="text-sm font-medium"> {{ __('datatable.page') }} {{ currentPage }} {{ __('datatable.of') }} {{ pageCount }} </span>
                 </div>
 
+                <!-- Next Page Button -->
                 <Button variant="outline" size="icon" class="h-8 w-8" :disabled="!canNextPage" @click="nextPage">
-                    <ChevronRight class="h-4 w-4" />
+                    <ChevronRight class="h-4 w-4 rtl:hidden" />
+                    <ChevronLeft class="hidden h-4 w-4 rtl:block" />
                     <span class="sr-only">{{ __('datatable.next_page') }}</span>
                 </Button>
+
+                <!-- Last Page Button -->
                 <Button variant="outline" size="icon" class="h-8 w-8" :disabled="!canNextPage" @click="lastPage">
-                    <ChevronsRight class="h-4 w-4" />
+                    <ChevronsRight class="h-4 w-4 rtl:hidden" />
+                    <ChevronsLeft class="hidden h-4 w-4 rtl:block" />
                     <span class="sr-only">{{ __('datatable.last_page') }}</span>
                 </Button>
             </div>

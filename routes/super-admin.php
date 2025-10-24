@@ -3,7 +3,10 @@
 use App\Http\Controllers\SuperAdmin\IndexController;
 use App\Http\Controllers\SuperAdmin\Privileges\PermissionsController;
 use App\Http\Controllers\SuperAdmin\Privileges\RolesController;
-use App\Http\Controllers\SuperAdmin\ProductColorsController;
+use App\Http\Controllers\SuperAdmin\Products\ProductCategoriesController;
+use App\Http\Controllers\SuperAdmin\Products\ProductColorsController;
+use App\Http\Controllers\SuperAdmin\Products\ProductQualitiesController;
+use App\Http\Controllers\SuperAdmin\Products\ProductSizesController;
 use App\Http\Controllers\SuperAdmin\Profile\PasswordController;
 use App\Http\Controllers\SuperAdmin\Profile\ProfileController;
 use App\Http\Controllers\SuperAdmin\UsersController;
@@ -115,5 +118,80 @@ Route::prefix('dashboard')->name('super-admin.')->group(function () {
 
     // ================================================
     // ------------ End Product Colors ---------------
+    // ================================================
+
+    // ================================================
+    // ------------ Start Product Sizes --------------
+    // ================================================
+
+    Route::prefix('product-sizes')->name('product-sizes.')->middleware('permission:access-super-admin-product-sizes')->group(function () {
+        Route::resource('/', ProductSizesController::class)
+            ->parameters(['' => 'productSize'])
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
+            ->names([
+                'index' => 'index',
+                'create' => 'create',
+                'store' => 'store',
+                'edit' => 'edit',
+                'update' => 'update',
+                'destroy' => 'destroy',
+            ]);
+
+        // Custom route for toggling size status
+        Route::patch('/{productSize}/toggle-status', [ProductSizesController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // ================================================
+    // ------------ End Product Sizes ----------------
+    // ================================================
+
+    // ================================================
+    // ------------ Start Product Qualities ----------
+    // ================================================
+
+    Route::prefix('product-qualities')->name('product-qualities.')->middleware('permission:access-super-admin-product-qualities')->group(function () {
+        Route::resource('/', ProductQualitiesController::class)
+            ->parameters(['' => 'productQuality'])
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
+            ->names([
+                'index' => 'index',
+                'create' => 'create',
+                'store' => 'store',
+                'edit' => 'edit',
+                'update' => 'update',
+                'destroy' => 'destroy',
+            ]);
+
+        // Custom route for toggling quality status
+        Route::patch('/{productQuality}/toggle-status', [ProductQualitiesController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // ================================================
+    // ------------ End Product Qualities ------------
+    // ================================================
+
+    // ================================================
+    // ------------ Start Product Categories ---------
+    // ================================================
+
+    Route::prefix('product-categories')->name('product-categories.')->middleware('permission:access-super-admin-product-categories')->group(function () {
+        Route::resource('/', ProductCategoriesController::class)
+            ->parameters(['' => 'productCategory'])
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
+            ->names([
+                'index' => 'index',
+                'create' => 'create',
+                'store' => 'store',
+                'edit' => 'edit',
+                'update' => 'update',
+                'destroy' => 'destroy',
+            ]);
+
+        // Custom route for toggling category status
+        Route::patch('/{productCategory}/toggle-status', [ProductCategoriesController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // ================================================
+    // ------------ End Product Categories -----------
     // ================================================
 });

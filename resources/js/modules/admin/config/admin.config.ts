@@ -55,7 +55,7 @@ const getAdminSidebarMainItems = (): NavItem[] => [
     },
     {
         title: 'sidebar.product_categories',
-        // href: route('super-admin.product-categories.index'),
+        href: route('super-admin.product-categories.index'),
         icon: FolderTree,
         iconColor: '#8b5cf6', // violet-500 (organization/hierarchy)
         iconSize: '1.25rem',
@@ -63,7 +63,7 @@ const getAdminSidebarMainItems = (): NavItem[] => [
     },
     {
         title: 'sidebar.product_qualities',
-        // href: route('super-admin.product-qualities.index'),
+        href: route('super-admin.product-qualities.index'),
         icon: BadgeCheck,
         iconColor: '#059669', // emerald-600 (quality/premium)
         iconSize: '1.25rem',
@@ -80,7 +80,7 @@ const getAdminSidebarMainItems = (): NavItem[] => [
 
     {
         title: 'sidebar.product_sizes',
-        // href: route('super-admin.product-sizes.index'),
+        href: route('super-admin.product-sizes.index'),
         icon: Maximize2,
         iconColor: '#06b6d4', // cyan-500 (measurements/dimensions)
         iconSize: '1.25rem',
@@ -136,7 +136,7 @@ export const adminDashboardConfig: DashboardConfig = {
         containerVariant: 'sidebar',
         sidebarDirection: document.documentElement.dir === 'rtl' ? "right" : "left",
         sidebarVariant: 'inset',
-        sidebarCollapseButton: false,
+        sidebarCollapseButton: true,
         navbarAppearanceButton: false,
         navbarLogoutButton: true,
         navbarSettingsButton: false,

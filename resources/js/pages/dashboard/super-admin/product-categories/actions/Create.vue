@@ -9,43 +9,76 @@ import { Head, router, useForm } from '@inertiajs/vue3';
 import ActionLayout from '@modules/admin/layouts/ActionLayout.vue';
 import InputError from '@shared/components/InputError.vue';
 import { Label } from '@ui/label';
+import { watch } from 'vue';
 
 // Form - Initialize with empty values
 const form = useForm({
+    parent_id: null as number | null,
     name_en: '',
     name_ar: '',
-    code: '#000000',
+    slug: '',
     status: true,
 });
 
+// Auto-generate slug from name_en
+watch(
+    () => form.name_en,
+    (value) => {
+        if (value && !form.slug) {
+            form.slug = value
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+    },
+);
+
 // Submit handler
 const submit = () => {
-    form.post(route('super-admin.product-colors.store'));
+    form.post(route('super-admin.product-categories.store'));
 };
 
 // Breadcrumbs
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: __('datatable.product_colors.title'), href: route('super-admin.product-colors.index') },
-    { title: __('datatable.create_color'), href: route('super-admin.product-colors.create') },
+    { title: __('datatable.product_categories.title'), href: route('super-admin.product-categories.index') },
+    { title: __('datatable.create_category'), href: route('super-admin.product-categories.create') },
 ];
 </script>
 
 <template>
     <ActionLayout
         type="create"
-        :title="__('datatable.create_product_color')"
-        :description="__('datatable.fill_in_the_details_below_to_create_a_new_product_color')"
+        :title="__('datatable.create_product_category')"
+        :description="__('datatable.fill_in_the_details_below_to_create_a_new_product_category')"
         :breadcrumbs="breadcrumbs"
-        :back-href="route('super-admin.product-colors.index')"
+        :back-href="route('super-admin.product-categories.index')"
         :show-card="false"
         max-width="full"
-        :card-title="__('datatable.color_information')"
-        :card-description="__('datatable.fill_in_the_details_below_to_create_a_new_product_color')"
+        :card-title="__('datatable.category_information')"
+        :card-description="__('datatable.fill_in_the_details_below_to_create_a_new_product_category')"
     >
-        <Head :title="__('datatable.create_product_color')" />
+        <Head :title="__('datatable.create_product_category')" />
 
         <!-- Form -->
         <form @submit.prevent="submit" class="space-y-6">
+            <!-- Parent Category
+            <div class="space-y-2">
+                <Label for="parent_id">{{ __('datatable.parent_category') }}</Label>
+                <DashboardSelect
+                    v-model="form.parent_id"
+                    :options="categories"
+                    optionValue="id"
+                    :placeholder="__('datatable.select_parent_category')"
+                    class="w-full"
+                    :showClear="true"
+                    filter
+                    :filterPlaceholder="__('datatable.search')"
+                    :error="form.errors.parent_id"
+                />
+                <InputError :message="form.errors.parent_id" />
+                <Hint :text="__('datatable.parent_category_hint')" />
+            </div> -->
+
             <!-- English & Arabic Name -->
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 <!-- English Name -->
@@ -55,13 +88,13 @@ const breadcrumbs: BreadcrumbItem[] = [
                         id="name_en"
                         v-model="form.name_en"
                         type="text"
-                        :placeholder="__('datatable.enter_color_name_in_english')"
+                        :placeholder="__('datatable.enter_category_name_in_english')"
                         :error="form.errors.name_en"
                         autofocus
                         required
                     />
                     <InputError :message="form.errors.name_en" />
-                    <Hint :text="__('datatable.enter_color_name_in_english_example')" />
+                    <Hint :text="__('datatable.enter_category_name_in_english_example')" />
                 </div>
 
                 <!-- Arabic Name -->
@@ -71,29 +104,21 @@ const breadcrumbs: BreadcrumbItem[] = [
                         id="name_ar"
                         v-model="form.name_ar"
                         type="text"
-                        :placeholder="__('datatable.enter_color_name_in_arabic')"
+                        :placeholder="__('datatable.enter_category_name_in_arabic')"
                         :error="form.errors.name_ar"
                         required
                     />
                     <InputError :message="form.errors.name_ar" />
-                    <Hint :text="__('datatable.enter_color_name_in_arabic_example')" />
+                    <Hint :text="__('datatable.enter_category_name_in_arabic_example')" />
                 </div>
             </div>
 
-            <!-- Color Code -->
+            <!-- Slug -->
             <div class="space-y-2">
-                <Label for="code" required>{{ __('datatable.color_code') }}</Label>
-                <div class="flex gap-4">
-                    <div class="flex-1">
-                        <DashboardTextInput id="code" v-model="form.code" type="text" placeholder="#000000" :error="form.errors.code" required />
-                        <InputError :message="form.errors.code" class="mt-2" />
-                        <Hint class="mt-2" :text="__('datatable.enter_hexadecimal_color_code_example')" />
-                    </div>
-                    <div class="flex items-start gap-2">
-                        <input v-model="form.code" type="color" class="h-10 w-20 cursor-pointer rounded border border-input" />
-                        <div class="h-10 w-10 rounded border border-input" :style="{ backgroundColor: form.code }"></div>
-                    </div>
-                </div>
+                <Label for="slug">{{ __('datatable.slug') }}</Label>
+                <DashboardTextInput id="slug" v-model="form.slug" type="text" :placeholder="__('datatable.enter_slug')" :error="form.errors.slug" />
+                <InputError :message="form.errors.slug" />
+                <Hint :text="__('datatable.slug_hint')" />
             </div>
 
             <!-- Status Toggle -->
@@ -104,7 +129,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     v-model="form.status"
                     :error="form.errors.status"
                     :label="form.status ? __('datatable.active') : __('datatable.inactive')"
-                    :hint="form.status ? __('datatable.the_color_is_active_and_visible') : __('datatable.the_color_is_inactive_and_hidden')"
+                    :hint="form.status ? __('datatable.the_category_is_active_and_visible') : __('datatable.the_category_is_inactive_and_hidden')"
                 />
                 <InputError :message="form.errors.status" />
             </div>
@@ -113,7 +138,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         <!-- Footer Actions -->
         <template #footer>
             <div class="flex justify-end gap-2">
-                <DashboardButton @click="router.visit(route('super-admin.product-colors.index'))" variant="secondary" :disabled="form.processing">
+                <DashboardButton @click="router.visit(route('super-admin.product-categories.index'))" variant="secondary" :disabled="form.processing">
                     {{ __('datatable.cancel') }}
                 </DashboardButton>
                 <DashboardButton @click="submit" :loading="form.processing" variant="default"> {{ __('datatable.create') }} </DashboardButton>

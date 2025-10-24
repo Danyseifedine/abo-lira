@@ -62,4 +62,141 @@ return [
         'active' => 'Active',
         'created' => 'Created',
     ],
+    'status' => 'Status',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'set_whether_the_color_is_active_or_inactive' => 'Set whether the color is active or inactive.',
+    'the_color_is_active_and_visible' => 'The color is active and visible.',
+    'the_color_is_inactive_and_hidden' => 'The color is inactive and hidden.',
+    'create' => 'Create',
+    'cancel' => 'Cancel',
+    'name_en' => 'Name (English)',
+    'name_ar' => 'Name (Arabic)',
+    'enter_color_name_in_english' => 'Enter color name in English',
+    'enter_color_name_in_arabic' => 'Enter color name in Arabic',
+    'enter_color_name_in_english_example' => 'Enter the color name in English (e.g., Red, Blue, Green).',
+    'enter_hexadecimal_color_code_example' => 'Enter the hexadecimal color code (e.g., #FF5733).',
+    'create_product_color' => 'Create Product Color',
+    'fill_in_the_details_below_to_create_a_new_product_color' => 'Fill in the details below to create a new product color',
+    'color_information' => 'Color Information',
+    'create_color' => 'Create Color',
+    'color_code' => 'Color Code',
+    'enter_hexadecimal_color_code' => 'Enter hexadecimal color code',
+    'enter_hexadecimal_color_code_example' => 'Enter the hexadecimal color code (e.g., #FF5733).',
+    'color_code_example' => 'Color Code Example: #FF5733',
+
+    // Edit form specific translations
+    'edit_color' => 'Edit Color',
+    'edit_product_color' => 'Edit Product Color',
+    'update_the_details_below_to_modify_the_product_color' => 'Update the details below to modify the product color',
+    'update_color' => 'Update Color',
+
+    // Product Sizes Section
+    'product_sizes' => [
+        'title' => 'Product Sizes',
+        'description' => 'Manage product sizes for your inventory',
+    ],
+
+    // Product Sizes Columns
+    'product_sizes_columns' => [
+        'number' => '#',
+        'name_en' => 'Name (EN)',
+        'name_ar' => 'Name (AR)',
+        'active' => 'Active',
+        'created' => 'Created',
+    ],
+
+    // Size form translations
+    'size_information' => 'Size Information',
+    'create_size' => 'Create Size',
+    'edit_size' => 'Edit Size',
+    'create_product_size' => 'Create Product Size',
+    'edit_product_size' => 'Edit Product Size',
+    'fill_in_the_details_below_to_create_a_new_product_size' => 'Fill in the details below to create a new product size',
+    'update_the_details_below_to_modify_the_product_size' => 'Update the details below to modify the product size',
+    'update_size' => 'Update Size',
+    'enter_size_name_in_english' => 'Enter size name in English',
+    'enter_size_name_in_arabic' => 'Enter size name in Arabic',
+    'enter_size_name_in_english_example' => 'Enter the size name in English (e.g., Small, Medium, Large, XL).',
+    'enter_size_name_in_arabic_example' => 'Enter the size name in Arabic (e.g., صغير, متوسط, كبير).',
+    'the_size_is_active_and_visible' => 'The size is active and visible.',
+    'the_size_is_inactive_and_hidden' => 'The size is inactive and hidden.',
+    'set_whether_the_size_is_active_or_inactive' => 'Set whether the size is active or inactive.',
+    'size_id' => 'Size ID',
+
+    // Product Qualities Section
+    'product_qualities' => [
+        'title' => 'Product Qualities',
+        'description' => 'Manage product quality levels and grades',
+    ],
+
+    // Product Qualities Columns
+    'product_qualities_columns' => [
+        'number' => '#',
+        'name_en' => 'Name (EN)',
+        'name_ar' => 'Name (AR)',
+        'slug' => 'Slug',
+        'active' => 'Active',
+        'created' => 'Created',
+    ],
+
+    // Quality form translations
+    'quality_information' => 'Quality Information',
+    'create_quality' => 'Create Quality',
+    'edit_quality' => 'Edit Quality',
+    'create_product_quality' => 'Create Product Quality',
+    'edit_product_quality' => 'Edit Product Quality',
+    'fill_in_the_details_below_to_create_a_new_product_quality' => 'Fill in the details below to create a new product quality',
+    'update_the_details_below_to_modify_the_product_quality' => 'Update the details below to modify the product quality',
+    'update_quality' => 'Update Quality',
+    'enter_quality_name_in_english' => 'Enter quality name in English',
+    'enter_quality_name_in_arabic' => 'Enter quality name in Arabic',
+    'enter_quality_name_in_english_example' => 'Enter the quality name in English (e.g., Premium, Standard, Basic).',
+    'enter_quality_name_in_arabic_example' => 'Enter the quality name in Arabic (e.g., ممتاز, عادي, أساسي).',
+    'the_quality_is_active_and_visible' => 'The quality is active and visible.',
+    'the_quality_is_inactive_and_hidden' => 'The quality is inactive and hidden.',
+    'set_whether_the_quality_is_active_or_inactive' => 'Set whether the quality is active or inactive.',
+    'quality_id' => 'Quality ID',
+    'slug' => 'Slug',
+    'enter_slug' => 'Enter slug',
+    'slug_hint' => 'URL-friendly identifier. Leave empty to auto-generate from English name.',
+
+    // Product Categories Section
+    'product_categories' => [
+        'title' => 'Product Categories',
+        'description' => 'Organize products into hierarchical categories',
+    ],
+
+    // Product Categories Columns
+    'product_categories_columns' => [
+        'number' => '#',
+        'name_en' => 'Name (EN)',
+        'name_ar' => 'Name (AR)',
+        'parent' => 'Parent Category',
+        'slug' => 'Slug',
+        'active' => 'Active',
+        'created' => 'Created',
+    ],
+
+    // Category form translations
+    'category_information' => 'Category Information',
+    'create_category' => 'Create Category',
+    'edit_category' => 'Edit Category',
+    'create_product_category' => 'Create Product Category',
+    'edit_product_category' => 'Edit Product Category',
+    'fill_in_the_details_below_to_create_a_new_product_category' => 'Fill in the details below to create a new product category',
+    'update_the_details_below_to_modify_the_product_category' => 'Update the details below to modify the product category',
+    'update_category' => 'Update Category',
+    'enter_category_name_in_english' => 'Enter category name in English',
+    'enter_category_name_in_arabic' => 'Enter category name in Arabic',
+    'enter_category_name_in_english_example' => 'Enter the category name in English (e.g., Electronics, Clothing, Accessories).',
+    'enter_category_name_in_arabic_example' => 'Enter the category name in Arabic (e.g., إلكترونيات, ملابس, إكسسوارات).',
+    'the_category_is_active_and_visible' => 'The category is active and visible.',
+    'the_category_is_inactive_and_hidden' => 'The category is inactive and hidden.',
+    'set_whether_the_category_is_active_or_inactive' => 'Set whether the category is active or inactive.',
+    'category_id' => 'Category ID',
+    'parent_category' => 'Parent Category',
+    'select_parent_category' => 'Select parent category',
+    'parent_category_hint' => 'Leave empty to create a root category, or select a parent to create a subcategory.',
+    'all_categories' => 'All Categories',
 ];

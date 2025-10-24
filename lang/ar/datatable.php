@@ -62,4 +62,143 @@ return [
         'active' => 'نشط',
         'created' => 'تاريخ الإنشاء',
     ],
+
+    'status' => 'الحالة',
+    'active' => 'نشط',
+    'inactive' => 'غير نشط',
+    'set_whether_the_color_is_active_or_inactive' => 'اختر ما إذا كان اللون نشط أو غير نشط.',
+    'the_color_is_active_and_visible' => 'اللون نشط ومرئي',
+    'the_color_is_inactive_and_hidden' => 'اللون غير نشط ومخفي',
+    'create' => 'إنشاء',
+    'cancel' => 'إلغاء',
+    'name_en' => 'الاسم (إنجليزي)',
+    'name_ar' => 'الاسم (عربي)',
+    'enter_color_name_in_english' => 'أدخل اسم اللون بالإنجليزية',
+    'enter_color_name_in_arabic' => 'أدخل اسم اللون بالعربية',
+    'enter_color_name_in_arabic_example' => 'أدخل اسم اللون بالعربية (مثال: أحمر، أزرق، أخضر).',
+    'enter_hexadecimal_color_code_example' => 'أدخل رمز اللون السداسي (مثال: #FF5733).',
+    'create_product_color' => 'إنشاء لون منتج',
+    'fill_in_the_details_below_to_create_a_new_product_color' => 'أدخل التفاصيل أدناه لإنشاء لون منتج جديد',
+    'color_information' => 'معلومات اللون',
+    'create_color' => 'إنشاء لون',
+    'color_code' => 'رمز اللون',
+    'enter_hexadecimal_color_code' => 'أدخل رمز اللون السداسي',
+    'enter_hexadecimal_color_code_example' => 'أدخل رمز اللون السداسي (مثال: #FF5733).',
+    'color_code_example' => 'مثال رمز اللون: #FF5733',
+    'enter_color_name_in_english_example' => 'أدخل اسم اللون بالإنجليزية (مثال: Red, Blue, Green).',
+
+    // Edit form specific translations
+    'edit_color' => 'تعديل اللون',
+    'edit_product_color' => 'تعديل لون المنتج',
+    'update_the_details_below_to_modify_the_product_color' => 'قم بتحديث التفاصيل أدناه لتعديل لون المنتج',
+    'update_color' => 'تحديث اللون',
+
+    // Product Sizes Section
+    'product_sizes' => [
+        'title' => 'أحجام المنتجات',
+        'description' => 'إدارة أحجام المنتجات في مخزونك',
+    ],
+
+    // Product Sizes Columns
+    'product_sizes_columns' => [
+        'number' => '#',
+        'name_en' => 'الاسم (إنجليزي)',
+        'name_ar' => 'الاسم (عربي)',
+        'active' => 'نشط',
+        'created' => 'تاريخ الإنشاء',
+    ],
+
+    // Size form translations
+    'size_information' => 'معلومات الحجم',
+    'create_size' => 'إنشاء حجم',
+    'edit_size' => 'تعديل الحجم',
+    'create_product_size' => 'إنشاء حجم منتج',
+    'edit_product_size' => 'تعديل حجم المنتج',
+    'fill_in_the_details_below_to_create_a_new_product_size' => 'أدخل التفاصيل أدناه لإنشاء حجم منتج جديد',
+    'update_the_details_below_to_modify_the_product_size' => 'قم بتحديث التفاصيل أدناه لتعديل حجم المنتج',
+    'update_size' => 'تحديث الحجم',
+    'enter_size_name_in_english' => 'أدخل اسم الحجم بالإنجليزية',
+    'enter_size_name_in_arabic' => 'أدخل اسم الحجم بالعربية',
+    'enter_size_name_in_english_example' => 'أدخل اسم الحجم بالإنجليزية (مثال: Small, Medium, Large, XL).',
+    'enter_size_name_in_arabic_example' => 'أدخل اسم الحجم بالعربية (مثال: صغير, متوسط, كبير).',
+    'the_size_is_active_and_visible' => 'الحجم نشط ومرئي',
+    'the_size_is_inactive_and_hidden' => 'الحجم غير نشط ومخفي',
+    'set_whether_the_size_is_active_or_inactive' => 'اختر ما إذا كان الحجم نشط أو غير نشط.',
+    'size_id' => 'معرف الحجم',
+
+    // Product Qualities Section
+    'product_qualities' => [
+        'title' => 'جودة المنتجات',
+        'description' => 'إدارة مستويات ودرجات جودة المنتجات',
+    ],
+
+    // Product Qualities Columns
+    'product_qualities_columns' => [
+        'number' => '#',
+        'name_en' => 'الاسم (إنجليزي)',
+        'name_ar' => 'الاسم (عربي)',
+        'slug' => 'الرابط',
+        'active' => 'نشط',
+        'created' => 'تاريخ الإنشاء',
+    ],
+
+    // Quality form translations
+    'quality_information' => 'معلومات الجودة',
+    'create_quality' => 'إنشاء جودة',
+    'edit_quality' => 'تعديل الجودة',
+    'create_product_quality' => 'إنشاء جودة منتج',
+    'edit_product_quality' => 'تعديل جودة المنتج',
+    'fill_in_the_details_below_to_create_a_new_product_quality' => 'أدخل التفاصيل أدناه لإنشاء جودة منتج جديدة',
+    'update_the_details_below_to_modify_the_product_quality' => 'قم بتحديث التفاصيل أدناه لتعديل جودة المنتج',
+    'update_quality' => 'تحديث الجودة',
+    'enter_quality_name_in_english' => 'أدخل اسم الجودة بالإنجليزية',
+    'enter_quality_name_in_arabic' => 'أدخل اسم الجودة بالعربية',
+    'enter_quality_name_in_english_example' => 'أدخل اسم الجودة بالإنجليزية (مثال: Premium, Standard, Basic).',
+    'enter_quality_name_in_arabic_example' => 'أدخل اسم الجودة بالعربية (مثال: ممتاز, عادي, أساسي).',
+    'the_quality_is_active_and_visible' => 'الجودة نشطة ومرئية',
+    'the_quality_is_inactive_and_hidden' => 'الجودة غير نشطة ومخفية',
+    'set_whether_the_quality_is_active_or_inactive' => 'اختر ما إذا كانت الجودة نشطة أو غير نشطة.',
+    'quality_id' => 'معرف الجودة',
+    'slug' => 'الرابط',
+    'enter_slug' => 'أدخل الرابط',
+    'slug_hint' => 'معرف صديق لعناوين URL. اتركه فارغًا لإنشائه تلقائيًا من الاسم الإنجليزي.',
+
+    // Product Categories Section
+    'product_categories' => [
+        'title' => 'فئات المنتجات',
+        'description' => 'تنظيم المنتجات في فئات هرمية',
+    ],
+
+    // Product Categories Columns
+    'product_categories_columns' => [
+        'number' => '#',
+        'name_en' => 'الاسم (إنجليزي)',
+        'name_ar' => 'الاسم (عربي)',
+        'parent' => 'الفئة الأب',
+        'slug' => 'الرابط',
+        'active' => 'نشط',
+        'created' => 'تاريخ الإنشاء',
+    ],
+
+    // Category form translations
+    'category_information' => 'معلومات الفئة',
+    'create_category' => 'إنشاء فئة',
+    'edit_category' => 'تعديل الفئة',
+    'create_product_category' => 'إنشاء فئة منتج',
+    'edit_product_category' => 'تعديل فئة المنتج',
+    'fill_in_the_details_below_to_create_a_new_product_category' => 'أدخل التفاصيل أدناه لإنشاء فئة منتج جديدة',
+    'update_the_details_below_to_modify_the_product_category' => 'قم بتحديث التفاصيل أدناه لتعديل فئة المنتج',
+    'update_category' => 'تحديث الفئة',
+    'enter_category_name_in_english' => 'أدخل اسم الفئة بالإنجليزية',
+    'enter_category_name_in_arabic' => 'أدخل اسم الفئة بالعربية',
+    'enter_category_name_in_english_example' => 'أدخل اسم الفئة بالإنجليزية (مثال: Electronics, Clothing, Accessories).',
+    'enter_category_name_in_arabic_example' => 'أدخل اسم الفئة بالعربية (مثال: إلكترونيات, ملابس, إكسسوارات).',
+    'the_category_is_active_and_visible' => 'الفئة نشطة ومرئية',
+    'the_category_is_inactive_and_hidden' => 'الفئة غير نشطة ومخفية',
+    'set_whether_the_category_is_active_or_inactive' => 'اختر ما إذا كانت الفئة نشطة أو غير نشطة.',
+    'category_id' => 'معرف الفئة',
+    'parent_category' => 'الفئة الأب',
+    'select_parent_category' => 'اختر الفئة الأب',
+    'parent_category_hint' => 'اتركه فارغًا لإنشاء فئة رئيسية، أو اختر فئة أب لإنشاء فئة فرعية.',
+    'all_categories' => 'كل الفئات',
 ];

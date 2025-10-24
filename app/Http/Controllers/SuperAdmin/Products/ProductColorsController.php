@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers\SuperAdmin\Products;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\ProductColor\StoreProductColorRequest;
@@ -44,7 +44,7 @@ class ProductColorsController extends BaseController
     {
         $this->colorService->create($request->validated());
 
-        return $this->successWithToast('Product color created successfully', 'Success', 'super-admin.product-colors.index');
+        return $this->successWithToast(__('toast.created_successfully'), __('toast.success'), 'super-admin.product-colors.index');
     }
 
     public function edit(ProductVariantColor $productColor)
@@ -58,14 +58,14 @@ class ProductColorsController extends BaseController
     {
         $this->colorService->update($productColor, $request->validated());
 
-        return $this->successWithToast('Product color updated successfully', 'Success', 'super-admin.product-colors.index');
+        return $this->successWithToast(__('toast.updated_successfully'), __('toast.success'), 'super-admin.product-colors.index');
     }
 
     public function destroy(ProductVariantColor $productColor)
     {
         $this->colorService->delete($productColor);
 
-        return $this->successWithToast('Product color deleted successfully', 'Success', 'super-admin.product-colors.index');
+        return $this->successWithToast(__('toast.deleted_successfully'), __('toast.success'), 'super-admin.product-colors.index');
     }
 
     public function toggleStatus(ProductVariantColor $productColor)
@@ -73,12 +73,9 @@ class ProductColorsController extends BaseController
         try {
             $this->colorService->toggleStatus($productColor);
 
-            $status = $productColor->status ? 'activated' : 'deactivated';
-            $message = "Product color '{$productColor->name_en}' has been {$status} successfully.";
-
-            return $this->successWithToast($message, 'Color ' . ucfirst($status));
+            return $this->successWithToast(__('toast.status_updated_successfully'), __('toast.success'), 'super-admin.product-colors.index');
         } catch (\Exception $e) {
-            return $this->errorWithToast('Failed to update color status. Please try again.');
+            return $this->errorWithToast(__('toast.failed_to_update_color_status'), __('toast.error'), 'super-admin.product-colors.index');
         }
     }
 }

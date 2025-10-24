@@ -154,4 +154,22 @@ return [
     'uppercase'              => 'يجب أن يحتوي الحقل :attribute على حروف كبيرة.',
     'url'                    => 'صيغة رابط حقل :attribute غير صحيحة.',
     'uuid'                   => 'حقل :attribute يجب أن يكون بصيغة UUID سليمة.',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Attributes
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used to swap our attribute placeholder
+    | with something more reader friendly such as "E-Mail Address" instead
+    | of "email". This simply helps us make our message more expressive.
+    |
+    */
+
+    'attributes' => [
+        'name_en' => 'الاسم (إنجليزي)',
+        'name_ar' => 'الاسم (عربي)',
+        'code' => 'رمز اللون',
+        'status' => 'الحالة',
+    ],
 ];

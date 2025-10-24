@@ -28,18 +28,4 @@ class StoreProductColorRequest extends FormRequest
             'status' => 'required|boolean',
         ];
     }
-
-    /**
-     * Get custom messages for validator errors.
-     */
-    public function messages(): array
-    {
-        return [
-            'name_en.required' => 'The English name is required.',
-            'name_ar.required' => 'The Arabic name is required.',
-            'code.required' => 'The color code is required.',
-            'code.unique' => 'This color code is already in use.',
-            'status.required' => 'The status is required.',
-        ];
-    }
 }

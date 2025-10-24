@@ -9,45 +9,54 @@ import { Head, router, useForm } from '@inertiajs/vue3';
 import ActionLayout from '@modules/admin/layouts/ActionLayout.vue';
 import InputError from '@shared/components/InputError.vue';
 import { Label } from '@ui/label';
-import type { ProductColor } from '../datatable/type';
+import { watch } from 'vue';
 
-const props = defineProps<{
-    color: ProductColor;
-}>();
-
-// Form - Initialize with color's existing values
+// Form - Initialize with empty values
 const form = useForm({
-    name_en: props.color.name_en,
-    name_ar: props.color.name_ar,
-    code: props.color.code,
-    status: Boolean(props.color.status),
+    name_en: '',
+    name_ar: '',
+    slug: '',
+    status: true,
 });
+
+// Auto-generate slug from name_en
+watch(
+    () => form.name_en,
+    (value) => {
+        if (value && !form.slug) {
+            form.slug = value
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+    },
+);
 
 // Submit handler
 const submit = () => {
-    form.put(route('super-admin.product-colors.update', props.color.id));
+    form.post(route('super-admin.product-qualities.store'));
 };
 
 // Breadcrumbs
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: __('datatable.product_colors.title'), href: route('super-admin.product-colors.index') },
-    { title: __('datatable.edit_color'), href: route('super-admin.product-colors.edit', props.color.id) },
+    { title: __('datatable.product_qualities.title'), href: route('super-admin.product-qualities.index') },
+    { title: __('datatable.create_quality'), href: route('super-admin.product-qualities.create') },
 ];
 </script>
 
 <template>
     <ActionLayout
-        type="edit"
-        :title="__('datatable.edit_product_color')"
-        :description="__('datatable.update_the_details_below_to_modify_the_product_color')"
+        type="create"
+        :title="__('datatable.create_product_quality')"
+        :description="__('datatable.fill_in_the_details_below_to_create_a_new_product_quality')"
         :breadcrumbs="breadcrumbs"
-        :back-href="route('super-admin.product-colors.index')"
+        :back-href="route('super-admin.product-qualities.index')"
         :show-card="false"
         max-width="full"
-        :card-title="__('datatable.color_information')"
-        :card-description="__('datatable.update_the_details_below_to_modify_the_product_color')"
+        :card-title="__('datatable.quality_information')"
+        :card-description="__('datatable.fill_in_the_details_below_to_create_a_new_product_quality')"
     >
-        <Head :title="__('datatable.edit_product_color')" />
+        <Head :title="__('datatable.create_product_quality')" />
 
         <!-- Form -->
         <form @submit.prevent="submit" class="space-y-6">
@@ -60,13 +69,13 @@ const breadcrumbs: BreadcrumbItem[] = [
                         id="name_en"
                         v-model="form.name_en"
                         type="text"
-                        :placeholder="__('datatable.enter_color_name_in_english')"
+                        :placeholder="__('datatable.enter_quality_name_in_english')"
                         :error="form.errors.name_en"
                         autofocus
                         required
                     />
                     <InputError :message="form.errors.name_en" />
-                    <Hint :text="__('datatable.enter_color_name_in_english_example')" />
+                    <Hint :text="__('datatable.enter_quality_name_in_english_example')" />
                 </div>
 
                 <!-- Arabic Name -->
@@ -76,30 +85,21 @@ const breadcrumbs: BreadcrumbItem[] = [
                         id="name_ar"
                         v-model="form.name_ar"
                         type="text"
-                        :placeholder="__('datatable.enter_color_name_in_arabic')"
+                        :placeholder="__('datatable.enter_quality_name_in_arabic')"
                         :error="form.errors.name_ar"
                         required
-                        dir="rtl"
                     />
                     <InputError :message="form.errors.name_ar" />
-                    <Hint :text="__('datatable.enter_color_name_in_arabic_example')" />
+                    <Hint :text="__('datatable.enter_quality_name_in_arabic_example')" />
                 </div>
             </div>
 
-            <!-- Color Code -->
+            <!-- Slug -->
             <div class="space-y-2">
-                <Label for="code" required>{{ __('datatable.color_code') }}</Label>
-                <div class="flex gap-4">
-                    <div class="flex-1">
-                        <DashboardTextInput id="code" v-model="form.code" type="text" placeholder="#000000" :error="form.errors.code" required />
-                        <InputError :message="form.errors.code" class="mt-2" />
-                        <Hint :text="__('datatable.enter_hexadecimal_color_code_example')" class="mt-2" />
-                    </div>
-                    <div class="flex items-start gap-2">
-                        <input v-model="form.code" type="color" class="h-10 w-20 cursor-pointer rounded border border-input" />
-                        <div class="h-10 w-10 rounded border border-input" :style="{ backgroundColor: form.code }"></div>
-                    </div>
-                </div>
+                <Label for="slug">{{ __('datatable.slug') }}</Label>
+                <DashboardTextInput id="slug" v-model="form.slug" type="text" :placeholder="__('datatable.enter_slug')" :error="form.errors.slug" />
+                <InputError :message="form.errors.slug" />
+                <Hint :text="__('datatable.slug_hint')" />
             </div>
 
             <!-- Status Toggle -->
@@ -110,20 +110,19 @@ const breadcrumbs: BreadcrumbItem[] = [
                     v-model="form.status"
                     :error="form.errors.status"
                     :label="form.status ? __('datatable.active') : __('datatable.inactive')"
-                    :hint="form.status ? __('datatable.the_color_is_active_and_visible') : __('datatable.the_color_is_inactive_and_hidden')"
+                    :hint="form.status ? __('datatable.the_quality_is_active_and_visible') : __('datatable.the_quality_is_inactive_and_hidden')"
                 />
                 <InputError :message="form.errors.status" />
-                <Hint :text="__('datatable.set_whether_the_color_is_active_or_inactive')" />
             </div>
         </form>
 
         <!-- Footer Actions -->
         <template #footer>
             <div class="flex justify-end gap-2">
-                <DashboardButton @click="router.visit(route('super-admin.product-colors.index'))" variant="secondary" :disabled="form.processing">
+                <DashboardButton @click="router.visit(route('super-admin.product-qualities.index'))" variant="secondary" :disabled="form.processing">
                     {{ __('datatable.cancel') }}
                 </DashboardButton>
-                <DashboardButton @click="submit" :loading="form.processing" variant="default"> {{ __('datatable.update_color') }} </DashboardButton>
+                <DashboardButton @click="submit" :loading="form.processing" variant="default"> {{ __('datatable.create') }} </DashboardButton>
             </div>
         </template>
     </ActionLayout>
