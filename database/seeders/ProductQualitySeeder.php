@@ -13,15 +13,10 @@ class ProductQualitySeeder extends Seeder
     {
         $qualities = [
             ['name_en' => 'Original', 'name_ar' => 'أصلي', 'slug' => 'original', 'status' => true],
-            ['name_en' => 'OEM', 'name_ar' => 'OEM', 'slug' => 'oem', 'status' => true],
-            ['name_en' => 'Aftermarket', 'name_ar' => 'ما بعد البيع', 'slug' => 'aftermarket', 'status' => true],
             ['name_en' => 'Premium', 'name_ar' => 'بريميوم', 'slug' => 'premium', 'status' => true],
-            ['name_en' => 'Standard', 'name_ar' => 'قياسي', 'slug' => 'standard', 'status' => true],
             ['name_en' => 'Economy', 'name_ar' => 'اقتصادي', 'slug' => 'economy', 'status' => true],
             ['name_en' => 'High Performance', 'name_ar' => 'عالي الأداء', 'slug' => 'high-performance', 'status' => true],
-            ['name_en' => 'Racing Grade', 'name_ar' => 'درجة السباق', 'slug' => 'racing-grade', 'status' => true],
             ['name_en' => 'OE Replacement', 'name_ar' => 'بديل أصلي', 'slug' => 'oe-replacement', 'status' => true],
-            ['name_en' => 'Commercial Grade', 'name_ar' => 'درجة تجارية', 'slug' => 'commercial-grade', 'status' => true],
 
             ['name_en' => 'Grade A', 'name_ar' => 'درجة A', 'slug' => 'grade-a', 'status' => true],
             ['name_en' => 'Grade B', 'name_ar' => 'درجة B', 'slug' => 'grade-b', 'status' => true],

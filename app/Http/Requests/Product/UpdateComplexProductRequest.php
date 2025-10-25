@@ -26,6 +26,9 @@ class UpdateComplexProductRequest extends FormRequest
             'description_ar' => 'nullable|string',
             'has_variants' => 'required|boolean',
             'status' => 'boolean',
+            // Featured image (for size-only variants)
+            'temp_files' => 'nullable|array|max:1',
+            'temp_files.*.temp_path' => 'nullable|string',
             // Placement image (optional)
             'placement_image' => 'nullable|array|max:1',
             'placement_image.*.temp_path' => 'nullable|string',

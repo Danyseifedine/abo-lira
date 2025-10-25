@@ -101,6 +101,9 @@ class ProductsController extends BaseController
             ];
         });
 
+        // Get existing featured image (for size-only variants)
+        $existingFiles = $this->getExistingFilesForEdit($product, 'featured');
+
         // Get existing placement image
         $existingPlacementFiles = $this->getExistingFilesForEdit($product, 'placement');
 
@@ -111,6 +114,7 @@ class ProductsController extends BaseController
             'colors' => $colors,
             'sizes' => $sizes,
             'existingVariants' => $existingVariants,
+            'existingFiles' => $existingFiles,
             'existingPlacementFiles' => $existingPlacementFiles,
         ]);
     }
@@ -221,6 +225,15 @@ class ProductsController extends BaseController
                 }
             }
 
+            // Handle featured image if provided (for size-only variants)
+            if ($request->has('temp_files') && is_array($request->temp_files) && ! empty($request->temp_files)) {
+                $this->fileUploadService->moveToMediaLibrary(
+                    $product,
+                    $request->temp_files,
+                    'featured'
+                );
+            }
+
             // Handle placement image if provided
             if ($request->has('placement_image') && is_array($request->placement_image) && ! empty($request->placement_image)) {
                 $this->fileUploadService->moveToMediaLibrary(
@@ -243,6 +256,9 @@ class ProductsController extends BaseController
                         $this->fileUploadService->cleanupTempFiles($variantData['temp_files']);
                     }
                 }
+            }
+            if ($request->has('temp_files')) {
+                $this->fileUploadService->cleanupTempFiles($request->temp_files);
             }
             if ($request->has('placement_image')) {
                 $this->fileUploadService->cleanupTempFiles($request->placement_image);
@@ -337,6 +353,15 @@ class ProductsController extends BaseController
             // Delete variants that were removed
             $product->variants()->whereNotIn('id', $existingVariantIds)->delete();
 
+            // Handle featured image updates if provided (for size-only variants)
+            if ($request->has('temp_files') && is_array($request->temp_files)) {
+                $this->updateMediaFiles(
+                    $product,
+                    $request->temp_files,
+                    'featured'
+                );
+            }
+
             // Handle placement image updates if provided
             if ($request->has('placement_image') && is_array($request->placement_image)) {
                 $this->updateMediaFiles(
@@ -359,6 +384,9 @@ class ProductsController extends BaseController
                         $this->fileUploadService->cleanupTempFiles($variantData['temp_files']);
                     }
                 }
+            }
+            if ($request->has('temp_files')) {
+                $this->fileUploadService->cleanupTempFiles($request->temp_files);
             }
             if ($request->has('placement_image')) {
                 $this->fileUploadService->cleanupTempFiles($request->placement_image);

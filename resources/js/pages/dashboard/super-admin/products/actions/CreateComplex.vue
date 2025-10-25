@@ -77,6 +77,7 @@ const form = useForm({
     sku: '',
     has_variants: true, // Always true for complex products
     status: true,
+    temp_files: [] as any[], // Featured product image (for size-only variants)
     placement_image: [] as any[], // Global placement image
     variants: [] as any[],
 });
@@ -378,6 +379,21 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <Label for="variant_both" class="cursor-pointer font-normal">{{ __('datatable.color_and_size') }}</Label>
                     </div>
                 </div>
+            </div>
+
+            <!-- Product Image (for Size Only variants) -->
+            <div v-if="variantType === 'size'" class="space-y-2">
+                <Label for="temp_files">{{ __('datatable.featured_image') }}</Label>
+                <DashboardFileUpload
+                    id="temp_files"
+                    v-model="form.temp_files"
+                    :multiple="false"
+                    accept="image/*"
+                    :file-limit="1"
+                    context="products"
+                />
+                <Hint :text="__('datatable.featured_image_hint')" />
+                <InputError :message="form.errors.temp_files" />
             </div>
 
             <!-- Variants Repeater -->

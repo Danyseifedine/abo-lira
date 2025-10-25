@@ -18,7 +18,6 @@ class ProductCategorySeeder extends Seeder
             ['name_en' => 'Electrical Parts', 'name_ar' => 'القطع الكهربائية', 'slug' => 'electrical-parts', 'status' => true],
             ['name_en' => 'Lighting', 'name_ar' => 'الإضاءة', 'slug' => 'lighting', 'status' => true],
             ['name_en' => 'Body & Frame', 'name_ar' => 'الهيكل والإطار', 'slug' => 'body-frame', 'status' => true],
-            ['name_en' => 'Controls & Cables', 'name_ar' => 'التحكم والكابلات', 'slug' => 'controls-cables', 'status' => true],
             ['name_en' => 'Filters & Fluids', 'name_ar' => 'الفلاتر والسوائل', 'slug' => 'filters-fluids', 'status' => true],
             ['name_en' => 'Accessories', 'name_ar' => 'الإكسسوارات', 'slug' => 'accessories', 'status' => true],
             ['name_en' => 'Safety Gear', 'name_ar' => 'معدات السلامة', 'slug' => 'safety-gear', 'status' => true],
