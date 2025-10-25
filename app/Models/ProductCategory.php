@@ -48,4 +48,13 @@ class ProductCategory extends Model
     {
         return $query->where('status', false);
     }
+
+    public function getNameAttribute()
+    {
+        if (app()->isLocale('en')) {
+            return $this->name_en;
+        }
+
+        return $this->name_ar;
+    }
 }

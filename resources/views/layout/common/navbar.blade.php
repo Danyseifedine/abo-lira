@@ -71,7 +71,7 @@
                         </a>
                     </div>
                     <div class="main__logo">
-                        <h1 class="main__logo--title"><a class="main__logo--link" href="{{ route('home') }}"><img class="main__logo--img" src="{{ asset('assets/img/logo/nav-log.webp') }}" alt="logo-img"></a></h1>
+                        <h1 class="main__logo--title"><a class="main__logo--link" href="{{ route('home') }}"><img class="main__logo--img" src="{{ asset('logos/logo.png') }}" alt="logo-img" width="60"></a></h1>
                     </div>
                     <div class="header__menu style3 d-none d-lg-block">
                         <nav class="header__menu--navigation">
@@ -123,7 +123,7 @@
             <div class="offcanvas__inner">
                 <div class="offcanvas__logo">
                     <a class="offcanvas__logo_link" href="{{ route('home') }}">
-                        <img src="{{ asset('assets/img/logo/nav-log.webp') }}" alt="Grocee Logo" width="158" height="36">
+                        <img src="{{ asset('logos/logo.png') }}" alt="Grocee Logo" width="158" height="36">
                     </a>
                     <button class="offcanvas__close--btn" data-offcanvas>close</button>
                 </div>

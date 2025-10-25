@@ -5,6 +5,7 @@ use App\Navigation\SuperAdminPath;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Http\Controllers\Portal\HomeController;
 
 if (config('app.features.multi_lang')) {
     Route::group(
@@ -23,33 +24,16 @@ if (config('app.features.multi_lang')) {
 // i need better name then defineRoutes
 function registerWebRoutes()
 {
-    Route::get('/', function () {
-        return view('landing');
-    })->name('home');
+    Route::controller(HomeController::class)->group(function () {
+        Route::get('/', 'home')->name('home');
+        Route::get('/about', 'about')->name('about');
+        Route::get('/contact', 'contact')->name('contact');
+        Route::get('/shop', 'shop')->name('shop');
+        Route::get('/cart', 'cart')->name('cart');
+        Route::get('/detail', 'detail')->name('detail');
+        Route::get('/checkout', 'checkout')->name('checkout');
+    });
 
-    Route::get('/about', function () {
-        return view('about');
-    })->name('about');
-
-    Route::get('/contact', function () {
-        return view('contact');
-    })->name('contact');
-
-    Route::get('/shop', function () {
-        return view('shop');
-    })->name('shop');
-
-    Route::get('/cart', function () {
-        return view('cart');
-    })->name('cart');
-
-    Route::get('/detail', function () {
-        return view('detail');
-    })->name('detail');
-
-    Route::get('/checkout', function () {
-        return view('checkout');
-    })->name('checkout');
 
     Route::middleware([
         'auth',
