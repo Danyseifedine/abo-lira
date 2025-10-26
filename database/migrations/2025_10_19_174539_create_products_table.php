@@ -25,11 +25,11 @@ return new class extends Migration
             // discount
             $table->boolean('is_new')->default(false);
 
-            $table->decimal('discount_price', 10, 2)->nullable();
-            $table->date('discount_start_date')->nullable();
-            $table->date('discount_end_date')->nullable();
+            $table->decimal('discount_price', 10, 2)->nullable()->comment('Null if has_variants is true');
+            $table->date('discount_start_date')->nullable()->comment('Null if has_limited_time_discount or has_variants is true');
+            $table->date('discount_end_date')->nullable()->comment('Null if has_limited_time_discount or has_variants is true');
 
-            $table->boolean('has_limited_time')->default(false)->comment('Whether the product is available for a limited date range or forever');
+            $table->boolean('has_limited_time_discount')->default(false)->comment('Whether the product is available for a limited date range or forever');
 
             $table->integer('stock_quantity')->nullable()->comment('Null if has_variants is true');
             $table->boolean('out_of_stock')->default(false)->comment('Ignored or null if has_variants is true');

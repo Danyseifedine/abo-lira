@@ -23,6 +23,10 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->decimal('discount_price', 10, 2)->nullable();
 
+            $table->boolean('has_limited_time_discount')->default(false)->comment('Whether the variant is available for a limited date range or forever');
+            $table->date('discount_start_date')->nullable()->comment('Null if has_limited_time_discount is false');
+            $table->date('discount_end_date')->nullable()->comment('Null if has_limited_time_discount is false');
+
             // stock
             $table->integer('stock_quantity');
             $table->boolean('out_of_stock')->default(false);

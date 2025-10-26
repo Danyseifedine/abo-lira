@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
                 ['email' => $userData['email']],
                 [
                     'name' => $userData['name'],
-                    'password' => Hash::make('password'),
+                    'password' => Hash::make('amin@@123'),
                     'email_verified_at' => now(),
                 ]
             );
