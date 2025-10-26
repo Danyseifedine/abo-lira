@@ -30,9 +30,9 @@ interface ProductQuality {
 }
 
 // Get option label based on locale
-const getOptionLabel = () => {
+const optionLabel = computed(() => {
     return page.props.locale === 'ar' ? 'name_ar' : 'name_en';
-};
+});
 
 const props = defineProps<{
     product: Product;
@@ -202,7 +202,7 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                         id="category_id"
                         v-model="form.category_id"
                         :options="categories"
-                        :optionLabel="getOptionLabel()"
+                        :optionLabel="optionLabel"
                         optionValue="id"
                         :placeholder="__('datatable.select_category')"
                         class="w-full"
@@ -220,7 +220,7 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                         id="quality_id"
                         v-model="form.quality_id"
                         :options="qualities"
-                        :optionLabel="getOptionLabel()"
+                        :optionLabel="optionLabel"
                         optionValue="id"
                         :placeholder="__('datatable.select_quality')"
                         class="w-full"

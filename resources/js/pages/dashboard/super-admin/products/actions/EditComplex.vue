@@ -43,9 +43,9 @@ interface ProductSize {
 }
 
 // Get option label based on locale
-const getOptionLabel = () => {
+const optionLabel = computed(() => {
     return page.props.locale === 'ar' ? 'name_ar' : 'name_en';
-};
+});
 
 interface ProductVariant {
     id: number;
@@ -291,7 +291,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         id="category_id"
                         v-model="form.category_id"
                         :options="categories"
-                        :optionLabel="getOptionLabel()"
+                        :optionLabel="optionLabel"
                         optionValue="id"
                         :placeholder="__('datatable.select_category')"
                         class="w-full"
@@ -310,7 +310,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         id="quality_id"
                         v-model="form.quality_id"
                         :options="qualities"
-                        :optionLabel="getOptionLabel()"
+                        :optionLabel="optionLabel"
                         optionValue="id"
                         :placeholder="__('datatable.select_quality')"
                         class="w-full"
@@ -443,7 +443,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 :id="`color_${index}`"
                                 v-model="variant.color_id"
                                 :options="colors"
-                                :optionLabel="getOptionLabel()"
+                                :optionLabel="optionLabel"
                                 optionValue="id"
                                 :placeholder="__('datatable.select_color')"
                                 class="w-full"
@@ -460,7 +460,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 :id="`size_${index}`"
                                 v-model="variant.size_id"
                                 :options="sizes"
-                                :optionLabel="getOptionLabel()"
+                                :optionLabel="optionLabel"
                                 optionValue="id"
                                 :placeholder="__('datatable.select_size')"
                                 class="w-full"

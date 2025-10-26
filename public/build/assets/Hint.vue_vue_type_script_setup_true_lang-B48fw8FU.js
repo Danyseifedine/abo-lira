@@ -1,1 +1,0 @@
-import{d as e,c as o,o as s,t as n}from"./app-C2Kgv6oa.js";const r={class:"text-muted-foreground text-xs"},_=e({__name:"Hint",props:{text:{}},setup(a){return(t,p)=>(s(),o("p",r,n(t.text),1))}});export{_};

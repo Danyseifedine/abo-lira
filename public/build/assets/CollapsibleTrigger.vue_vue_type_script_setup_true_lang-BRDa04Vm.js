@@ -1,1 +1,0 @@
-import{Y as s}from"./createLucideIcon-DGaDKVeM.js";import{d as r,f as t,o as n,u as p,G as l,H as i,w as c,r as f}from"./app-C2Kgv6oa.js";const _=r({__name:"CollapsibleTrigger",props:{asChild:{type:Boolean},as:{}},setup(e){const a=e;return(o,m)=>(n(),t(p(s),l(i(a)),{default:c(()=>[f(o.$slots,"default")]),_:3},16))}});export{_};
