@@ -29,6 +29,10 @@ interface ProductQuality {
     name_ar: string;
 }
 
+// Computed properties for select option labels
+const categoryOptionLabel = computed(() => (page.props.locale === 'ar' ? 'name_ar' : 'name_en'));
+const qualityOptionLabel = computed(() => (page.props.locale === 'ar' ? 'name_ar' : 'name_en'));
+
 const props = defineProps<{
     product: Product;
     categories: ProductCategory[];
@@ -197,7 +201,7 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                         id="category_id"
                         v-model="form.category_id"
                         :options="categories"
-                        :optionLabel="page.props.locale === 'ar' ? 'name_ar' : 'name_en'"
+                        :optionLabel="categoryOptionLabel"
                         optionValue="id"
                         :placeholder="__('datatable.select_category')"
                         class="w-full"
@@ -215,7 +219,7 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                         id="quality_id"
                         v-model="form.quality_id"
                         :options="qualities"
-                        :optionLabel="page.props.locale === 'ar' ? 'name_ar' : 'name_en'"
+                        :optionLabel="qualityOptionLabel"
                         optionValue="id"
                         :placeholder="__('datatable.select_quality')"
                         class="w-full"
@@ -278,13 +282,7 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                 <!-- Featured Image Upload -->
                 <div class="space-y-2">
                     <Label for="featured_image">{{ __('datatable.featured_image') }}</Label>
-                    <DashboardFileUpload
-                        id="featured_image"
-                        v-model="form.temp_files"
-                        :multiple="false"
-                        accept="image/*"
-                        context="products"
-                    />
+                    <DashboardFileUpload id="featured_image" v-model="form.temp_files" :multiple="false" accept="image/*" context="products" />
                     <InputError :message="form.errors.temp_files" />
                     <Hint :text="__('datatable.featured_image_hint')" />
                 </div>

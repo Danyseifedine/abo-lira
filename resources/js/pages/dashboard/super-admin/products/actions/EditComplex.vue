@@ -42,6 +42,12 @@ interface ProductSize {
     name_ar: string;
 }
 
+// Computed properties for select option labels
+const categoryOptionLabel = computed(() => (page.props.locale === 'ar' ? 'name_ar' : 'name_en'));
+const qualityOptionLabel = computed(() => (page.props.locale === 'ar' ? 'name_ar' : 'name_en'));
+const colorOptionLabel = computed(() => (page.props.locale === 'ar' ? 'name_ar' : 'name_en'));
+const sizeOptionLabel = computed(() => (page.props.locale === 'ar' ? 'name_ar' : 'name_en'));
+
 interface ProductVariant {
     id: number;
     sku: string;
@@ -286,7 +292,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         id="category_id"
                         v-model="form.category_id"
                         :options="categories"
-                        :optionLabel="page.props.locale === 'ar' ? 'name_ar' : 'name_en'"
+                        :optionLabel="categoryOptionLabel"
                         optionValue="id"
                         :placeholder="__('datatable.select_category')"
                         class="w-full"
@@ -305,7 +311,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         id="quality_id"
                         v-model="form.quality_id"
                         :options="qualities"
-                        :optionLabel="page.props.locale === 'ar' ? 'name_ar' : 'name_en'"
+                        :optionLabel="qualityOptionLabel"
                         optionValue="id"
                         :placeholder="__('datatable.select_quality')"
                         class="w-full"
@@ -438,7 +444,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 :id="`color_${index}`"
                                 v-model="variant.color_id"
                                 :options="colors"
-                                :optionLabel="page.props.locale === 'ar' ? 'name_ar' : 'name_en'"
+                                :optionLabel="colorOptionLabel"
                                 optionValue="id"
                                 :placeholder="__('datatable.select_color')"
                                 class="w-full"
@@ -455,7 +461,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 :id="`size_${index}`"
                                 v-model="variant.size_id"
                                 :options="sizes"
-                                :optionLabel="page.props.locale === 'ar' ? 'name_ar' : 'name_en'"
+                                :optionLabel="sizeOptionLabel"
                                 optionValue="id"
                                 :placeholder="__('datatable.select_size')"
                                 class="w-full"
