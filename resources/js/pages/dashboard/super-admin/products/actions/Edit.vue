@@ -283,7 +283,6 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                         v-model="form.temp_files"
                         :multiple="false"
                         accept="image/*"
-                        :file-limit="1"
                         context="products"
                     />
                     <InputError :message="form.errors.temp_files" />
@@ -301,7 +300,6 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                     v-model="form.placement_image"
                     :multiple="false"
                     accept="image/*"
-                    :file-limit="1"
                     context="products-placement"
                 />
                 <InputError :message="form.errors.placement_image" />

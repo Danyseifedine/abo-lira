@@ -342,4 +342,5 @@ return [
     'add_simple_product' => 'Add Simple Product',
     'add_complex_product' => 'Add Complex Product',
 
+    'color' => 'Color'
 ];

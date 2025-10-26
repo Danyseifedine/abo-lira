@@ -1,0 +1,1 @@
+import{a as e}from"./createLucideIcon-BQWQbCcp.js";import{d as o,c as n,o as t,r as c,x as d,u as l}from"./app-EMxj6o_A.js";const f=o({__name:"Card",props:{class:{}},setup(s){const r=s;return(a,m)=>(t(),n("div",{class:d(l(e)("rounded-lg border bg-card text-card-foreground shadow-sm",r.class))},[c(a.$slots,"default")],2))}});export{f as _};

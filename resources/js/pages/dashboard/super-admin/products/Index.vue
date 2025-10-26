@@ -184,10 +184,10 @@ const productColumns = createProductColumns(openDeleteDialog, props.columnLabels
                     <p class="mt-1 text-muted-foreground">{{ __('datatable.products.description') }}</p>
                 </div>
                 <div class="flex gap-2">
-                    <DashboardButton variant="default" @click="() => router.get(route('super-admin.products.create'))">
+                    <!-- <DashboardButton variant="default" @click="() => router.get(route('super-admin.products.create'))">
                         <Plus class="mr-2 h-4 w-4" />
                         {{ __('datatable.add_simple_product') }}
-                    </DashboardButton>
+                    </DashboardButton> -->
                     <DashboardButton variant="outline" @click="() => router.get(route('super-admin.products.create-complex'))">
                         <Plus class="mr-2 h-4 w-4" />
                         {{ __('datatable.add_complex_product') }}
