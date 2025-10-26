@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DashboardButton from '@/common/components/dashboards/form/DashboardButton.vue';
 import DashboardFileUpload from '@/common/components/dashboards/form/DashboardFileUpload.vue';
-import DashboardMultiSelect from '@/common/components/dashboards/form/DashboardMultiSelect.vue';
+import DashboardSelect from '@/common/components/dashboards/form/DashboardSelect.vue';
 import DashboardTextInput from '@/common/components/dashboards/form/DashboardTextInput.vue';
 import DashboardTextarea from '@/common/components/dashboards/form/DashboardTextarea.vue';
 import DashboardToggle from '@/common/components/dashboards/form/DashboardToggle.vue';
@@ -70,8 +70,8 @@ const form = useForm({
     slug: '',
     description_en: '',
     description_ar: '',
-    category_ids: [] as number[], // Multi-select but single value
-    quality_ids: [] as number[], // Multi-select but single value
+    category_id: null as number | null,
+    quality_id: null as number | null,
     sku: '',
     has_variants: true, // Always true for complex products
     status: true,
@@ -79,26 +79,6 @@ const form = useForm({
     placement_image: [] as any[], // Global placement image
     variants: [] as any[],
 });
-
-// Ensure only one category is selected
-watch(
-    () => form.category_ids,
-    (newValue) => {
-        if (newValue && newValue.length > 1) {
-            form.category_ids = [newValue[newValue.length - 1]]; // Keep only the last selected
-        }
-    },
-);
-
-// Ensure only one quality is selected
-watch(
-    () => form.quality_ids,
-    (newValue) => {
-        if (newValue && newValue.length > 1) {
-            form.quality_ids = [newValue[newValue.length - 1]]; // Keep only the last selected
-        }
-    },
-);
 
 // Auto-generate slug from English name
 watch(
@@ -116,10 +96,7 @@ watch(
 );
 
 // Auto-generate SKU when category and quality are selected
-watch([() => form.category_ids, () => form.quality_ids], ([categoryIds, qualityIds]) => {
-    const categoryId = categoryIds.length > 0 ? categoryIds[0] : null;
-    const qualityId = qualityIds.length > 0 ? qualityIds[0] : null;
-
+watch([() => form.category_id, () => form.quality_id], ([categoryId, qualityId]) => {
     if (categoryId && qualityId) {
         const category = props.categories.find((c: ProductCategory) => c.id === categoryId);
         const quality = props.qualities.find((q: ProductQuality) => q.id === qualityId);
@@ -166,18 +143,7 @@ const submit = () => {
         temp_files: variant.temp_files,
     }));
 
-    // Convert arrays to single values for backend
-    const data = {
-        ...form.data(),
-        category_id: form.category_ids.length > 0 ? form.category_ids[0] : null,
-        quality_id: form.quality_ids.length > 0 ? form.quality_ids[0] : null,
-    };
-
-    // Remove the array fields
-    delete (data as any).category_ids;
-    delete (data as any).quality_ids;
-
-    form.transform(() => data).post(route('super-admin.products.store-complex'), {
+    form.post(route('super-admin.products.store-complex'), {
         onError: (errors) => {
             console.error('Validation errors:', errors);
         },
@@ -295,9 +261,9 @@ const breadcrumbs: BreadcrumbItem[] = [
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 <div class="space-y-2">
                     <Label required>{{ __('datatable.category') }}</Label>
-                    <DashboardMultiSelect
-                        id="category_ids"
-                        v-model="form.category_ids"
+                    <DashboardSelect
+                        id="category_id"
+                        v-model="form.category_id"
                         :options="categories"
                         autoLocalizedLabel
                         optionValue="id"
@@ -305,20 +271,18 @@ const breadcrumbs: BreadcrumbItem[] = [
                         class="w-full"
                         :showClear="true"
                         filter
-                        :error="(form.errors as any).category_id ?? null"
+                        :error="form.errors.category_id ?? null"
                         :filterPlaceholder="__('datatable.search')"
-                        :maxSelectedLabels="1"
-                        :showToggleAll="false"
                     />
-                    <InputError :message="(form.errors as any).category_id" />
+                    <InputError :message="form.errors.category_id" />
                     <Hint :text="__('datatable.category_hint')" />
                 </div>
 
                 <div class="space-y-2">
                     <Label required>{{ __('datatable.quality') }}</Label>
-                    <DashboardMultiSelect
-                        id="quality_ids"
-                        v-model="form.quality_ids"
+                    <DashboardSelect
+                        id="quality_id"
+                        v-model="form.quality_id"
                         :options="qualities"
                         autoLocalizedLabel
                         optionValue="id"
@@ -326,12 +290,10 @@ const breadcrumbs: BreadcrumbItem[] = [
                         class="w-full"
                         :showClear="true"
                         filter
-                        :error="(form.errors as any).quality_id ?? null"
+                        :error="form.errors.quality_id ?? null"
                         :filterPlaceholder="__('datatable.search')"
-                        :maxSelectedLabels="1"
-                        :showToggleAll="false"
                     />
-                    <InputError :message="(form.errors as any).quality_id" />
+                    <InputError :message="form.errors.quality_id" />
                     <Hint :text="__('datatable.quality_hint')" />
                 </div>
             </div>
