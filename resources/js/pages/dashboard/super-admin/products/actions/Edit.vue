@@ -47,8 +47,6 @@ const form = useForm({
     quality_id: props.product.quality_id,
     sku: props.product.sku || '',
     price: props.product.price,
-    stock_quantity: props.product.stock_quantity,
-    out_of_stock: props.product.out_of_stock || false,
     has_variants: props.product.has_variants || false,
     is_new: props.product.is_new || false,
     status: Boolean(props.product.status),
@@ -77,8 +75,6 @@ watch(
     (newValue) => {
         if (newValue) {
             form.price = null;
-            form.stock_quantity = null;
-            form.out_of_stock = false;
         }
     },
 );
@@ -277,33 +273,6 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                         <InputError :message="form.errors.price" />
                         <Hint :text="__('datatable.price_hint')" />
                     </div>
-
-                    <div class="space-y-2">
-                        <Label for="stock_quantity">{{ __('datatable.stock_quantity') }}</Label>
-                        <DashboardTextInput
-                            id="stock_quantity"
-                            v-model="form.stock_quantity"
-                            type="number"
-                            min="0"
-                            :placeholder="__('datatable.stock_quantity_placeholder')"
-                            :error="form.errors.stock_quantity"
-                        />
-                        <InputError :message="form.errors.stock_quantity" />
-                        <Hint :text="__('datatable.stock_quantity_hint')" />
-                    </div>
-                </div>
-
-                <!-- Out of Stock Toggle -->
-                <div class="space-y-2">
-                    <Label for="out_of_stock">{{ __('datatable.out_of_stock') }}</Label>
-                    <DashboardToggle
-                        id="out_of_stock"
-                        v-model="form.out_of_stock"
-                        :error="form.errors.out_of_stock"
-                        :label="form.out_of_stock ? __('datatable.active') : __('datatable.inactive')"
-                        :hint="__('datatable.out_of_stock_hint')"
-                    />
-                    <InputError :message="form.errors.out_of_stock" />
                 </div>
 
                 <!-- Featured Image Upload -->

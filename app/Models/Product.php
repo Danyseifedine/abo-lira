@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model implements HasMedia
 {
@@ -25,9 +25,7 @@ class Product extends Model implements HasMedia
         'discount_price',
         'discount_start_date',
         'discount_end_date',
-        'has_limited_time',
-        'stock_quantity',
-        'out_of_stock',
+        'has_limited_time_discount',
         'has_variants',
         'description_en',
         'description_ar',
@@ -43,9 +41,7 @@ class Product extends Model implements HasMedia
             'discount_price' => 'decimal:2',
             'discount_start_date' => 'date',
             'discount_end_date' => 'date',
-            'has_limited_time' => 'boolean',
-            'stock_quantity' => 'integer',
-            'out_of_stock' => 'boolean',
+            'has_limited_time_discount' => 'boolean',
             'has_variants' => 'boolean',
             'price' => 'decimal:2',
             'status' => 'boolean',

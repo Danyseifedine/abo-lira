@@ -39,7 +39,7 @@ class ProductsController extends BaseController
 
         return Inertia::render(SuperAdminPath::view('products/Index'), [
             'products' => $products,
-            'filters' => $this->getFilters(['status', 'category_id', 'quality_id', 'has_variants', 'is_new', 'out_of_stock', 'created_from', 'created_to']),
+            'filters' => $this->getFilters(['status', 'category_id', 'quality_id', 'has_variants', 'is_new', 'created_from', 'created_to']),
             'columnLabels' => __('datatable.products_columns'),
             'categories' => ProductCategory::active()->get(['id', 'name_en', 'name_ar']),
             'qualities' => ProductQuality::active()->get(['id', 'name_en', 'name_ar']),
@@ -94,8 +94,6 @@ class ProductsController extends BaseController
                 'color_id' => $variant->color_id,
                 'size_id' => $variant->size_id,
                 'price' => $variant->price,
-                'stock_quantity' => $variant->stock_quantity,
-                'out_of_stock' => $variant->out_of_stock,
                 'status' => $variant->status,
                 'existing_media' => $existingMedia,
             ];
@@ -303,8 +301,6 @@ class ProductsController extends BaseController
                             'color_id' => $variantData['color_id'] ?? null,
                             'size_id' => $variantData['size_id'] ?? null,
                             'price' => $variantData['price'],
-                            'stock_quantity' => $variantData['stock_quantity'],
-                            'out_of_stock' => $variantData['out_of_stock'] ?? false,
                             'status' => $variantData['status'] ?? true,
                         ]);
 
@@ -332,8 +328,6 @@ class ProductsController extends BaseController
                         'color_id' => $variantData['color_id'] ?? null,
                         'size_id' => $variantData['size_id'] ?? null,
                         'price' => $variantData['price'],
-                        'stock_quantity' => $variantData['stock_quantity'],
-                        'out_of_stock' => $variantData['out_of_stock'] ?? false,
                         'status' => $variantData['status'] ?? true,
                     ]);
 
@@ -494,17 +488,6 @@ class ProductsController extends BaseController
             return $this->successWithToast(__('toast.is_new_updated_successfully'), __('toast.success'), 'super-admin.products.index');
         } catch (\Exception $e) {
             return $this->errorWithToast(__('toast.failed_to_update_is_new'), __('toast.error'), 'super-admin.products.index');
-        }
-    }
-
-    public function toggleOutOfStock(Product $product)
-    {
-        try {
-            $this->productService->toggleOutOfStock($product);
-
-            return $this->successWithToast(__('toast.out_of_stock_updated_successfully'), __('toast.success'), 'super-admin.products.index');
-        } catch (\Exception $e) {
-            return $this->errorWithToast(__('toast.failed_to_update_out_of_stock'), __('toast.error'), 'super-admin.products.index');
         }
     }
 }

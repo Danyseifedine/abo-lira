@@ -48,8 +48,6 @@ interface ProductVariant {
     color_id: number | null;
     size_id: number | null;
     price: number;
-    stock_quantity: number;
-    out_of_stock: boolean;
     status: boolean;
 }
 
@@ -73,8 +71,6 @@ interface Variant {
     color_id: number | null;
     size_id: number | null;
     price: number | null;
-    stock_quantity: number | null;
-    out_of_stock: boolean;
     status: boolean;
     temp_files: any[];
     existing_media?: any[];
@@ -110,8 +106,6 @@ const variants = ref<Variant[]>(
         color_id: v.color_id,
         size_id: v.size_id,
         price: v.price,
-        stock_quantity: v.stock_quantity,
-        out_of_stock: v.out_of_stock,
         status: v.status,
         temp_files: v.existing_media || [],
         existing_media: v.existing_media || [],
@@ -143,8 +137,6 @@ const addVariant = () => {
         color_id: null,
         size_id: null,
         price: null,
-        stock_quantity: null,
-        out_of_stock: false,
         status: true,
         temp_files: [],
     });
@@ -167,8 +159,6 @@ const submit = () => {
         color_id: variant.color_id,
         size_id: variant.size_id,
         price: variant.price,
-        stock_quantity: variant.stock_quantity,
-        out_of_stock: variant.out_of_stock,
         status: variant.status,
         temp_files: variant.temp_files.filter((file: any) => file.temp_path), // Only new files
         existing_media: variant.existing_media || [], // Keep existing media
@@ -494,17 +484,6 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 :placeholder="__('datatable.price_placeholder')"
                             />
                         </div>
-
-                        <!-- Stock Quantity -->
-                        <div class="space-y-2">
-                            <Label :for="`stock_${index}`" required>{{ __('datatable.stock_quantity') }}</Label>
-                            <DashboardTextInput
-                                :id="`stock_${index}`"
-                                v-model="variant.stock_quantity"
-                                type="number"
-                                :placeholder="__('datatable.stock_quantity_placeholder')"
-                            />
-                        </div>
                     </div>
 
                     <!-- Image Upload (if color or both) -->
@@ -521,29 +500,15 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <Hint :text="__('datatable.variant_image_hint')" />
                     </div>
 
-                    <!-- Toggles -->
-                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                        <!-- Out of Stock Toggle -->
-                        <div class="space-y-2">
-                            <Label :for="`out_of_stock_${index}`">{{ __('datatable.out_of_stock') }}</Label>
-                            <DashboardToggle
-                                :id="`out_of_stock_${index}`"
-                                v-model="variant.out_of_stock"
-                                :label="variant.out_of_stock ? __('datatable.yes') : __('datatable.no')"
-                                size="small"
-                            />
-                        </div>
-
-                        <!-- Status Toggle -->
-                        <div class="space-y-2">
-                            <Label :for="`variant_status_${index}`">{{ __('datatable.status') }}</Label>
-                            <DashboardToggle
-                                :id="`variant_status_${index}`"
-                                v-model="variant.status"
-                                :label="variant.status ? __('datatable.active') : __('datatable.inactive')"
-                                size="small"
-                            />
-                        </div>
+                    <!-- Status Toggle -->
+                    <div class="space-y-2">
+                        <Label :for="`variant_status_${index}`">{{ __('datatable.status') }}</Label>
+                        <DashboardToggle
+                            :id="`variant_status_${index}`"
+                            v-model="variant.status"
+                            :label="variant.status ? __('datatable.active') : __('datatable.inactive')"
+                            size="small"
+                        />
                     </div>
                 </div>
             </div>

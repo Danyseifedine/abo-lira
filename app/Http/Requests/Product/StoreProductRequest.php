@@ -28,8 +28,6 @@ class StoreProductRequest extends FormRequest
             'status' => 'boolean',
             // Only required if has_variants is false
             'price' => 'nullable|numeric|min:0',
-            'stock_quantity' => 'nullable|integer|min:0',
-            'out_of_stock' => 'boolean',
             // Media files (temp_files contains array of temp file objects)
             'temp_files' => 'required|array|max:1',
             'temp_files.*.temp_path' => 'required|string',

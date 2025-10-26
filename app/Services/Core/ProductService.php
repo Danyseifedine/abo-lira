@@ -11,14 +11,14 @@ class ProductService
     public function getBaseQuery(): Builder
     {
         return Product::with(['category', 'quality'])
-            ->select('id', 'sku', 'category_id', 'quality_id', 'name_en', 'name_ar', 'slug', 'price', 'stock_quantity', 'out_of_stock', 'has_variants', 'is_new', 'status', 'created_at');
+            ->select('id', 'sku', 'category_id', 'quality_id', 'name_en', 'name_ar', 'slug', 'price', 'has_variants', 'is_new', 'status', 'created_at');
     }
 
     public function getDataTableConfig(): array
     {
         return [
             'searchColumns' => ['name_en', 'name_ar', 'sku', 'slug'],
-            'allowedSorts' => ['name_en', 'name_ar', 'sku', 'price', 'stock_quantity', 'created_at'],
+            'allowedSorts' => ['name_en', 'name_ar', 'sku', 'price', 'created_at'],
             'allowedFilters' => [
                 'status' => function ($query, $value) {
                     if ($value === 'active') {
@@ -38,9 +38,6 @@ class ProductService
                 },
                 'is_new' => function ($query, $value) {
                     $query->where('is_new', $value === 'yes' ? 1 : 0);
-                },
-                'out_of_stock' => function ($query, $value) {
-                    $query->where('out_of_stock', $value === 'yes' ? 1 : 0);
                 },
                 'created_from' => function ($query, $value) {
                     $query->whereDate('created_at', '>=', $value);
@@ -62,11 +59,6 @@ class ProductService
         return $product->update(['is_new' => ! $product->is_new]);
     }
 
-    public function toggleOutOfStock(Product $product): bool
-    {
-        return $product->update(['out_of_stock' => ! $product->out_of_stock]);
-    }
-
     public function findById(int $id): ?Product
     {
         return Product::find($id);
@@ -84,18 +76,16 @@ class ProductService
             $data['slug'] = Str::slug($data['name_en']);
         }
 
-        // If has_variants is true, set price, stock_quantity, and out_of_stock to null
+        // If has_variants is true, set price to null
         if (isset($data['has_variants']) && $data['has_variants']) {
             $data['price'] = null;
-            $data['stock_quantity'] = null;
-            $data['out_of_stock'] = false;
         }
 
         // Keep discount fields as null for now
         $data['discount_price'] = null;
         $data['discount_start_date'] = null;
         $data['discount_end_date'] = null;
-        $data['has_limited_time'] = false;
+        $data['has_limited_time_discount'] = false;
 
         return $product->update($data);
     }
@@ -107,18 +97,16 @@ class ProductService
             $data['slug'] = Str::slug($data['name_en']);
         }
 
-        // If has_variants is true, set price, stock_quantity, and out_of_stock to null
+        // If has_variants is true, set price to null
         if (isset($data['has_variants']) && $data['has_variants']) {
             $data['price'] = null;
-            $data['stock_quantity'] = null;
-            $data['out_of_stock'] = false;
         }
 
         // Keep discount fields as null for now
         $data['discount_price'] = null;
         $data['discount_start_date'] = null;
         $data['discount_end_date'] = null;
-        $data['has_limited_time'] = false;
+        $data['has_limited_time_discount'] = false;
 
         return Product::create($data);
     }
@@ -144,16 +132,14 @@ class ProductService
         // Set has_variants to true
         $data['has_variants'] = true;
 
-        // Price, stock, and out_of_stock should be null for products with variants
+        // Price should be null for products with variants
         $data['price'] = null;
-        $data['stock_quantity'] = null;
-        $data['out_of_stock'] = false;
 
         // Keep discount fields as null
         $data['discount_price'] = null;
         $data['discount_start_date'] = null;
         $data['discount_end_date'] = null;
-        $data['has_limited_time'] = false;
+        $data['has_limited_time_discount'] = false;
 
         // Create the product
         $product = Product::create($data);
@@ -179,8 +165,6 @@ class ProductService
             'color_id' => $data['color_id'] ?? null,
             'size_id' => $data['size_id'] ?? null,
             'price' => $data['price'],
-            'stock_quantity' => $data['stock_quantity'],
-            'out_of_stock' => $data['out_of_stock'] ?? false,
             'status' => $data['status'] ?? true,
         ]);
 

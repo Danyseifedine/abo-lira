@@ -38,8 +38,6 @@ class UpdateComplexProductRequest extends FormRequest
             'variants.*.color_id' => 'nullable|exists:product_variant_colors,id',
             'variants.*.size_id' => 'nullable|exists:product_variant_sizes,id',
             'variants.*.price' => 'required|numeric|min:0',
-            'variants.*.stock_quantity' => 'required|integer|min:0',
-            'variants.*.out_of_stock' => 'boolean',
             'variants.*.status' => 'boolean',
             'variants.*.temp_files' => 'nullable|array',
             'variants.*.temp_files.*.temp_path' => 'nullable|string',
@@ -53,7 +51,6 @@ class UpdateComplexProductRequest extends FormRequest
             'variants.required' => 'At least one variant is required for complex products.',
             'variants.min' => 'At least one variant is required for complex products.',
             'variants.*.price.required' => 'Price is required for each variant.',
-            'variants.*.stock_quantity.required' => 'Stock quantity is required for each variant.',
         ];
     }
 }

@@ -21,7 +21,7 @@ import { __ } from '@/core/utils/translations';
  */
 export function createProductColumns(
     openDeleteDialog: (product: Product) => void,
-    labels: { number: string; name_en: string; name_ar: string; category: string; quality: string; price: string; stock: string; active: string; is_new: string; out_of_stock: string }
+    labels: { number: string; name_en: string; name_ar: string; category: string; quality: string; price: string; active: string; is_new: string }
 ) {
     const { showCopyToClipboardToast } = useToast();
     const isToggleLoading = ref(false);
@@ -90,16 +90,6 @@ export function createProductColumns(
             },
         }),
 
-        // Stock
-        textColumn('stock_quantity', labels.stock, {
-            sortable: true,
-            headerClassName: 'text-start px-0',
-            className: 'text-start px-3',
-            format: (value: number) => {
-                return value ? value.toString() : '_';
-            },
-        }),
-
         // Status toggle
         toggleColumn('status', labels.active, {
             headerClassName: 'text-center px-0',
@@ -154,42 +144,6 @@ export function createProductColumns(
             },
             disabled: () => {
                 return isToggleLoading.value;
-            },
-            toggledWhen: (value: any) => {
-                return convertToBoolean(value);
-            },
-            size: 'sm',
-        }),
-
-        // Out of Stock toggle
-        toggleColumn('out_of_stock', labels.out_of_stock, {
-            headerClassName: 'text-center px-0',
-            onToggle: (value: boolean, product: Product, control) => {
-                // Only allow toggle if product doesn't have variants
-                if (product.has_variants) {
-                    control.revert();
-                    return;
-                }
-
-                router.patch(route('super-admin.products.toggle-out-of-stock', product.id), { out_of_stock: value }, {
-                    preserveScroll: true,
-                    preserveState: true,
-                    onStart: () => {
-                        isToggleLoading.value = true;
-                    },
-                    onFinish: () => {
-                        isToggleLoading.value = false;
-                    },
-                    onSuccess: (page) => {
-                        const response = (page.props as any).flash?.toast;
-                        if (response?.success === false) {
-                            control.revert();
-                        }
-                    }
-                });
-            },
-            disabled: (product: Product) => {
-                return isToggleLoading.value || product.has_variants;
             },
             toggledWhen: (value: any) => {
                 return convertToBoolean(value);
