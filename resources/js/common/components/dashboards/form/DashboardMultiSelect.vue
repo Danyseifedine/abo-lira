@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
 import MultiSelect from 'primevue/multiselect';
 import { computed } from 'vue';
 
@@ -24,6 +25,12 @@ interface Props {
      * @default 'value'
      */
     optionValue?: string;
+
+    /**
+     * Auto-localized label - automatically switches between name_en and name_ar based on locale
+     * @default false
+     */
+    autoLocalizedLabel?: boolean;
 
     /**
      * Property name for option group label
@@ -122,6 +129,7 @@ const props = withDefaults(defineProps<Props>(), {
     modelValue: () => [],
     optionLabel: 'label',
     optionValue: 'value',
+    autoLocalizedLabel: false,
     placeholder: 'Select items',
     error: null,
     disabled: false,
@@ -139,12 +147,22 @@ const props = withDefaults(defineProps<Props>(), {
     class: '',
 });
 
+const page = usePage();
+
 const emit = defineEmits<{
     'update:modelValue': [value: any[]];
     change: [event: any];
     blur: [event: Event];
     focus: [event: Event];
 }>();
+
+// Computed option label - auto-localizes if enabled
+const computedOptionLabel = computed(() => {
+    if (props.autoLocalizedLabel) {
+        return page.props.locale === 'ar' ? 'name_ar' : 'name_en';
+    }
+    return props.optionLabel;
+});
 
 // Computed class with error state
 const wrapperClass = computed(() => {
@@ -184,7 +202,7 @@ const handleFocus = (event: Event) => {
             :id="id"
             :model-value="modelValue"
             :options="options"
-            :option-label="optionLabel"
+            :option-label="computedOptionLabel"
             :option-value="optionValue"
             :option-group-label="optionGroupLabel"
             :option-group-children="optionGroupChildren"
