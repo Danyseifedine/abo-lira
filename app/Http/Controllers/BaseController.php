@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\File\FileUploadService;
-use App\Traits\HasDataTable;
+use App\Traits\HasDatatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -11,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 
 class BaseController extends Controller
 {
-    use HasDataTable;
+    use HasDatatable;
 
     public function __construct(
         protected readonly FileUploadService $fileUploadService

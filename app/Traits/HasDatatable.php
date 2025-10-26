@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-trait HasDataTable
+trait HasDatatable
 {
     /**
      * Process DataTable request
