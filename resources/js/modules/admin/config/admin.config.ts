@@ -137,7 +137,7 @@ export const adminDashboardConfig: DashboardConfig = {
         sidebarDirection: document.documentElement.dir === 'rtl' ? "right" : "left",
         sidebarVariant: 'inset',
         sidebarCollapseButton: true,
-        navbarAppearanceButton: true,
+        navbarAppearanceButton: false,
         navbarLogoutButton: true,
         navbarSettingsButton: false,
         navbarLanguageDropdown: true,
