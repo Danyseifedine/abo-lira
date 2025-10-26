@@ -8,13 +8,17 @@ use App\Http\Requests\ProductCategory\UpdateProductCategoryRequest;
 use App\Models\ProductCategory;
 use App\Navigation\SuperAdminPath;
 use App\Services\Core\ProductCategoryService;
+use App\Services\File\FileUploadService;
 use Inertia\Inertia;
 
 class ProductCategoriesController extends BaseController
 {
     public function __construct(
-        private ProductCategoryService $categoryService
-    ) {}
+        private ProductCategoryService $categoryService,
+        FileUploadService $fileUploadService
+    ) {
+        parent::__construct($fileUploadService);
+    }
 
     public function index()
     {
@@ -47,7 +51,16 @@ class ProductCategoriesController extends BaseController
 
     public function store(StoreProductCategoryRequest $request)
     {
-        $this->categoryService->create($request->validated());
+        $category = $this->categoryService->create($request->validated());
+
+        // Handle category image if provided
+        if ($request->has('temp_files') && is_array($request->temp_files) && ! empty($request->temp_files)) {
+            $this->fileUploadService->moveToMediaLibrary(
+                $category,
+                $request->temp_files,
+                'category-image'
+            );
+        }
 
         return $this->successWithToast(__('toast.created_successfully'), __('toast.success'), 'super-admin.product-categories.index');
     }
@@ -57,15 +70,28 @@ class ProductCategoriesController extends BaseController
         $categories = $this->categoryService->getAllCategories()
             ->reject(fn($cat) => $cat->id === $productCategory->id); // Exclude current category
 
+        // Get existing files
+        $existingFiles = $this->getExistingFilesForEdit($productCategory, 'category-image');
+
         return Inertia::render(SuperAdminPath::view('product-categories/actions/Edit'), [
             'category' => $productCategory->load('parent'),
             'categories' => $categories,
+            'existingFiles' => $existingFiles,
         ]);
     }
 
     public function update(UpdateProductCategoryRequest $request, ProductCategory $productCategory)
     {
         $this->categoryService->update($productCategory, $request->validated());
+
+        // Handle category image updates if provided
+        if ($request->has('temp_files') && is_array($request->temp_files)) {
+            $this->updateMediaFiles(
+                $productCategory,
+                $request->temp_files,
+                'category-image'
+            );
+        }
 
         return $this->successWithToast(__('toast.updated_successfully'), __('toast.success'), 'super-admin.product-categories.index');
     }

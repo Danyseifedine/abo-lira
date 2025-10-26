@@ -23,7 +23,7 @@
                 </div>
                 <div class="categories__inner--style3 d-flex">
                     @foreach ($categories as $category)
-                        <x-category image="assets/img/categories/categories-product1.webp"
+                        <x-category image="{{ $category->image }}"
                             link="{{ route('shop', ['category' => $category->slug]) }}" :name="$category->name"
                             :itemCount="12" />
                     @endforeach

@@ -20,6 +20,9 @@ class StoreProductCategoryRequest extends FormRequest
             'name_ar' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:' . ProductCategory::class,
             'status' => 'boolean',
+            // Category image
+            'temp_files' => 'nullable|array|max:1',
+            'temp_files.*.temp_path' => 'nullable|string',
         ];
     }
 }

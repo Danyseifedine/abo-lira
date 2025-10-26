@@ -230,6 +230,8 @@ return [
     'category' => 'التصنيف',
     'select_category' => 'اختر التصنيف',
     'category_hint' => 'تصنيف المنتج',
+    'category_image' => 'صورة الفئة',
+    'category_image_hint' => 'تحميل صورة لهذه الفئة (اختياري)',
     'quality' => 'الجودة',
     'select_quality' => 'اختر الجودة',
     'quality_hint' => 'مستوى جودة المنتج',

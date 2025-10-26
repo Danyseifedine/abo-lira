@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DashboardButton from '@/common/components/dashboards/form/DashboardButton.vue';
+import DashboardFileUpload from '@/common/components/dashboards/form/DashboardFileUpload.vue';
 import DashboardTextInput from '@/common/components/dashboards/form/DashboardTextInput.vue';
 import DashboardToggle from '@/common/components/dashboards/form/DashboardToggle.vue';
 import Hint from '@/common/components/dashboards/typography/Hint.vue';
@@ -18,6 +19,7 @@ const form = useForm({
     name_ar: '',
     slug: '',
     status: true,
+    temp_files: [] as any[],
 });
 
 // Auto-generate slug from name_en
@@ -119,6 +121,21 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <DashboardTextInput id="slug" v-model="form.slug" type="text" :placeholder="__('datatable.enter_slug')" :error="form.errors.slug" />
                 <InputError :message="form.errors.slug" />
                 <Hint :text="__('datatable.slug_hint')" />
+            </div>
+
+            <!-- Category Image -->
+            <div class="space-y-2">
+                <Label for="temp_files">{{ __('datatable.category_image') }}</Label>
+                <DashboardFileUpload
+                    id="temp_files"
+                    v-model="form.temp_files"
+                    :multiple="false"
+                    accept="image/*"
+                    :file-limit="1"
+                    context="category-images"
+                />
+                <Hint :text="__('datatable.category_image_hint')" />
+                <InputError :message="form.errors.temp_files" />
             </div>
 
             <!-- Status Toggle -->

@@ -25,6 +25,9 @@ class UpdateProductCategoryRequest extends FormRequest
             'name_ar' => 'required|string|max:255',
             'slug' => ['nullable', 'string', 'max:255', Rule::unique(ProductCategory::class)->ignore($this->productCategory->id)],
             'status' => 'boolean',
+            // Category image
+            'temp_files' => 'nullable|array|max:1',
+            'temp_files.*.temp_path' => 'nullable|string',
         ];
     }
 }

@@ -228,6 +228,8 @@ return [
     'category' => 'Category',
     'select_category' => 'Select Category',
     'category_hint' => 'Product category',
+    'category_image' => 'Category Image',
+    'category_image_hint' => 'Upload an image for this category (optional)',
     'quality' => 'Quality',
     'select_quality' => 'Select Quality',
     'quality_hint' => 'Product quality level',

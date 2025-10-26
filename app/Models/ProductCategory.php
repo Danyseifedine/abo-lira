@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Builder;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class ProductCategory extends Model
+class ProductCategory extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $fillable = [
         'parent_id',
         'name_en',
@@ -16,6 +20,19 @@ class ProductCategory extends Model
         'slug',
         'status',
     ];
+
+    protected $with = [
+        'media',
+    ];
+
+    protected $appends = [
+        'image',
+    ];
+
+    public function getImageAttribute()
+    {
+        return $this->getFirstMediaUrl('category-image');
+    }
 
     protected function casts(): array
     {
