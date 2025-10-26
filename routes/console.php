@@ -11,4 +11,4 @@ Schedule::call(function () {
     \Log::info('Test schedule running at ' . now());
 })->everyFiveSeconds();
 
-
+Schedule::command('temp:cleanup --hours=24')->daily();
