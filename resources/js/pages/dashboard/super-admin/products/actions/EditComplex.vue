@@ -286,7 +286,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             <!-- Category & Quality -->
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 <div class="space-y-2">
-                    <Label for="category_id" required>{{ __('datatable.category') }}</Label>
+                    <Label required>{{ __('datatable.category') }}</Label>
                     <DashboardSelect
                         id="category_id"
                         v-model="form.category_id"
@@ -305,7 +305,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="quality_id" required>{{ __('datatable.quality') }}</Label>
+                    <Label required>{{ __('datatable.quality') }}</Label>
                     <DashboardSelect
                         id="quality_id"
                         v-model="form.quality_id"
@@ -438,7 +438,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                         <!-- Color Select (if color or both) -->
                         <div v-if="showColorField" class="space-y-2">
-                            <Label :for="`color_${index}`" required>{{ __('datatable.color') }}</Label>
+                            <Label required>{{ __('datatable.color') }}</Label>
                             <DashboardSelect
                                 :id="`color_${index}`"
                                 v-model="variant.color_id"
@@ -455,7 +455,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
                         <!-- Size Select (if size or both) -->
                         <div v-if="showSizeField" class="space-y-2">
-                            <Label :for="`size_${index}`" required>{{ __('datatable.size') }}</Label>
+                            <Label required>{{ __('datatable.size') }}</Label>
                             <DashboardSelect
                                 :id="`size_${index}`"
                                 v-model="variant.size_id"
