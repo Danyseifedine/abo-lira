@@ -20,10 +20,9 @@ class ProductCategorySeeder extends Seeder
             ['name_en' => 'Body & Frame', 'name_ar' => 'الهيكل والإطار', 'slug' => 'body-frame', 'status' => true],
             ['name_en' => 'Filters & Oil', 'name_ar' => 'الفلاتر والزيوت', 'slug' => 'filters-oil', 'status' => true],
             ['name_en' => 'Safety Gear', 'name_ar' => 'معدات السلامة', 'slug' => 'safety-gear', 'status' => true],
-            ['name_en' => 'Storage & Luggage', 'name_ar' => 'التخزين والحقائب', 'slug' => 'storage-luggage', 'status' => true],
+            ['name_en' => 'Accessories', 'name_ar' => 'الإكسسوارات', 'slug' => 'accessories', 'status' => true],
             ['name_en' => 'Handlebars & Mirrors', 'name_ar' => 'المقابض والمرايا', 'slug' => 'handlebars-mirrors', 'status' => true],
             ['name_en' => 'Seats & Covers', 'name_ar' => 'المقاعد والأغطية', 'slug' => 'seats-covers', 'status' => true],
-
         ];
 
         foreach ($categories as $category) {
