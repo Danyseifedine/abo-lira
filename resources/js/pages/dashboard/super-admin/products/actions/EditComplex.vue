@@ -8,14 +8,12 @@ import DashboardToggle from '@/common/components/dashboards/form/DashboardToggle
 import Hint from '@/common/components/dashboards/typography/Hint.vue';
 import { __ } from '@/core/utils/translations';
 import type { BreadcrumbItem } from '@core/types';
-import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import ActionLayout from '@modules/admin/layouts/ActionLayout.vue';
 import InputError from '@shared/components/InputError.vue';
 import { Label } from '@ui/label';
 import { Plus, Trash2 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
-
-const page = usePage();
 
 interface ProductCategory {
     id: number;
@@ -42,10 +40,7 @@ interface ProductSize {
     name_ar: string;
 }
 
-// Get option label based on locale
-const optionLabel = computed(() => {
-    return page.props.locale === 'ar' ? 'name_ar' : 'name_en';
-});
+// Note: Using autoLocalizedLabel prop in DashboardSelect for automatic locale handling
 
 interface ProductVariant {
     id: number;
@@ -291,7 +286,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         id="category_id"
                         v-model="form.category_id"
                         :options="categories"
-                        :optionLabel="optionLabel"
+                        autoLocalizedLabel
                         optionValue="id"
                         :placeholder="__('datatable.select_category')"
                         class="w-full"
@@ -310,7 +305,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         id="quality_id"
                         v-model="form.quality_id"
                         :options="qualities"
-                        :optionLabel="optionLabel"
+                        autoLocalizedLabel
                         optionValue="id"
                         :placeholder="__('datatable.select_quality')"
                         class="w-full"
@@ -443,7 +438,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 :id="`color_${index}`"
                                 v-model="variant.color_id"
                                 :options="colors"
-                                :optionLabel="optionLabel"
+                                autoLocalizedLabel
                                 optionValue="id"
                                 :placeholder="__('datatable.select_color')"
                                 class="w-full"
@@ -460,7 +455,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 :id="`size_${index}`"
                                 v-model="variant.size_id"
                                 :options="sizes"
-                                :optionLabel="optionLabel"
+                                autoLocalizedLabel
                                 optionValue="id"
                                 :placeholder="__('datatable.select_size')"
                                 class="w-full"

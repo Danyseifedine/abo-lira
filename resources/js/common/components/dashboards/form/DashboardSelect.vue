@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
 import Select from 'primevue/select';
 import { computed } from 'vue';
 
@@ -24,6 +25,12 @@ interface Props {
      * @default 'code'
      */
     optionValue?: string;
+
+    /**
+     * Auto-localized label - automatically switches between name_en and name_ar based on locale
+     * @default false
+     */
+    autoLocalizedLabel?: boolean;
 
     /**
      * Placeholder text
@@ -90,6 +97,7 @@ const props = withDefaults(defineProps<Props>(), {
     modelValue: null,
     optionLabel: 'name',
     optionValue: 'code',
+    autoLocalizedLabel: false,
     placeholder: 'Select an option',
     error: null,
     disabled: false,
@@ -103,12 +111,22 @@ const props = withDefaults(defineProps<Props>(), {
     class: '',
 });
 
+const page = usePage();
+
 const emit = defineEmits<{
     'update:modelValue': [value: string | number | null];
     change: [event: any];
     blur: [event: Event];
     focus: [event: Event];
 }>();
+
+// Computed option label - auto-localizes if enabled
+const computedOptionLabel = computed(() => {
+    if (props.autoLocalizedLabel) {
+        return page.props.locale === 'ar' ? 'name_ar' : 'name_en';
+    }
+    return props.optionLabel;
+});
 
 // Computed class with error state
 const wrapperClass = computed(() => {
@@ -148,7 +166,7 @@ const handleFocus = (event: Event) => {
             :id="id"
             :model-value="modelValue"
             :options="options"
-            :option-label="optionLabel"
+            :option-label="computedOptionLabel"
             :option-value="optionValue"
             :placeholder="placeholder"
             :disabled="disabled"

@@ -8,14 +8,12 @@ import DashboardToggle from '@/common/components/dashboards/form/DashboardToggle
 import Hint from '@/common/components/dashboards/typography/Hint.vue';
 import { __ } from '@/core/utils/translations';
 import type { BreadcrumbItem } from '@core/types';
-import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import ActionLayout from '@modules/admin/layouts/ActionLayout.vue';
 import InputError from '@shared/components/InputError.vue';
 import { Label } from '@ui/label';
 import { computed, watch } from 'vue';
 import type { Product } from '../datatable/type';
-
-const page = usePage();
 
 interface ProductCategory {
     id: number;
@@ -29,10 +27,7 @@ interface ProductQuality {
     name_ar: string;
 }
 
-// Get option label based on locale
-const optionLabel = computed(() => {
-    return page.props.locale === 'ar' ? 'name_ar' : 'name_en';
-});
+// Note: Using autoLocalizedLabel prop in DashboardSelect for automatic locale handling
 
 const props = defineProps<{
     product: Product;
@@ -202,7 +197,7 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                         id="category_id"
                         v-model="form.category_id"
                         :options="categories"
-                        :optionLabel="optionLabel"
+                        autoLocalizedLabel
                         optionValue="id"
                         :placeholder="__('datatable.select_category')"
                         class="w-full"
@@ -220,7 +215,7 @@ const showPriceAndStockFields = computed(() => !form.has_variants);
                         id="quality_id"
                         v-model="form.quality_id"
                         :options="qualities"
-                        :optionLabel="optionLabel"
+                        autoLocalizedLabel
                         optionValue="id"
                         :placeholder="__('datatable.select_quality')"
                         class="w-full"
