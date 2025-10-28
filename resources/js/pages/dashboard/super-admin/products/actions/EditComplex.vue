@@ -370,6 +370,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     id="placement_image"
                     v-model="form.placement_image"
                     :multiple="false"
+                    :file-limit="1"
                     accept="image/*"
                     context="product-placement"
                 />
@@ -402,7 +403,14 @@ const breadcrumbs: BreadcrumbItem[] = [
             <!-- Product Image (for Size Only variants) -->
             <div v-if="variantType === 'size'" class="space-y-2">
                 <Label for="temp_files">{{ __('datatable.featured_image') }}</Label>
-                <DashboardFileUpload id="temp_files" v-model="form.temp_files" :multiple="false" accept="image/*" context="products" />
+                <DashboardFileUpload
+                    :file-limit="1"
+                    id="temp_files"
+                    v-model="form.temp_files"
+                    :multiple="false"
+                    accept="image/*"
+                    context="products"
+                />
                 <Hint :text="__('datatable.featured_image_hint')" />
                 <InputError :message="form.errors.temp_files" />
             </div>
@@ -490,6 +498,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             v-model="variant.temp_files"
                             v-model:deletedMediaIds="variant.deleted_media_ids"
                             :multiple="false"
+                            :file-limit="1"
                             accept="image/*"
                             context="product-variants"
                         />
