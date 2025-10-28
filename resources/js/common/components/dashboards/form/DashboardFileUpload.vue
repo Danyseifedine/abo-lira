@@ -6,15 +6,18 @@ import FileUpload, { type FileUploadSelectEvent, type FileUploadUploaderEvent } 
 import { computed, nextTick, ref } from 'vue';
 
 export interface TemporaryFile {
-    temp_path: string;
+    id?: number; // Media ID for existing files
+    temp_path?: string; // Temp path for new uploads
     original_name: string;
     size: number;
     mime_type: string;
     url: string;
+    original_url?: string; // Original URL for existing media
 }
 
 export interface DashboardFileUploadProps {
     modelValue?: TemporaryFile[] | null;
+    deletedMediaIds?: number[]; // Track deleted existing media IDs
     name?: string;
     url?: string;
     accept?: string;
@@ -63,6 +66,7 @@ const props = withDefaults(defineProps<DashboardFileUploadProps>(), {
 
 const emit = defineEmits<{
     'update:modelValue': [files: TemporaryFile[]];
+    'update:deletedMediaIds': [ids: number[]];
     upload: [event: FileUploadUploaderEvent];
     select: [event: FileUploadSelectEvent];
     remove: [event: { file: File; files: File[] }];
@@ -78,6 +82,7 @@ const emit = defineEmits<{
 const fileUploadRef = ref<any>(null);
 const selectedFiles = ref<File[]>([]);
 const tempFiles = ref<TemporaryFile[]>(props.modelValue || []);
+const deletedIds = ref<number[]>(props.deletedMediaIds || []);
 const isUploading = ref(false);
 const isDeleting = ref(false);
 const uploadProgress = ref(0);
@@ -333,9 +338,19 @@ const removeTempFile = async (tempFile: TemporaryFile) => {
     try {
         // If it's an existing file (not a temp file), just remove from UI
         // The backend will handle deletion during update
-        if ((tempFile as any).is_existing) {
+        if ((tempFile as any).is_existing || tempFile.id) {
+            // Track the deleted media ID
+            const mediaId = tempFile.id || (tempFile as any).media_id;
+            if (mediaId && !deletedIds.value.includes(mediaId)) {
+                deletedIds.value.push(mediaId);
+                emit('update:deletedMediaIds', deletedIds.value);
+            }
+
             const updatedFiles = tempFiles.value.filter((f) => {
-                // For existing files, compare by media_id or url
+                // For existing files, compare by id or media_id or url
+                if (f.id && mediaId) {
+                    return f.id !== mediaId;
+                }
                 if ((f as any).is_existing && (tempFile as any).media_id) {
                     return (f as any).media_id !== (tempFile as any).media_id;
                 }

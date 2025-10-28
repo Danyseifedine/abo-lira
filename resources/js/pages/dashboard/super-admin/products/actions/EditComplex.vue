@@ -74,6 +74,7 @@ interface Variant {
     status: boolean;
     temp_files: any[];
     existing_media?: any[];
+    deleted_media_ids?: number[];
 }
 
 const props = defineProps<{
@@ -162,6 +163,7 @@ const submit = () => {
         status: variant.status,
         temp_files: variant.temp_files.filter((file: any) => file.temp_path), // Only new files
         existing_media: variant.existing_media || [], // Keep existing media
+        deleted_media_ids: variant.deleted_media_ids || [], // Track deleted media IDs
     }));
 
     form.put(route('super-admin.products.update-complex', props.product.id), {
@@ -486,6 +488,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <DashboardFileUpload
                             :id="`image_${index}`"
                             v-model="variant.temp_files"
+                            v-model:deletedMediaIds="variant.deleted_media_ids"
                             :multiple="false"
                             accept="image/*"
                             context="product-variants"

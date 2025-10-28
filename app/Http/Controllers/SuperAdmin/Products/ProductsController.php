@@ -306,6 +306,9 @@ class ProductsController extends BaseController
 
                         $existingVariantIds[] = $variant->id;
 
+                        // Handle deleted media using FileUploadService
+                        $this->fileUploadService->handleMediaDeletion($variant, $variantData, 'variant-image');
+
                         // Handle variant images if new files are uploaded
                         if (isset($variantData['temp_files']) && is_array($variantData['temp_files']) && ! empty($variantData['temp_files'])) {
                             // Filter only new temp files (those with temp_path)

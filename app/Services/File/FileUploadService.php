@@ -250,4 +250,46 @@ class FileUploadService
             'failed' => $failed,
         ];
     }
+
+    /**
+     * Delete existing media files by their IDs from a model
+     *
+     * @param  \Spatie\MediaLibrary\HasMedia  $model
+     * @return int Number of deleted media files
+     */
+    public function deleteExistingMedia($model, array $mediaIds, string $collectionName = 'default'): int
+    {
+        if (empty($mediaIds)) {
+            return 0;
+        }
+
+        $deletedCount = 0;
+
+        foreach ($mediaIds as $mediaId) {
+            $media = $model->getMedia($collectionName)->where('id', $mediaId)->first();
+
+            if ($media) {
+                $media->delete();
+                $deletedCount++;
+            }
+        }
+
+        return $deletedCount;
+    }
+
+    /**
+     * Handle media deletion from request data
+     * Automatically extracts deleted_media_ids from data array
+     *
+     * @param  \Spatie\MediaLibrary\HasMedia  $model
+     * @return int Number of deleted media files
+     */
+    public function handleMediaDeletion($model, array $data, string $collectionName = 'default'): int
+    {
+        $deletedMediaIds = $data['deleted_media_ids'] ?? [];
+
+        $deletedCount = $this->deleteExistingMedia($model, $deletedMediaIds, $collectionName);
+
+        return $deletedCount;
+    }
 }
