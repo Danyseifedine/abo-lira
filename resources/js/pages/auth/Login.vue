@@ -3,10 +3,10 @@ import DashboardButton from '@/common/components/dashboards/form/DashboardButton
 import DashboardTextInput from '@/common/components/dashboards/form/DashboardTextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import InputError from '@shared/components/InputError.vue';
-import TextLink from '@shared/components/TextLink.vue';
+// import TextLink from '@shared/components/TextLink.vue';
 import AuthBase from '@shared/layouts/GuestLayout.vue';
-import { Checkbox } from '@shared/ui/checkbox';
-import { Label } from '@shared/ui/label';
+// import { Checkbox } from '@shared/ui/checkbox';
+// import { Label } from '@shared/ui/label';
 
 defineProps<{
     status?: string;
@@ -21,14 +21,18 @@ const form = useForm({
 
 const submit = () => {
     form.post(route('login'), {
+        onSuccess: () => {
+            // Force full page reload after successful login to refresh CSRF token and session
+            window.location.href = route('super-admin.dashboard');
+        },
         onFinish: () => form.reset('password'),
     });
 };
 
 // Handler for Google login button
-const loginWithGoogle = () => {
-    window.location.href = route('keychain.redirect', { provider: 'google' });
-};
+// const loginWithGoogle = () => {
+//     window.location.href = route('keychain.redirect', { provider: 'google' });
+// };
 </script>
 
 <template>
@@ -72,7 +76,7 @@ const loginWithGoogle = () => {
                     <InputError :message="form.errors.password" />
                 </div>
 
-                <div class="flex items-center justify-between" :tabindex="3">
+                <!-- <div class="flex items-center justify-between" :tabindex="3">
                     <Label for="remember" class="flex items-center space-x-2 text-sm">
                         <Checkbox id="remember" v-model:checked="form.remember" :tabindex="4" />
                         <span>Remember me</span>
@@ -80,12 +84,12 @@ const loginWithGoogle = () => {
                     <TextLink v-if="canResetPassword" :href="route('password.request')" class="text-xs font-medium hover:underline" :tabindex="5">
                         Forgot password?
                     </TextLink>
-                </div>
+                </div> -->
 
                 <DashboardButton type="submit" size="lg" class="mt-4 w-full" :loading="form.processing"> Sign In </DashboardButton>
 
                 <!-- Google Login Button -->
-                <DashboardButton type="button" size="lg" variant="glass" class="w-full" @click="loginWithGoogle">
+                <!-- <DashboardButton type="button" size="lg" variant="glass" class="w-full" @click="loginWithGoogle">
                     <template #icon>
                         <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" viewBox="0 0 48 48">
                             <g>
@@ -109,13 +113,13 @@ const loginWithGoogle = () => {
                         </svg>
                     </template>
                     Sign in with Google
-                </DashboardButton>
+                </DashboardButton> -->
             </div>
 
-            <div class="mt-4 text-center text-sm text-muted-foreground">
+            <!-- <div class="mt-4 text-center text-sm text-muted-foreground">
                 Don't have an account?
                 <TextLink :href="route('register')" class="ml-1 font-medium text-primary hover:underline" :tabindex="6">Create an account</TextLink>
-            </div>
+            </div> -->
         </form>
     </AuthBase>
 </template>
