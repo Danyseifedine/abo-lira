@@ -343,5 +343,5 @@ return [
     'all_permissions' => 'جميع الصلاحيات',
 
     'color' => 'اللون',
-    
+    'size' => 'الحجم',
 ];
