@@ -4,11 +4,34 @@
         <!-- Start slider section -->
         <section class="hero__slider--section">
             <div class="slider__thumbnail--style5 position-relative">
-                <img class="slider__thumbnail--img__style5" src="{{ asset('assets/img/slider/home5-slider-thumb.webp') }}"
-                    alt="slider-img">
+                <img class="slider__thumbnail--img__style5" src="{{ asset('assets/img/abo-lira/hero.svg') }}" alt="slider-img">
                 <div class="hero__content--style5 text-center">
-                    <h2 class="hero__content--style5__title h1">Comes Width The <br> <span class="text__secondary">Ultimate
-                            Protection</span></h2>
+                    <h2 class="hero__content--style5__title h1">
+                        <span class="hero-titles">Push the Limits.</span><br>
+                        <span class="text__secondary">Fuel Your Adventure</span><br>
+                        <span class="hero-titles">With Top Motorcycle Gear</span>
+                    </h2>
+
+                    <!-- Enhanced Hero Content -->
+                    <div class="hero__enhanced--content mt-4">
+                        <p class="hero__description hero-description mb-4">
+                            Discover premium motorcycle gear designed for riders who demand excellence.
+                            From helmets to protective gear, we've got everything you need for your next adventure.
+                        </p>
+
+                        <!-- Call to Action Buttons -->
+                        <div class="hero__cta--buttons d-flex gap-3 justify-content-center flex-wrap mb-4">
+                            <a href="{{ route('shop') }}" class="hero__btn hero__btn--primary">
+                                <i class="fas fa-shopping-bag me-2"></i>
+                                Shop Now
+                            </a>
+                            <a href="{{ route('about') }}" class="hero__btn hero__btn--secondary hero-learn-more">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Learn More
+                            </a>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
@@ -39,9 +62,11 @@
                 </div>
                 <div class="product__section--inner pb-15 product__swiper--activation swiper">
                     <div class="swiper-wrapper">
-                        <x-product-slide primaryImage="assets/img/product/main-product/product5.webp" name="1"
-                            currentPrice="239.52" oldPrice="362.00" discount="14" />
-
+                        @foreach ($accessoriesProducts as $product)
+                            <x-product-slide :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
+                                :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality" :hasMultipleVariants="$product->has_multiple_variants"
+                                :is_discounted="$product->is_discounted" />
+                        @endforeach
                     </div>
                     <div class="swiper__nav--btn swiper-button-next">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -66,12 +91,17 @@
         <section class="product__section section--padding pt-0">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
-                    <h2 class="section__heading--maintitle">Latest <span>Products</span></h2>
+                    <h2 class="section__heading--maintitle"><a
+                            href="{{ route('shop') }}">Products Less Than $5</a>
+                    </h2>
                 </div>
                 <div class="product__section--inner pb-15 product__swiper--activation swiper">
                     <div class="swiper-wrapper">
-                        <x-product-slide primaryImage="assets/img/product/main-product/product5.webp" name="1"
-                            currentPrice="239.52" oldPrice="362.00" discount="14" />
+                        @foreach ($productsLessThanPrice5 as $product)
+                            <x-product-slide :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
+                                :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality"
+                                :hasMultipleVariants="$product->has_multiple_variants" :is_discounted="$product->is_discounted" />
+                        @endforeach
                     </div>
                     <div class="swiper__nav--btn swiper-button-next">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

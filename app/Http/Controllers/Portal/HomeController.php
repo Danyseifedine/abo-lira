@@ -3,18 +3,27 @@
 namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Services\Portal\ProductServicePortal;
 use Illuminate\View\View;
 
 class HomeController extends Controller
 {
+
+    public function __construct(
+        private ProductServicePortal $productService
+    ) {}
+
+
     public function home(): View
     {
-
-        // category counts
         $categories = ProductCategory::active()->get();
+        $accessoriesCategory = $categories->firstWhere('slug', 'accessories');
 
-        return view('landing', compact('categories'));
+        $accessoriesProducts = $this->productService->getRandomProductsByCategory(true, $accessoriesCategory->id, 8);
+        $productsLessThanPrice5 = $this->productService->getProductLessThanPrice(true, 5, 8);
+        return view('landing', compact('categories', 'accessoriesProducts', 'productsLessThanPrice5'));
     }
 
     public function about(): View

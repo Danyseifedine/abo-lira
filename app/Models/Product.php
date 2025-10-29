@@ -26,6 +26,7 @@ class Product extends Model implements HasMedia
         'discount_start_date',
         'discount_end_date',
         'has_limited_time_discount',
+        'is_discounted',
         'has_variants',
         'description_en',
         'description_ar',
@@ -42,10 +43,30 @@ class Product extends Model implements HasMedia
             'discount_start_date' => 'date',
             'discount_end_date' => 'date',
             'has_limited_time_discount' => 'boolean',
+            'is_discounted' => 'boolean',
             'has_variants' => 'boolean',
             'price' => 'decimal:2',
             'status' => 'boolean',
         ];
+    }
+
+    protected $with = [
+        'media',
+    ];
+
+    protected $appends = [
+        'image',
+        'name',
+    ];
+
+    public function getImageAttribute()
+    {
+        return $this->getFirstMediaUrl('product-image');
+    }
+
+    public function getNameAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->name_ar : $this->name_en;
     }
 
     protected static function boot(): void

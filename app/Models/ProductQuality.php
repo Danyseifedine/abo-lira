@@ -36,4 +36,9 @@ class ProductQuality extends Model
     {
         return $query->where('status', false);
     }
+
+    public function getNameAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->name_ar : $this->name_en;
+    }
 }

@@ -19,7 +19,6 @@ class ProductVariant extends Model implements HasMedia
         'color_id',
         'size_id',
         'price',
-        'discount_price',
         'status',
     ];
 
@@ -27,9 +26,21 @@ class ProductVariant extends Model implements HasMedia
     {
         return [
             'price' => 'decimal:2',
-            'discount_price' => 'decimal:2',
             'status' => 'boolean',
         ];
+    }
+
+    protected $with = [
+        'media',
+    ];
+
+    protected $appends = [
+        'image',
+    ];
+
+    public function getImageAttribute()
+    {
+        return $this->getFirstMediaUrl('variant-image');
     }
 
     protected static function boot(): void
