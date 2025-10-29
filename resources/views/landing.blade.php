@@ -1,5 +1,28 @@
 @extends('layout.master')
 @section('content')
+    <style>
+        /*# sourceMappingURL=style.css.map */
+
+        .hero-titles {
+            color: var(--text-white-color);
+        }
+
+        @media (max-width: 768px) {
+            .hero-titles {
+                color: black;
+            }
+
+            .hero-description {
+                color: black;
+            }
+
+            .hero-learn-more {
+                color: #333333;
+            }
+
+        }
+    </style>
+
     <main class="main__content_wrapper">
         <!-- Start slider section -->
         <section class="hero__slider--section">
@@ -91,8 +114,7 @@
         <section class="product__section section--padding pt-0">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
-                    <h2 class="section__heading--maintitle"><a
-                            href="{{ route('shop') }}">Products Less Than $5</a>
+                    <h2 class="section__heading--maintitle"><a href="{{ route('shop') }}">Products Less Than $5</a>
                     </h2>
                 </div>
                 <div class="product__section--inner pb-15 product__swiper--activation swiper">

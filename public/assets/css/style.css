@@ -13023,24 +13023,3 @@ details>summary::-webkit-details-marker {
         font-size: 1.6rem;
     }
 }
-
-/*# sourceMappingURL=style.css.map */
-
-.hero-titles {
-    color: var(--text-white-color);
-}
-
-@media (max-width: 768px) {
-    .hero-titles {
-        color: black;
-    }
-
-    .hero-description {
-        color: black;
-    }
-
-    .hero-learn-more {
-        color: #333333;
-    }
-
-}
