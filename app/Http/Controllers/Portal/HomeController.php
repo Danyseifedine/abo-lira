@@ -18,22 +18,13 @@ class HomeController extends Controller
 
     public function home(): View
     {
-        // Cache categories for 1 hour with eager loaded media
-        $categories = cache()->remember('portal_active_categories', 3600, function () {
-            return ProductCategory::with('media')->active()->get();
-        });
-
+        // Don't cache categories - they're fast with indexes and already optimized
+        $categories = ProductCategory::with('media')->active()->get();
         $accessoriesCategory = $categories->firstWhere('slug', 'accessories');
 
-        // Cache product queries for 5 minutes (short cache to keep products relatively fresh)
-        $cacheKey = 'portal_home_accessories_' . $accessoriesCategory->id;
-        $accessoriesProducts = cache()->remember($cacheKey, 300, function () use ($accessoriesCategory) {
-            return $this->productService->getRandomProductsByCategory(true, $accessoriesCategory->id, 8);
-        });
-
-        $productsLessThanPrice5 = cache()->remember('portal_home_products_under_5', 300, function () {
-            return $this->productService->getProductLessThanPrice(true, 5, 8);
-        });
+        // Fetch products directly without cache (fast with optimizations)
+        $accessoriesProducts = $this->productService->getRandomProductsByCategory(true, $accessoriesCategory->id, 8);
+        $productsLessThanPrice5 = $this->productService->getProductLessThanPrice(true, 5, 8);
 
         return view('landing', compact('categories', 'accessoriesProducts', 'productsLessThanPrice5'));
     }

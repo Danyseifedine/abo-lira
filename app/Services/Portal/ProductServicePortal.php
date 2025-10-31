@@ -4,19 +4,21 @@ namespace App\Services\Portal;
 
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductServicePortal
 {
     private static array $categoryCache = [];
+
     private static array $qualityCache = [];
 
     /**
      * Calculate discount prices and percentage based on base price and discount amount.
      *
-     * @param float $basePrice The original price (from variant or product)
-     * @param float|null $discountAmount The discount amount to subtract (not percentage), can be null
+     * @param  float  $basePrice  The original price (from variant or product)
+     * @param  float|null  $discountAmount  The discount amount to subtract (not percentage), can be null
      * @return array ['new_price' => float, 'discount_percentage' => float]
      */
     public function calculateDiscount(float $basePrice, ?float $discountAmount): array
@@ -41,34 +43,29 @@ class ProductServicePortal
      * If $includeFirstVariant is true, each product will have its first active variant loaded
      * (ordered by ID, limited to 1 per product, only active variants).
      *
-     * @param bool $includeFirstVariant Whether to eagerly load the first active variant for each product.
-     * @param int $limit                The number of products to retrieve.
+     * @param  bool  $includeFirstVariant  Whether to eagerly load the first active variant for each product.
+     * @param  int  $limit  The number of products to retrieve.
      * @return \Illuminate\Support\Collection<Product> List of recent products, each optionally with their first variant.
      */
     public function getLatestProducts(bool $includeFirstVariant = true, int $limit = 8): Collection|array
     {
-        $products = Product::with([
-            'variants' => function ($query) {
-                $query->active()->orderBy('id');
-            },
-            'variants.media',
-            'media'
-        ])
-            ->active()
+        $products = Product::active()
             ->latest()
             ->limit($limit)
             ->get();
 
-        $this->preloadRelations($products);
-
         if ($includeFirstVariant) {
+            $variants = $this->loadFirstVariantWithMedia($products);
+            $this->loadFirstMediaForProducts($products, $variants);
+            $this->preloadRelations($products);
+
             return $this->transformProducts($products);
         }
 
         return $products;
     }
 
-    public function getRandomProductsByCategory(bool $includeFirstVariant = true, int $categoryId, int $limit = 8): Collection|array
+    public function getRandomProductsByCategory(bool $includeFirstVariant, int $categoryId, int $limit = 8): Collection|array
     {
         // Faster random selection using ID range instead of ORDER BY RAND()
         $products = $this->getRandomProducts(
@@ -76,28 +73,21 @@ class ProductServicePortal
             $limit
         );
 
-        $this->preloadRelations($products);
-
         if ($includeFirstVariant && $products->isNotEmpty()) {
+            $variants = $this->loadFirstVariantWithMedia($products);
+            $this->loadFirstMediaForProducts($products, $variants);
+            $this->preloadRelations($products);
+
             return $this->transformProducts($products);
         }
 
         return $products;
     }
 
-    public function getProductLessThanPrice(bool $includeFirstVariant = true, float $maxPrice, int $limit = 8): Collection|array
+    public function getProductLessThanPrice(bool $includeFirstVariant, float $maxPrice, int $limit = 8): Collection|array
     {
         // Get ALL products that might match (product price OR variant price < maxPrice)
-        $allProducts = Product::with([
-            'variants' => function ($query) use ($maxPrice) {
-                $query->active()
-                    ->where('price', '<', $maxPrice)
-                    ->orderBy('id');
-            },
-            'variants.media',
-            'media'
-        ])
-            ->active()
+        $allProducts = Product::active()
             ->where(function ($query) use ($maxPrice) {
                 $query->where('price', '<', $maxPrice)
                     ->orWhereHas('variants', function ($q) use ($maxPrice) {
@@ -110,9 +100,12 @@ class ProductServicePortal
             return collect();
         }
 
-        $this->preloadRelations($allProducts);
-
         if ($includeFirstVariant) {
+            // Load first variant with media and price constraint, then product media only for products without variants
+            $variants = $this->loadFirstVariantWithMedia($allProducts, $maxPrice);
+            $this->loadFirstMediaForProducts($allProducts, $variants);
+            $this->preloadRelations($allProducts);
+
             // Transform and filter to get products where actual base_price < maxPrice
             $validProducts = $this->transformProducts($allProducts)
                 ->filter(function ($product) use ($maxPrice) {
@@ -147,21 +140,14 @@ class ProductServicePortal
 
         while ($randomIds->count() < $limit && $attempts < $maxAttempts) {
             $randomId = rand($min, $max);
-            if (!$randomIds->contains($randomId)) {
+            if (! $randomIds->contains($randomId)) {
                 $randomIds->push($randomId);
             }
             $attempts++;
         }
 
-        // Fetch products with the random IDs
+        // Fetch products without media - loaded separately for optimization
         return $query->clone()
-            ->with([
-                'variants' => function ($q) {
-                    $q->active()->orderBy('id');
-                },
-                'variants.media',
-                'media'
-            ])
             ->whereIn('id', $randomIds)
             ->limit($limit)
             ->get()
@@ -170,36 +156,180 @@ class ProductServicePortal
     }
 
     /**
-     * Preload categories and qualities with caching to avoid duplicate queries
+     * Load ONLY the first media item for products that don't have variants
+     * Since variant image takes priority, we only load product media for products without variants
+     */
+    private function loadFirstMediaForProducts(Collection $products, Collection $productsWithVariants): void
+    {
+        $productsWithoutVariants = $products->filter(function ($product) use ($productsWithVariants) {
+            return ! $productsWithVariants->has($product->id);
+        });
+
+        if ($productsWithoutVariants->isEmpty()) {
+            foreach ($products as $product) {
+                if (! $productsWithVariants->has($product->id)) {
+                    $product->setRelation('media', collect());
+                }
+            }
+
+            return;
+        }
+
+        $productIds = $productsWithoutVariants->pluck('id');
+
+        // Load ONLY the first media item for products without variants
+        $firstMediaItems = DB::table('media')
+            ->whereIn('model_id', $productIds)
+            ->where('model_type', 'App\\Models\\Product')
+            ->where('collection_name', 'product-image')
+            ->whereIn('id', function ($query) use ($productIds) {
+                $query->selectRaw('MIN(id)')
+                    ->from('media')
+                    ->whereIn('model_id', $productIds)
+                    ->where('model_type', 'App\\Models\\Product')
+                    ->where('collection_name', 'product-image')
+                    ->groupBy('model_id');
+            })
+            ->get()
+            ->keyBy('model_id');
+
+        // Attach the first media item to each product
+        foreach ($products as $product) {
+            if (! $productsWithVariants->has($product->id)) {
+                if (isset($firstMediaItems[$product->id])) {
+                    $mediaItem = $firstMediaItems[$product->id];
+                    $media = new \Spatie\MediaLibrary\MediaCollections\Models\Media((array) $mediaItem);
+                    $media->exists = true;
+                    $product->setRelation('media', collect([$media]));
+                } else {
+                    $product->setRelation('media', collect());
+                }
+            }
+        }
+    }
+
+    /**
+     * Load ONLY the first active variant with ONLY its first media for each product
+     * Ultra-optimized: Uses a single JOIN query to combine variant + media in one query
+     */
+    private function loadFirstVariantWithMedia(Collection $products, ?float $maxPrice = null): Collection
+    {
+        if ($products->isEmpty()) {
+            return collect();
+        }
+
+        $productIds = $products->pluck('id');
+
+        // Get first variants using optimized subquery
+        $firstVariants = \App\Models\ProductVariant::query()
+            ->select('product_variants.*')
+            ->whereIn('product_id', $productIds)
+            ->active()
+            ->when($maxPrice !== null, function ($query) use ($maxPrice) {
+                $query->where('price', '<', $maxPrice);
+            })
+            ->whereIn('id', function ($query) use ($productIds, $maxPrice) {
+                $query->selectRaw('MIN(id)')
+                    ->from('product_variants')
+                    ->whereIn('product_id', $productIds)
+                    ->where('status', true)
+                    ->when($maxPrice !== null, function ($q) use ($maxPrice) {
+                        $q->where('price', '<', $maxPrice);
+                    })
+                    ->groupBy('product_id');
+            })
+            ->get()
+            ->keyBy('product_id');
+
+        if ($firstVariants->isEmpty()) {
+            return collect();
+        }
+
+        // Load ONLY first media for these variants in a single optimized query
+        $variantIds = $firstVariants->pluck('id');
+        $firstMediaItems = DB::table('media')
+            ->whereIn('model_id', $variantIds)
+            ->where('model_type', 'App\\Models\\ProductVariant')
+            ->where('collection_name', 'variant-image')
+            ->whereIn('id', function ($query) use ($variantIds) {
+                $query->selectRaw('MIN(id)')
+                    ->from('media')
+                    ->whereIn('model_id', $variantIds)
+                    ->where('model_type', 'App\\Models\\ProductVariant')
+                    ->where('collection_name', 'variant-image')
+                    ->groupBy('model_id');
+            })
+            ->get()
+            ->keyBy('model_id');
+
+        // Build variants with media
+        $variants = collect();
+        foreach ($firstVariants as $productId => $variant) {
+            // Attach media if exists
+            if ($firstMediaItems->has($variant->id)) {
+                $mediaItem = $firstMediaItems->get($variant->id);
+                $media = new \Spatie\MediaLibrary\MediaCollections\Models\Media((array) $mediaItem);
+                $media->exists = true;
+                $variant->setRelation('media', collect([$media]));
+            } else {
+                $variant->setRelation('media', collect());
+            }
+
+            $variants->put($productId, $variant);
+        }
+
+        // Attach variants to products
+        foreach ($products as $product) {
+            if ($variants->has($product->id)) {
+                $product->setRelation('variants', collect([$variants->get($product->id)]));
+            } else {
+                $product->setRelation('variants', collect());
+            }
+        }
+
+        return $variants;
+    }
+
+    /**
+     * Preload ONLY category and quality names (not full objects with media)
+     * Ultra-optimized: Only loads the name field, not full models with relationships
      */
     private function preloadRelations(Collection $products): void
     {
         $categoryIds = $products->pluck('category_id')->unique()->filter();
         $qualityIds = $products->pluck('quality_id')->unique()->filter();
 
-        // Load categories with media that aren't cached
+        // Load ONLY name_en and name_ar for uncached categories
         $uncachedCategoryIds = $categoryIds->reject(fn($id) => isset(self::$categoryCache[$id]));
         if ($uncachedCategoryIds->isNotEmpty()) {
-            $categories = \App\Models\ProductCategory::with('media')
+            $categories = DB::table('product_categories')
                 ->whereIn('id', $uncachedCategoryIds)
+                ->select('id', 'name_en', 'name_ar')
                 ->get();
 
+            $locale = app()->getLocale();
             foreach ($categories as $category) {
-                self::$categoryCache[$category->id] = $category;
+                $name = $locale === 'ar' ? $category->name_ar : $category->name_en;
+                self::$categoryCache[$category->id] = (object) ['id' => $category->id, 'name' => $name];
             }
         }
 
-        // Load qualities that aren't cached
+        // Load ONLY name_en and name_ar for uncached qualities
         $uncachedQualityIds = $qualityIds->reject(fn($id) => isset(self::$qualityCache[$id]));
         if ($uncachedQualityIds->isNotEmpty()) {
-            $qualities = \App\Models\ProductQuality::whereIn('id', $uncachedQualityIds)->get();
+            $qualities = DB::table('product_qualities')
+                ->whereIn('id', $uncachedQualityIds)
+                ->select('id', 'name_en', 'name_ar')
+                ->get();
 
+            $locale = app()->getLocale();
             foreach ($qualities as $quality) {
-                self::$qualityCache[$quality->id] = $quality;
+                $name = $locale === 'ar' ? $quality->name_ar : $quality->name_en;
+                self::$qualityCache[$quality->id] = (object) ['id' => $quality->id, 'name' => $name];
             }
         }
 
-        // Set cached relations on products
+        // Set cached relations on products (only name, not full objects)
         foreach ($products as $product) {
             if ($product->category_id && isset(self::$categoryCache[$product->category_id])) {
                 $product->setRelation('category', self::$categoryCache[$product->category_id]);
