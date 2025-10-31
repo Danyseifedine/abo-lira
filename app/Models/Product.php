@@ -50,10 +50,6 @@ class Product extends Model implements HasMedia
         ];
     }
 
-    protected $with = [
-        'media',
-    ];
-
     protected $appends = [
         'image',
         'name',

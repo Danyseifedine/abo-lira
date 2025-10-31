@@ -30,10 +30,6 @@ class ProductVariant extends Model implements HasMedia
         ];
     }
 
-    protected $with = [
-        'media',
-    ];
-
     protected $appends = [
         'image',
     ];

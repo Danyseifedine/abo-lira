@@ -21,10 +21,6 @@ class ProductCategory extends Model implements HasMedia
         'status',
     ];
 
-    protected $with = [
-        'media',
-    ];
-
     protected $appends = [
         'image',
     ];
