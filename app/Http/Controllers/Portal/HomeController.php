@@ -25,9 +25,9 @@ class HomeController extends Controller
             ->get();
         // // Fetch products directly without cache (fast with optimizations)
         // $accessoriesProducts = $this->productService->getRandomProductsByCategory(true, $accessoriesCategory->id, 8);
-        // $productsLessThanPrice5 = $this->productService->getProductLessThanPrice(true, 5, 8);
+        $productsLessThanPrice5 = $this->productService->getProductLessThanPrice(5, 8);
 
-        return view('landing', compact('categories'));
+        return view('landing', compact('categories', 'productsLessThanPrice5'));
     }
 
     public function about(): View

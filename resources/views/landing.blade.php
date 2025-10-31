@@ -111,7 +111,7 @@
         <!-- End product section -->
 
         <!-- Start product section -->
-        {{-- <section class="product__section section--padding pt-0">
+        <section class="product__section section--padding pt-0">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
                     <h2 class="section__heading--maintitle"><a href="{{ route('shop') }}">Products Less Than $5</a>
@@ -141,7 +141,7 @@
                     </div>
                 </div>
             </div>
-        </section> --}}
+        </section>
         <!-- End product section -->
 
         <!-- Start product section -->
