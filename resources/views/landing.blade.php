@@ -62,7 +62,7 @@
         <!-- End slider section -->
 
         <!-- Start categories section -->
-        <section class="categories__section section--padding">
+        {{-- <section class="categories__section section--padding">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
                     <h2 class="section__heading--maintitle">Shop by <span>Categories</span></h2>
@@ -107,7 +107,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
         <!-- End product section -->
 
         <!-- Start product section -->
