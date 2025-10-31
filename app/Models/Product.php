@@ -32,6 +32,7 @@ class Product extends Model implements HasMedia
         'description_ar',
         'price',
         'status',
+        'has_multiple_color',
     ];
 
     protected function casts(): array
@@ -47,6 +48,7 @@ class Product extends Model implements HasMedia
             'has_variants' => 'boolean',
             'price' => 'decimal:2',
             'status' => 'boolean',
+            'has_multiple_color' => 'boolean',
         ];
     }
 
@@ -107,5 +109,15 @@ class Product extends Model implements HasMedia
     public function scopeInActive(Builder $query): Builder
     {
         return $query->where('status', false);
+    }
+
+    public function scopeHasMultipleColor(Builder $query): Builder
+    {
+        return $query->where('has_multiple_color', true);
+    }
+
+    public function scopeHasSingleColor(Builder $query): Builder
+    {
+        return $query->where('has_multiple_color', false);
     }
 }

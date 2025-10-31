@@ -58,7 +58,6 @@ class ProductServicePortal
         if ($includeFirstVariant) {
             return $products->map(function ($product) {
                 $firstVariant = $product->variants->first();
-                $variantCount = $product->variants->count();
                 $description = app()->getLocale() === 'ar' ? $product->description_ar : $product->description_en;
 
                 // Priority: Use variant price if available, otherwise use product price
@@ -81,8 +80,7 @@ class ProductServicePortal
                     'is_discounted' => $product->is_discounted,
                     'category' => $product->category?->name ?? null,
                     'quality' => $product->quality?->name ?? null,
-                    'has_multiple_variants' => $variantCount > 1,
-                    'variant_count' => $variantCount,
+                    'has_multiple_variants' => $product->has_multiple_color,
                 ];
             });
         }
@@ -108,7 +106,6 @@ class ProductServicePortal
         if ($includeFirstVariant && $products->isNotEmpty()) {
             return $products->map(function ($product) {
                 $firstVariant = $product->variants->first();
-                $variantCount = $product->variants->count();
                 $description = app()->getLocale() === 'ar' ? $product->description_ar : $product->description_en;
 
                 // Priority: Use variant price if available, otherwise use product price
@@ -131,8 +128,7 @@ class ProductServicePortal
                     'is_discounted' => $product->is_discounted,
                     'category' => $product->category?->name ?? null,
                     'quality' => $product->quality?->name ?? null,
-                    'has_multiple_variants' => $variantCount > 1,
-                    'variant_count' => $variantCount,
+                    'has_multiple_variants' => $product->has_multiple_color,
                 ];
             });
         }
@@ -147,15 +143,18 @@ class ProductServicePortal
         // Select all necessary relations up front to avoid N+1 queries (Eloquent eager loading)
         $products = Product::with([
             'variants' => function ($query) use ($maxPrice) {
-                $query->active()->where('price', '<', $maxPrice)->orderBy('id');
+                $query->active()
+                    ->where('price', '<', $maxPrice)
+                    ->orderBy('id')
+                    ->limit(1);
             },
             'variants.media',
             'category:id,name_en,name_ar',
             'quality:id,name_en,name_ar',
         ])
-            ->whereHas('variants', function ($query) use ($maxPrice) {
-                $query->active()->where('price', '<', $maxPrice);
-            })
+                ->whereHas('variants', function ($query) use ($maxPrice) {
+                    $query->active()->where('price', '<', $maxPrice);
+                })
             ->active()
             ->inRandomOrder()
             ->limit($limit)
@@ -163,7 +162,6 @@ class ProductServicePortal
 
         return $products->map(function ($product) use ($locale) {
             $firstVariant = $product->variants->first();
-            $variantCount = $product->variants->count();
 
             $name = $locale === 'ar'
                 ? ($product->name_ar ?? $product->name)
@@ -212,8 +210,7 @@ class ProductServicePortal
                 'is_discounted' => $product->is_discounted,
                 'category' => $category,
                 'quality' => $quality,
-                'has_multiple_variants' => $variantCount > 1,
-                'variant_count' => $variantCount,
+                'has_multiple_variants' => $product->has_multiple_color,
             ];
         });
     }

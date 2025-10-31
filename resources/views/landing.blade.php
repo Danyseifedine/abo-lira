@@ -145,7 +145,7 @@
         <!-- End product section -->
 
         <!-- Start product section -->
-        <section class="product__section deal__section--bg section--padding ">
+        {{-- <section class="product__section deal__section--bg section--padding ">
             <div class="container">
                 <div class="section__heading  border-bottom mb-30">
                     <h2 class="section__heading--maintitle">Deal Of <span>The Day</span></h2>
@@ -262,11 +262,11 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
         <!-- End product section -->
 
         <!-- Start blog section -->
-        <section class="blog__section section--padding">
+        {{-- <section class="blog__section section--padding">
             <div class="container">
                 <div
                     class="section__heading section__heading--flex border-bottom d-flex justify-content-between align-items-end mb-30">
@@ -332,11 +332,11 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
         <!-- End blog section -->
 
         <!-- Start banner video section -->
-        <section class="banner__video--section section--padding pt-0">
+        {{-- <section class="banner__video--section section--padding pt-0">
             <div class="container">
                 <div class="banner__video--inner position-relative">
                     <div class="banner__video--thumbnail position-relative">
@@ -359,11 +359,11 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
         <!-- End banner video section -->
 
         <!-- Start banner section -->
-        <section class="banner__section section--padding pt-0">
+        {{-- <section class="banner__section section--padding pt-0">
             <div class="container">
                 <div class="row  mb--n30">
                     <div class="col-lg-6 col-md-6 mb-30">
@@ -412,7 +412,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
         <!-- End banner section -->
     </main>
 @endsection
