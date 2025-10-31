@@ -19,14 +19,15 @@ class HomeController extends Controller
     public function home(): View
     {
         // Don't cache categories - they're fast with indexes and already optimized
-        // $categories = ProductCategory::with('media')->active()->get();
-        // $accessoriesCategory = $categories->firstWhere('slug', 'accessories');
-
+        $categories = ProductCategory::query()
+            ->with('media')
+            ->active()
+            ->get();
         // // Fetch products directly without cache (fast with optimizations)
         // $accessoriesProducts = $this->productService->getRandomProductsByCategory(true, $accessoriesCategory->id, 8);
         // $productsLessThanPrice5 = $this->productService->getProductLessThanPrice(true, 5, 8);
 
-        return view('landing');
+        return view('landing', compact('categories'));
     }
 
     public function about(): View

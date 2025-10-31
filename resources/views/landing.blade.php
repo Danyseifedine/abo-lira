@@ -62,7 +62,7 @@
         <!-- End slider section -->
 
         <!-- Start categories section -->
-        {{-- <section class="categories__section section--padding">
+         <section class="categories__section section--padding">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
                     <h2 class="section__heading--maintitle">Shop by <span>Categories</span></h2>
@@ -78,7 +78,7 @@
         <!-- End categories section -->
 
         <!-- Start product section -->
-        <section class="product__section section--padding  pt-0">
+        {{-- <section class="product__section section--padding  pt-0">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
                     <h2 class="section__heading--maintitle">Pouplar <span>Products</span></h2>
