@@ -16,9 +16,11 @@
     <article class="product__card" style="height: 100%; display: flex; flex-direction: column;">
         <div class="product__card--thumbnail">
             <a class="product__card--thumbnail__link display-block" href="{{ route('detail') }}">
-                <img src="{{ $primaryImage ? asset($primaryImage) : asset('assets/img/abo-lira/empty.webp') }}"
+                <img src="{{ asset('assets/img/abo-lira/empty.webp') }}"
+                    @if ($primaryImage) data-src="{{ asset($primaryImage) }}" @endif
                     alt="{{ $name }}{{ $category ? ' - ' . $category : '' }}{{ $quality ? ' - ' . $quality : '' }}{{ $description ? ' – ' . Str::limit(strip_tags($description), 80) : '' }}"
-                    loading="lazy" style="height: 250px; width: 100%; object-fit: cover; border-radius: 8px;"
+                    class="product__card--image"
+                    style="height: 250px; width: 100%; object-fit: cover; border-radius: 8px; transition: opacity 0.3s ease;"
                     title="{{ $name }}{{ $category ? ' in ' . $category : '' }}{{ $quality ? ' (' . $quality . ')' : '' }}"
                     @if ($basePrice) data-product-price="{{ $basePrice }}" @endif
                     @if (isset($discount) && $discount) data-discount="{{ $discount }}" @endif

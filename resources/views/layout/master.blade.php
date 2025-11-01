@@ -33,6 +33,16 @@
         .offcanvas__filter--sidebar_active::before {
             cursor: pointer !important;
         }
+
+        /* Product image loading transition */
+        .product__card--image {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .product__card--image.loaded {
+            opacity: 1;
+        }
     </style>
 
     @include('layout.common.loading')
@@ -61,6 +71,59 @@
 
     <!-- Customscript js -->
     <script src="{{ asset('assets/js/_script.js') }}"></script>
+
+    <!-- Product image lazy loading with placeholder -->
+    <script>
+        (function() {
+            function loadProductImages() {
+                const productImages = document.querySelectorAll('.product__card--image[data-src]');
+
+                productImages.forEach(function(img) {
+                    const actualSrc = img.getAttribute('data-src');
+                    if (!actualSrc) return;
+
+                    // Create a new image to preload
+                    const preloadImg = new Image();
+
+                    preloadImg.onload = function() {
+                        // Once loaded, swap the src
+                        img.src = actualSrc;
+                        img.classList.add('loaded');
+                    };
+
+                    preloadImg.onerror = function() {
+                        // If image fails to load, keep the placeholder
+                        img.classList.add('error');
+                    };
+
+                    // Start loading the actual image
+                    preloadImg.src = actualSrc;
+                });
+            }
+
+            // Load images when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadProductImages);
+            } else {
+                loadProductImages();
+            }
+
+            // Also handle dynamically added slides (e.g., Swiper)
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        loadProductImages();
+                    }
+                });
+            });
+
+            // Observe the document body for new nodes
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        })();
+    </script>
 
     @stack('scripts')
 </body>
