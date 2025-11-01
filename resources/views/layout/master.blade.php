@@ -20,7 +20,7 @@
 
     <!-- Plugin css -->
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/bootstrap.min.css') }}">
-
+    
     <!-- Custom Style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
