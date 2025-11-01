@@ -23,6 +23,18 @@
 
     <!-- Custom Style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    <!-- Fix cursor for overlay elements -->
+    <style>
+        body.overlay__active::before,
+        .predictive__search--box_active::before,
+        .mobile_menu_open::before,
+        .offCanvas__minicart_active::before,
+        .offcanvas__filter--sidebar_active::before {
+            cursor: pointer !important;
+        }
+    </style>
+
     @include('layout.common.loading')
 
     @stack('styles')

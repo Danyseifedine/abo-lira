@@ -60,7 +60,7 @@ body {
   @media only screen and (max-width: 991px) {
     font-size: 1.4rem;
     line-height: 2.4rem;
-    
+
   }
 }
 
@@ -478,7 +478,7 @@ hr {
   &.swiper-button-disabled{
     background: inherit;
     color: var(--primary-color);
-    
+
   }
   &:hover {
     background: var(--secondary-color);
@@ -486,7 +486,7 @@ hr {
   }
   &::after {
     display: none;
-    
+
   }
   &.swiper-button-prev {
     left: 0;
@@ -832,7 +832,7 @@ body.overlay__active::before,
   height: 100%;
   z-index: 999;
   opacity: 0.5;
-  cursor: crosshair;
+  cursor: pointer;
 }
 
 // Start animation css here

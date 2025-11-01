@@ -992,7 +992,7 @@ body.overlay__active::before,
   height: 100%;
   z-index: 999;
   opacity: 0.5;
-  cursor: crosshair;
+  cursor: pointer;
 }
 
 @-webkit-keyframes fadeInDown {
