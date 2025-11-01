@@ -20,7 +20,7 @@
                     @if ($primaryImage) data-src="{{ asset($primaryImage) }}" @endif
                     alt="{{ $name }}{{ $category ? ' - ' . $category : '' }}{{ $quality ? ' - ' . $quality : '' }}{{ $description ? ' – ' . Str::limit(strip_tags($description), 80) : '' }}"
                     class="product__card--image"
-                    style="height: 250px; width: 100%; object-fit: cover; border-radius: 8px; transition: opacity 0.3s ease;"
+                    style="height: 250px; width: 100%; object-fit: cover; border-radius: 8px; display: block; opacity: 1;"
                     title="{{ $name }}{{ $category ? ' in ' . $category : '' }}{{ $quality ? ' (' . $quality . ')' : '' }}"
                     @if ($basePrice) data-product-price="{{ $basePrice }}" @endif
                     @if (isset($discount) && $discount) data-discount="{{ $discount }}" @endif

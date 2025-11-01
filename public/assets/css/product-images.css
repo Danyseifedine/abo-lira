@@ -1,0 +1,32 @@
+/**
+ * Product Image Styles
+ * Smooth transitions and proper sizing for product images
+ */
+
+/* Fix cursor for overlay elements */
+body.overlay__active::before,
+.predictive__search--box_active::before,
+.mobile_menu_open::before,
+.offCanvas__minicart_active::before,
+.offcanvas__filter--sidebar_active::before {
+    cursor: pointer !important;
+}
+
+/* Product image - Smooth transition */
+.product__card--image {
+    height: 250px;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Prevent layout shift during image swap */
+.product__card--thumbnail {
+    position: relative;
+    overflow: hidden;
+    background-color: #f5f5f5;
+}
