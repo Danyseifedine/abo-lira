@@ -62,7 +62,7 @@
         <!-- End slider section -->
 
         <!-- Start categories section -->
-         <section class="categories__section section--padding">
+        <section class="categories__section section--padding">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
                     <h2 class="section__heading--maintitle">Shop by <span>Categories</span></h2>
@@ -121,8 +121,8 @@
                     <div class="swiper-wrapper">
                         @foreach ($productsLessThanPrice5 as $product)
                             <x-product-slide :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
-                                :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality"
-                                :hasMultipleVariants="$product->has_multiple_variants" :is_discounted="$product->is_discounted" />
+                                :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality" :hasMultipleVariants="$product->has_multiple_variants"
+                                :is_discounted="$product->is_discounted" />
                         @endforeach
                     </div>
                     <div class="swiper__nav--btn swiper-button-next">
@@ -336,12 +336,37 @@
         <!-- End blog section -->
 
         <!-- Start banner video section -->
-        {{-- <section class="banner__video--section section--padding pt-0">
-            <div class="container">
+        <section style="{{ app()->getLocale() === 'ar' ? 'direction: rtl;' : 'direction: ltr;' }}"
+            class="banner__video--section section--padding pt-0">
+            <div class="container" style="{{ app()->getLocale() === 'ar' ? 'direction: ltr;' : 'direction: ltr;' }}">
                 <div class="banner__video--inner position-relative">
                     <div class="banner__video--thumbnail position-relative">
-                        <img class="border-radius-5" src="assets/img/banner/banner14.webp" alt="banner-img">
-                        <a class="banner__video--play glightbox" href="https://vimeo.com/115041822" data-gallery="video">
+                        <div style="position: relative; display: inline-block; width: 817px; height: 602px;">
+                            <img class="border-radius-5" width="817" height="602"
+                                src="{{ asset('assets/img/abo-lira/thumbnail.jpeg') }}"
+                                alt="{{ __('landing.commit_image_alt', ['brand' => config('app.name')]) }}"
+                                title="{{ __('landing.commit_image_title', ['brand' => config('app.name')]) }}"
+                                style="display: block; width: 100%; height: 100%;" loading="lazy" decoding="async" />
+                            <div
+                                style="
+                                position: absolute;
+                                inset: 0;
+                                border-radius: 8px;
+                                pointer-events: none;
+                                background: linear-gradient(to {{ app()->getLocale() === 'ar' ? 'left' : 'right' }}, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.36) 40%, rgba(0,0,0,0) 80%);
+                            ">
+                            </div>
+                        </div>
+
+                        @php
+                            $ar_video_play = '';
+                            if (app()->getLocale() === 'ar') {
+                                $ar_video_play = 'right: 3rem;';
+                            }
+                        @endphp
+                        <a class="banner__video--play glightbox" style="
+                        {{ $ar_video_play }}"
+                            href="{{ asset('assets/img/abo-lira/vid.mp4') }}" data-gallery="video">
                             <svg width="26" height="25" viewBox="0 0 26 25" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="13.2212" cy="12.5" r="12" stroke="currentColor" />
@@ -349,17 +374,17 @@
                                     d="M18.9712 12.067C19.3045 12.2594 19.3045 12.7406 18.9712 12.933L10.7212 17.6962C10.3879 17.8886 9.97119 17.648 9.97119 17.2631L9.97119 7.73686C9.97119 7.35196 10.3879 7.1114 10.7212 7.30385L18.9712 12.067Z"
                                     fill="currentColor" />
                             </svg>
-                            WATCH THE VIDEO</a>
+                            {{ __('landing.watch_video') }}
+                        </a>
                     </div>
-                    <div class="image__width--text">
-                        <h2 class="image__width--text__title">We commit to provide quality & safe.</h2>
-                        <p class="image__width--text__desc">Born out of a shared love of good design & quality products, we
-                            create considered solutions fit for the modern lifestyle. Always driven by passion, we work to
-                            empower others to live the same.</p>
+                    <div class="image__width--text"
+                        style="{{ app()->getLocale() === 'ar' ? 'direction: rtl;' : 'direction: ltr;' }}">
+                        <h2 class="image__width--text__title">{{ __('landing.commit_title') }}</h2>
+                        <p class="image__width--text__desc">{{ __('landing.commit_description') }}</p>
                     </div>
                 </div>
             </div>
-        </section> --}}
+        </section>
         <!-- End banner video section -->
 
         <!-- Start banner section -->
