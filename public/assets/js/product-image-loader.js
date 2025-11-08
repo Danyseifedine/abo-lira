@@ -1,202 +1,626 @@
 /**
- * Product Image Lazy Loading with Placeholder
- * Smooth loading without flashing - optimized for performance
+ * Product Image Lazy Loading Implementation
+ * Optimized for e-commerce product cards and swiper galleries
  */
-(function() {
+
+(function () {
     'use strict';
-    
-    // Track processed images to avoid duplicate loading
-    const processedImages = new WeakSet();
-    let imageObserver = null;
-    let mutationObserver = null;
-    let checkTimeout = null;
-    
-    function isElementVisible(el) {
-        const rect = el.getBoundingClientRect();
-        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-        const windowWidth = window.innerWidth || document.documentElement.clientWidth;
-        
-        return (
-            rect.top >= -200 && // 200px above viewport
-            rect.left >= 0 &&
-            rect.bottom <= windowHeight + 200 && // 200px below viewport
-            rect.right <= windowWidth
-        );
-    }
-    
-    function loadImage(img) {
-        // Skip if already processed or loading
-        if (processedImages.has(img) || img.dataset.loading === 'true') {
-            return;
+
+    /**
+     * ProductImageLoader - Specialized lazy loader for product images
+     * Extends the base LazyImageLoader with product-specific optimizations
+     */
+    class ProductImageLoader {
+        constructor(options = {}) {
+            // Merge default product-specific options
+            this.options = {
+                // Selectors optimized for product cards
+                imageSelector: '.product__card--image[data-src]',
+                containerSelectors: ['.product__section--inner', '.swiper-wrapper'],
+
+                // Loading behavior
+                rootMargin: '300px',
+                threshold: [0, 0.1, 0.5],
+                loadingAttribute: 'data-src',
+                concurrent: 3,
+
+                // Visual settings for product images
+                fadeIn: true,
+                fadeDuration: 300,
+                productImageHeight: '250px',
+                productImageWidth: '100%',
+                objectFit: 'cover',
+
+                // Performance
+                debounceDelay: 50,
+                scrollThrottle: 100,
+                checkDelay: 300,
+                useRequestIdleCallback: true,
+
+                // Swiper detection
+                detectSwiper: true,
+                swiperSelectors: ['.swiper-slide', '.product__card'],
+
+                ...options
+            };
+
+            // Internal state
+            this.processedImages = new WeakSet();
+            this.loadingImages = new Set();
+            this.observers = {
+                intersection: null,
+                mutation: [],
+                resizeObserver: null
+            };
+            this.timers = {
+                debounce: null,
+                scroll: null,
+                check: null
+            };
+
+            // Bind methods
+            this.loadImage = this.loadImage.bind(this);
+            this.handleIntersection = this.handleIntersection.bind(this);
+            this.handleScroll = this.handleScroll.bind(this);
+            this.observeImages = this.observeImages.bind(this);
+
+            // Initialize
+            this.init();
         }
-        
-        const actualSrc = img.getAttribute('data-src');
-        if (!actualSrc) return;
-        
-        // Mark as loading to prevent duplicate loads
-        img.dataset.loading = 'true';
-        processedImages.add(img);
-        
-        // Create a new image to preload
-        const preloadImg = new Image();
-        
-        preloadImg.onload = function() {
-            // Smooth fade transition when swapping
-            // First set opacity to 0 for fade in
-            img.style.opacity = '0';
-            
-            // Force reflow to ensure opacity 0 is applied
-            img.offsetHeight;
-            
-            // Change the source and then fade in
-            requestAnimationFrame(function() {
-                img.src = actualSrc;
-                img.style.objectFit = 'cover';
-                img.style.height = '250px';
-                img.style.width = '100%';
-                
-                // Small delay to ensure image loads, then fade in
-                setTimeout(function() {
-                    img.style.opacity = '1';
-                    img.classList.add('loaded');
-                    img.removeAttribute('data-src');
-                    img.removeAttribute('data-loading');
-                }, 10);
-            });
-        };
-        
-        preloadImg.onerror = function() {
-            img.classList.add('error');
-            img.removeAttribute('data-loading');
-        };
-        
-        // Start loading the actual image
-        preloadImg.src = actualSrc;
-    }
-    
-    function loadVisibleImages() {
-        // Load all currently visible images immediately
-        const allImages = document.querySelectorAll('.product__card--image[data-src]:not([data-loading])');
-        const visibleImages = Array.from(allImages).filter(function(img) {
-            return isElementVisible(img);
-        });
-        
-        // Load visible images immediately
-        visibleImages.forEach(function(img) {
-            loadImage(img);
-        });
-        
-        return allImages;
-    }
-    
-    function initializeImageObserver() {
-        // Use Intersection Observer for lazy loading - preload much earlier
-        if ('IntersectionObserver' in window) {
-            imageObserver = new IntersectionObserver(function(entries) {
-                // Batch process all intersecting entries together
-                const toLoad = [];
-                
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        imageObserver.unobserve(entry.target);
-                        toLoad.push(entry.target);
-                    }
-                });
-                
-                // Load all at once to prevent flashing
-                toLoad.forEach(function(img) {
-                    loadImage(img);
-                });
-            }, {
-                rootMargin: '300px', // Start loading 300px before image comes into view
-                threshold: [0, 0.1, 0.5] // Multiple thresholds for better detection
-            });
-        }
-    }
-    
-    function observeImages() {
-        const allImages = loadVisibleImages();
-        
-        // Observe remaining images for lazy loading
-        allImages.forEach(function(img) {
-            if (!img.dataset.loading && imageObserver) {
-                imageObserver.observe(img);
-            }
-        });
-    }
-    
-    function debouncedObserve() {
-        // Debounce to prevent excessive calls
-        clearTimeout(checkTimeout);
-        checkTimeout = setTimeout(function() {
-            if (window.requestIdleCallback) {
-                requestIdleCallback(observeImages, { timeout: 500 });
+
+        /**
+         * Initialize the loader
+         */
+        init() {
+            this.injectStyles();
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => this.start());
             } else {
-                observeImages();
+                this.start();
             }
-        }, 50);
-    }
-    
-    // Initialize when DOM is ready
-    function init() {
-        initializeImageObserver();
-        
-        // Load visible images immediately
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                observeImages();
-                // Also check after a short delay to catch Swiper initialized slides
-                setTimeout(observeImages, 300);
+        }
+
+        /**
+         * Start observing and loading
+         */
+        start() {
+            // Setup intersection observer
+            this.setupIntersectionObserver();
+
+            // Initial observation
+            this.observeImages();
+
+            // Check again after a delay to catch any missed images
+            setTimeout(() => this.observeImages(), this.options.checkDelay);
+
+            // Setup mutation observers for dynamic content
+            this.setupMutationObservers();
+
+            // Setup scroll listener as fallback
+            this.setupScrollListener();
+
+            // Setup resize observer for responsive behavior
+            if ('ResizeObserver' in window) {
+                this.setupResizeObserver();
+            }
+        }
+
+        /**
+         * Setup Intersection Observer for lazy loading
+         */
+        setupIntersectionObserver() {
+            if (!('IntersectionObserver' in window)) {
+                console.warn('IntersectionObserver not supported, falling back to scroll-based loading');
+                this.fallbackToScroll();
+                return;
+            }
+
+            this.observers.intersection = new IntersectionObserver(
+                this.handleIntersection,
+                {
+                    rootMargin: this.options.rootMargin,
+                    threshold: this.options.threshold
+                }
+            );
+        }
+
+        /**
+         * Handle intersection observer callbacks
+         */
+        handleIntersection(entries) {
+            const toLoad = [];
+
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !this.isProcessed(entry.target)) {
+                    this.observers.intersection.unobserve(entry.target);
+                    toLoad.push(entry.target);
+                }
             });
-        } else {
-            observeImages();
-            setTimeout(observeImages, 300);
+
+            // Batch load all intersecting images
+            toLoad.forEach(img => this.loadImage(img));
         }
-        
-        // Optimized MutationObserver - only watch specific containers
-        if (mutationObserver) {
-            mutationObserver.disconnect();
+
+        /**
+         * Load a single image
+         */
+        loadImage(img) {
+            // Skip if already processed or loading
+            if (this.isProcessed(img) || this.isLoading(img)) {
+                return;
+            }
+
+            const actualSrc = img.getAttribute(this.options.loadingAttribute);
+            if (!actualSrc) return;
+
+            // Mark as loading
+            this.markAsLoading(img);
+
+            // Create preloader
+            const preloadImg = new Image();
+
+            preloadImg.onload = () => {
+                this.applyLoadedImage(img, actualSrc);
+                this.markAsLoaded(img);
+            };
+
+            preloadImg.onerror = () => {
+                this.handleLoadError(img);
+            };
+
+            // Start loading
+            preloadImg.src = actualSrc;
         }
-        
-        mutationObserver = new MutationObserver(function(mutations) {
-            let hasNewImages = false;
-            
-            mutations.forEach(function(mutation) {
-                mutation.addedNodes.forEach(function(node) {
-                    if (node.nodeType === 1) { // Element node
-                        // Check if it's a product slide or contains one
-                        if (node.classList && (node.classList.contains('swiper-slide') || 
-                            node.classList.contains('product__card') || 
-                            (node.querySelector && node.querySelector('.product__card--image[data-src]')))) {
-                            hasNewImages = true;
-                        }
-                    }
+
+        /**
+         * Apply loaded image with smooth transition
+         */
+        applyLoadedImage(img, src) {
+            // Use requestAnimationFrame for smooth transition
+            requestAnimationFrame(() => {
+                // Prepare for transition
+                img.style.transition = `opacity ${this.options.fadeDuration}ms ease-in-out`;
+                img.style.opacity = '0';
+
+                // Force reflow
+                void img.offsetHeight;
+
+                requestAnimationFrame(() => {
+                    // Apply new source and styles
+                    img.src = src;
+                    img.style.objectFit = this.options.objectFit;
+                    img.style.height = this.options.productImageHeight;
+                    img.style.width = this.options.productImageWidth;
+
+                    // Fade in
+                    setTimeout(() => {
+                        img.style.opacity = '1';
+                        img.classList.add('loaded');
+                    }, 10);
                 });
             });
-            
-            if (hasNewImages) {
-                debouncedObserve();
-            }
-        });
-        
-        // Only observe product containers, not the entire body
-        const productContainers = document.querySelectorAll('.product__section--inner, .swiper-wrapper');
-        productContainers.forEach(function(container) {
-            mutationObserver.observe(container, {
-                childList: true,
-                subtree: true
+        }
+
+        /**
+         * Handle image load error
+         */
+        handleLoadError(img) {
+            img.classList.add('error');
+            this.unmarkAsLoading(img);
+            console.error('Failed to load image:', img.getAttribute(this.options.loadingAttribute));
+        }
+
+        /**
+         * Mark image as loading
+         */
+        markAsLoading(img) {
+            img.dataset.loading = 'true';
+            this.loadingImages.add(img);
+        }
+
+        /**
+         * Mark image as loaded
+         */
+        markAsLoaded(img) {
+            this.processedImages.add(img);
+            this.unmarkAsLoading(img);
+            img.removeAttribute(this.options.loadingAttribute);
+            img.removeAttribute('data-loading');
+        }
+
+        /**
+         * Unmark image as loading
+         */
+        unmarkAsLoading(img) {
+            delete img.dataset.loading;
+            this.loadingImages.delete(img);
+        }
+
+        /**
+         * Check if image is processed
+         */
+        isProcessed(img) {
+            return this.processedImages.has(img);
+        }
+
+        /**
+         * Check if image is loading
+         */
+        isLoading(img) {
+            return img.dataset.loading === 'true' || this.loadingImages.has(img);
+        }
+
+        /**
+         * Check if element is visible
+         */
+        isElementVisible(el) {
+            const rect = el.getBoundingClientRect();
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+            const windowWidth = window.innerWidth || document.documentElement.clientWidth;
+
+            return (
+                rect.top >= -200 &&
+                rect.left >= 0 &&
+                rect.bottom <= windowHeight + 200 &&
+                rect.right <= windowWidth
+            );
+        }
+
+        /**
+         * Load all visible images
+         */
+        loadVisibleImages() {
+            const allImages = this.getAllImages();
+            const visibleImages = Array.from(allImages).filter(img => {
+                return this.isElementVisible(img) && !this.isProcessed(img) && !this.isLoading(img);
             });
-        });
-        
-        // Also observe on scroll for any missed images
-        let scrollTimeout = null;
-        window.addEventListener('scroll', function() {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(function() {
-                loadVisibleImages();
-            }, 100);
-        }, { passive: true });
+
+            visibleImages.forEach(img => this.loadImage(img));
+            return allImages;
+        }
+
+        /**
+         * Observe all images
+         */
+        observeImages() {
+            const allImages = this.loadVisibleImages();
+
+            if (this.observers.intersection) {
+                allImages.forEach(img => {
+                    if (!this.isProcessed(img) && !this.isLoading(img)) {
+                        this.observers.intersection.observe(img);
+                    }
+                });
+            }
+        }
+
+        /**
+         * Debounced observe for performance
+         */
+        debouncedObserve() {
+            clearTimeout(this.timers.debounce);
+
+            this.timers.debounce = setTimeout(() => {
+                if (this.options.useRequestIdleCallback && window.requestIdleCallback) {
+                    requestIdleCallback(() => this.observeImages(), { timeout: 500 });
+                } else {
+                    this.observeImages();
+                }
+            }, this.options.debounceDelay);
+        }
+
+        /**
+         * Setup mutation observers for dynamic content
+         */
+        setupMutationObservers() {
+            // Clear existing observers
+            this.observers.mutation.forEach(observer => observer.disconnect());
+            this.observers.mutation = [];
+
+            const mutationCallback = (mutations) => {
+                let hasNewImages = false;
+
+                mutations.forEach(mutation => {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === 1) { // Element node
+                            if (this.nodeHasOrIsProductImage(node)) {
+                                hasNewImages = true;
+                            }
+                        }
+                    });
+                });
+
+                if (hasNewImages) {
+                    this.debouncedObserve();
+                }
+            };
+
+            // Observe each container
+            this.options.containerSelectors.forEach(selector => {
+                const containers = document.querySelectorAll(selector);
+                containers.forEach(container => {
+                    const observer = new MutationObserver(mutationCallback);
+                    observer.observe(container, {
+                        childList: true,
+                        subtree: true
+                    });
+                    this.observers.mutation.push(observer);
+                });
+            });
+        }
+
+        /**
+         * Check if node has or is a product image
+         */
+        nodeHasOrIsProductImage(node) {
+            if (!node.classList) return false;
+
+            // Check if it's a swiper slide or product card
+            if (this.options.detectSwiper) {
+                for (const selector of this.options.swiperSelectors) {
+                    const className = selector.replace('.', '');
+                    if (node.classList.contains(className)) {
+                        return true;
+                    }
+                }
+            }
+
+            // Check if it contains product images
+            if (node.querySelector) {
+                return !!node.querySelector(this.options.imageSelector);
+            }
+
+            // Check if it is a product image
+            if (node.matches) {
+                return node.matches(this.options.imageSelector);
+            }
+
+            return false;
+        }
+
+        /**
+         * Setup scroll listener as fallback
+         */
+        setupScrollListener() {
+            const scrollHandler = () => {
+                clearTimeout(this.timers.scroll);
+                this.timers.scroll = setTimeout(() => {
+                    this.loadVisibleImages();
+                }, this.options.scrollThrottle);
+            };
+
+            window.addEventListener('scroll', scrollHandler, { passive: true });
+        }
+
+        /**
+         * Setup resize observer for responsive images
+         */
+        setupResizeObserver() {
+            let resizeTimeout;
+
+            this.observers.resizeObserver = new ResizeObserver(entries => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    // Recheck images after resize
+                    this.observeImages();
+                }, 200);
+            });
+
+            // Observe the body or main container
+            this.observers.resizeObserver.observe(document.body);
+        }
+
+        /**
+         * Fallback for browsers without IntersectionObserver
+         */
+        fallbackToScroll() {
+            // Just use scroll-based loading
+            this.loadVisibleImages();
+
+            window.addEventListener('scroll', this.handleScroll, { passive: true });
+            window.addEventListener('resize', this.handleScroll, { passive: true });
+        }
+
+        /**
+         * Handle scroll events
+         */
+        handleScroll() {
+            clearTimeout(this.timers.scroll);
+            this.timers.scroll = setTimeout(() => {
+                this.loadVisibleImages();
+            }, this.options.scrollThrottle);
+        }
+
+        /**
+         * Get all lazy-loadable images
+         */
+        getAllImages() {
+            return document.querySelectorAll(this.options.imageSelector);
+        }
+
+        /**
+         * Inject CSS styles
+         */
+        injectStyles() {
+            if (document.getElementById('product-lazy-styles')) return;
+
+            const style = document.createElement('style');
+            style.id = 'product-lazy-styles';
+            style.textContent = `
+                .product__card--image {
+                    transition: opacity ${this.options.fadeDuration}ms ease-in-out;
+                    will-change: opacity;
+                }
+
+                .product__card--image[data-loading="true"] {
+                    opacity: 0.5;
+                }
+
+                .product__card--image.loaded {
+                    opacity: 1 !important;
+                }
+
+                .product__card--image.error {
+                    opacity: 1;
+                    background: #f5f5f5;
+                }
+
+                /* Smooth transitions for swiper slides */
+                .swiper-slide .product__card--image {
+                    transition: opacity ${this.options.fadeDuration}ms ease-in-out,
+                               transform 0.3s ease;
+                }
+
+                /* Skeleton loading effect */
+                .product__card--image:not(.loaded):not(.error) {
+                    background: linear-gradient(
+                        90deg,
+                        #f0f0f0 25%,
+                        #e0e0e0 50%,
+                        #f0f0f0 75%
+                    );
+                    background-size: 200% 100%;
+                    animation: loading 1.5s infinite;
+                }
+
+                @keyframes loading {
+                    0% {
+                        background-position: 200% 0;
+                    }
+                    100% {
+                        background-position: -200% 0;
+                    }
+                }
+
+                /* Optimize rendering */
+                .product__section--inner,
+                .swiper-wrapper {
+                    will-change: scroll-position;
+                }
+
+                /* Ensure proper sizing during load */
+                .product__card--image {
+                    display: block;
+                    min-height: ${this.options.productImageHeight};
+                    width: ${this.options.productImageWidth};
+                    object-fit: ${this.options.objectFit};
+                }
+            `;
+
+            document.head.appendChild(style);
+        }
+
+        /**
+         * Refresh - rescan for new images
+         */
+        refresh() {
+            this.observeImages();
+        }
+
+        /**
+         * Destroy and cleanup
+         */
+        destroy() {
+            // Clear timers
+            Object.values(this.timers).forEach(timer => clearTimeout(timer));
+
+            // Disconnect observers
+            if (this.observers.intersection) {
+                this.observers.intersection.disconnect();
+            }
+
+            this.observers.mutation.forEach(observer => observer.disconnect());
+
+            if (this.observers.resizeObserver) {
+                this.observers.resizeObserver.disconnect();
+            }
+
+            // Remove event listeners
+            window.removeEventListener('scroll', this.handleScroll);
+            window.removeEventListener('resize', this.handleScroll);
+
+            // Clear sets
+            this.processedImages = new WeakSet();
+            this.loadingImages.clear();
+
+            // Remove styles
+            const styles = document.getElementById('product-lazy-styles');
+            if (styles) {
+                styles.remove();
+            }
+        }
+
+        /**
+         * Get loading statistics
+         */
+        getStats() {
+            const allImages = this.getAllImages();
+            const loaded = Array.from(allImages).filter(img => this.isProcessed(img)).length;
+            const loading = this.loadingImages.size;
+            const total = allImages.length;
+            const pending = total - loaded - loading;
+
+            return {
+                total,
+                loaded,
+                loading,
+                pending,
+                percentage: total > 0 ? (loaded / total) * 100 : 0
+            };
+        }
     }
-    
-    init();
+
+    /**
+     * Auto-initialize on DOM ready with your specific configuration
+     */
+    const initializeProductLazyLoader = () => {
+        // Create instance with your specific settings
+        window.productImageLoader = new ProductImageLoader({
+            imageSelector: '.product__card--image[data-src]',
+            containerSelectors: ['.product__section--inner', '.swiper-wrapper'],
+            rootMargin: '300px',
+            threshold: [0, 0.1, 0.5],
+            fadeIn: true,
+            fadeDuration: 300,
+            productImageHeight: '250px',
+            productImageWidth: '100%',
+            objectFit: 'cover',
+            debounceDelay: 50,
+            scrollThrottle: 100,
+            checkDelay: 300,
+            detectSwiper: true,
+            swiperSelectors: ['.swiper-slide', '.product__card'],
+            useRequestIdleCallback: true
+        });
+
+        // Log initial stats
+        console.log('Product Image Loader initialized');
+
+        // Optional: Log stats periodically during development
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            setInterval(() => {
+                const stats = window.productImageLoader.getStats();
+                console.log('Loading stats:', stats);
+            }, 5000);
+        }
+
+        // Optional: Expose refresh method for debugging
+        window.refreshProductImages = () => {
+            window.productImageLoader.refresh();
+            console.log('Product images refreshed');
+        };
+    };
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeProductLazyLoader);
+    } else {
+        // DOM is already loaded
+        initializeProductLazyLoader();
+    }
+
+    // Also make the class available globally if needed
+    window.ProductImageLoader = ProductImageLoader;
+
 })();

@@ -19,12 +19,21 @@ class HomeController extends Controller
     public function home(): View
     {
         // Don't cache categories - they're fast with indexes and already optimized
-        $categories = $this->productService->getProductCategories();
-        // // Fetch products directly without cache (fast with optimizations)
-        // $accessoriesProducts = $this->productService->getRandomProductsByCategory(true, $accessoriesCategory->id, 8);
-        $productsLessThanPrice5 = $this->productService->getProductLessThanPrice(5, 8);
+        $categories = $this->productService->getProductCategoriesCached();
 
-        return view('landing', compact('categories', 'productsLessThanPrice5'));
+        // Find the "accessories" category (by slug or name_en; adjust as needed)
+        $accessoriesCategory = $categories->first(function ($category) {
+            return $category->slug === 'accessories' || $category->name_en === 'Accessories';
+        });
+
+        $accessoriesProducts = null;
+        if ($accessoriesCategory) {
+            $accessoriesProducts = $this->productService->getRandomProductsByCategoryCached($accessoriesCategory->id, 8);
+        }
+
+        $productsLessThanPrice5 = $this->productService->getProductLessThanPriceCached(5, 8);
+
+        return view('landing', compact('categories', 'accessoriesProducts', 'productsLessThanPrice5'));
     }
 
     public function about(): View

@@ -33,7 +33,7 @@ class ProductServicePortal
         ];
     }
 
-    public function getProductCategories(): Collection
+    public function getProductCategoriesCached(): Collection
     {
         $locale = app()->getLocale();
 
@@ -63,112 +63,100 @@ class ProductServicePortal
         return collect($cachedData)->map(fn($item) => (object) $item);
     }
 
-    /**
-     * Retrieve the latest active products for the portal, optionally including their first active variant.
-     *
-     * If $includeFirstVariant is true, each product will have its first active variant loaded
-     * (ordered by ID, limited to 1 per product, only active variants).
-     *
-     * @param  bool  $includeFirstVariant  Whether to eagerly load the first active variant for each product.
-     * @param  int  $limit  The number of products to retrieve.
-     * @return \Illuminate\Support\Collection<Product> List of recent products, each optionally with their first variant.
-     */
-    public function getLatestProducts(bool $includeFirstVariant = true, int $limit = 8): Collection|array
+    public function getRandomProductsByCategoryCached(int $categoryId, int $limit = 8, bool $includeFirstVariant = true): Collection|array
     {
-        $products = Product::with([
-            'variants' => function ($query) {
-                $query->active()->orderBy('id');
-            },
-            'category',
-            'quality',
-        ])
-            ->active()
-            ->latest()
-            ->limit($limit)
-            ->get();
+        $locale = app()->getLocale();
 
-        if ($includeFirstVariant) {
-            return $products->map(function ($product) {
-                $firstVariant = $product->variants->first();
-                $description = app()->getLocale() === 'ar' ? $product->description_ar : $product->description_en;
+        // Cache key includes categoryId, limit, locale, and includeFirstVariant to ensure proper cache segmentation
+        $cacheKey = "portal.random_products_by_category_{$categoryId}_{$limit}_{$locale}_" . ($includeFirstVariant ? '1' : '0');
 
-                // Priority: Use variant price if available, otherwise use product price
-                $basePrice = $firstVariant?->price ?? $product->price;
+        $cachedData = Cache::remember(
+            $cacheKey,
+            now()->addWeek(), // Cache for 1 week
+            function () use ($categoryId, $limit, $locale, $includeFirstVariant) {
+                // Select all necessary relations up front to avoid N+1 queries (Eloquent eager loading)
+                $products = Product::with([
+                    'variants' => function ($query) {
+                        $query->active()->orderBy('id')->limit(1);
+                    },
+                    'variants.media',
+                    'category:id,name_en,name_ar',
+                    'quality:id,name_en,name_ar',
+                ])
+                    ->where('category_id', $categoryId)
+                    ->active()
+                    ->inRandomOrder() // Note: Random order will be cached for the week
+                    ->limit($limit)
+                    ->get();
 
-                // Calculate prices based on discount using the reusable method
-                $discountCalculation = $this->calculateDiscount($basePrice, $product->discount_price);
-                $newPrice = $discountCalculation['new_price'];
-                $discountPercentage = $discountCalculation['discount_percentage'];
+                if ($includeFirstVariant && $products->isNotEmpty()) {
+                    return $products->map(function ($product) use ($locale) {
+                        $firstVariant = $product->variants->first();
 
-                return (object) [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'slug' => $product->slug,
-                    'description' => Str::limit($description, 100, '...'),
-                    'image' => $firstVariant?->image ?? $product->image,
-                    'base_price' => $basePrice,
-                    'price' => $newPrice,
-                    'discount_percentage' => $discountPercentage,
-                    'is_discounted' => $product->is_discounted,
-                    'category' => $product->category?->name ?? null,
-                    'quality' => $product->quality?->name ?? null,
-                    'has_multiple_variants' => $product->has_multiple_color,
-                ];
-            });
-        }
+                        $name = $locale === 'ar'
+                            ? ($product->name_ar ?? $product->name)
+                            : ($product->name_en ?? $product->name);
 
-        return $products;
+                        $description = $locale === 'ar'
+                            ? ($product->description_ar ?? $product->description)
+                            : ($product->description_en ?? $product->description);
+
+                        // Priority: Use variant price if available, otherwise use product price
+                        $basePrice = $firstVariant?->price ?? $product->price;
+
+                        // Calculate prices based on discount using the reusable method
+                        $discountCalculation = $this->calculateDiscount($basePrice, $product->discount_price);
+                        $newPrice = $discountCalculation['new_price'];
+                        $discountPercentage = $discountCalculation['discount_percentage'];
+
+                        // Resolve image: prefer firstVariant->image, else product->image
+                        $image = $firstVariant?->image ?: $product->image;
+
+                        // Category and quality names, fallback to null if relation missing
+                        $categoryModel = $product->category;
+                        $category = null;
+                        if ($categoryModel) {
+                            $category = $locale === 'ar'
+                                ? ($categoryModel->name_ar ?? $categoryModel->name_en)
+                                : ($categoryModel->name_en ?? $categoryModel->name_ar);
+                        }
+
+                        $qualityModel = $product->quality;
+                        $quality = null;
+                        if ($qualityModel) {
+                            $quality = $locale === 'ar'
+                                ? ($qualityModel->name_ar ?? $qualityModel->name_en)
+                                : ($qualityModel->name_en ?? $qualityModel->name_ar);
+                        }
+
+                        // Return as array for efficient caching (not object)
+                        return [
+                            'id' => $product->id,
+                            'name' => $name,
+                            'slug' => $product->slug,
+                            'description' => Str::limit($description, 100, '...'),
+                            'image' => $image,
+                            'base_price' => $basePrice,
+                            'price' => $newPrice,
+                            'discount_percentage' => $discountPercentage,
+                            'is_discounted' => $product->is_discounted,
+                            'category' => $category,
+                            'quality' => $quality,
+                            'has_multiple_variants' => $product->has_multiple_color,
+                        ];
+                    })->toArray();
+                }
+
+                // If includeFirstVariant is false, return products as-is
+                return $products->toArray();
+            }
+        );
+
+        // Convert back to collection of objects to maintain same return format
+        return collect($cachedData)->map(fn($item) => (object) $item);
     }
 
-    public function getRandomProductsByCategory(bool $includeFirstVariant, int $categoryId, int $limit = 8): Collection|array
-    {
-        $products = Product::with([
-            'variants' => function ($query) {
-                $query->active()->orderBy('id');
-            },
-            'category',
-            'quality',
-        ])
-            ->where('category_id', $categoryId)
-            ->active()
-            ->inRandomOrder()
-            ->limit($limit)
-            ->get();
-
-        if ($includeFirstVariant && $products->isNotEmpty()) {
-            return $products->map(function ($product) {
-                $firstVariant = $product->variants->first();
-                $description = app()->getLocale() === 'ar' ? $product->description_ar : $product->description_en;
-
-                // Priority: Use variant price if available, otherwise use product price
-                $basePrice = $firstVariant?->price ?? $product->price;
-
-                // Calculate prices based on discount using the reusable method
-                $discountCalculation = $this->calculateDiscount($basePrice, $product->discount_price);
-                $newPrice = $discountCalculation['new_price'];
-                $discountPercentage = $discountCalculation['discount_percentage'];
-
-                return (object) [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'slug' => $product->slug,
-                    'description' => Str::limit($description, 100, '...'),
-                    'image' => $firstVariant?->image ?? $product->image,
-                    'base_price' => $basePrice,
-                    'price' => $newPrice,
-                    'discount_percentage' => $discountPercentage,
-                    'is_discounted' => $product->is_discounted,
-                    'category' => $product->category?->name ?? null,
-                    'quality' => $product->quality?->name ?? null,
-                    'has_multiple_variants' => $product->has_multiple_color,
-                ];
-            });
-        }
-
-        return $products;
-    }
-
-    public function getProductLessThanPrice(float $maxPrice, int $limit = 8): Collection|array
+    public function getProductLessThanPriceCached(float $maxPrice, int $limit = 8): Collection|array
     {
         $locale = app()->getLocale();
 

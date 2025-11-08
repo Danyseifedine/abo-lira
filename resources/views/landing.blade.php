@@ -77,38 +77,6 @@
         </section>
         <!-- End categories section -->
 
-        <!-- Start product section -->
-        {{-- <section class="product__section section--padding  pt-0">
-            <div class="container">
-                <div class="section__heading border-bottom mb-30">
-                    <h2 class="section__heading--maintitle">Pouplar <span>Products</span></h2>
-                </div>
-                <div class="product__section--inner pb-15 product__swiper--activation swiper">
-                    <div class="swiper-wrapper">
-                        @foreach ($accessoriesProducts as $product)
-                            <x-product-slide :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
-                                :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality" :hasMultipleVariants="$product->has_multiple_variants"
-                                :is_discounted="$product->is_discounted" />
-                        @endforeach
-                    </div>
-                    <div class="swiper__nav--btn swiper-button-next">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class=" -chevron-right">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </div>
-                    <div class="swiper__nav--btn swiper-button-prev">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class=" -chevron-left">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </section> --}}
-        <!-- End product section -->
 
         <!-- Start product section -->
         <section class="product__section section--padding pt-0">
@@ -142,127 +110,6 @@
                 </div>
             </div>
         </section>
-        <!-- End product section -->
-
-        <!-- Start product section -->
-        {{-- <section class="product__section deal__section--bg section--padding ">
-            <div class="container">
-                <div class="section__heading  border-bottom mb-30">
-                    <h2 class="section__heading--maintitle">Deal Of <span>The Day</span></h2>
-                </div>
-                <div class="product__section--inner">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="single__product--wrapper">
-                                <div class="single__product--topbar d-flex align-items-center">
-                                    <div class="single__product--preview single__product--thumbnail__preview swiper">
-                                        <div class="swiper-wrapper">
-                                            <div class="swiper-slide">
-                                                <div class="single__product--thumbnail">
-                                                    <a class="single__product--thumbnail__link display-block"
-                                                        href="product-details.html">
-                                                        <img class="single__product--thumbnail__img"
-                                                            src="{{ asset('assets/img/product/big-product/product1.webp') }}"
-                                                            alt="product-img">
-                                                    </a>
-                                                    <span class="product__badge style__left">-14%</span>
-                                                    <span class="product__badge--new">New</span>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div class="single__product--thumbnail">
-                                                    <a class="single__product--thumbnail__link display-block"
-                                                        href="product-details.html">
-                                                        <img class="single__product--thumbnail__img"
-                                                            src="{{ asset('assets/img/product/big-product/product2.webp') }}"
-                                                            alt="product-img">
-                                                    </a>
-                                                    <span class="product__badge style__left">-14%</span>
-                                                    <span class="product__badge--new">New</span>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div class="single__product--thumbnail">
-                                                    <a class="single__product--thumbnail__link display-block"
-                                                        href="product-details.html">
-                                                        <img class="single__product--thumbnail__img"
-                                                            src="{{ asset('assets/img/product/big-product/product3.webp') }}"
-                                                            alt="product-img">
-                                                    </a>
-                                                    <span class="product__badge style__left">-14%</span>
-                                                    <span class="product__badge--new">New</span>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div class="single__product--thumbnail">
-                                                    <a class="single__product--thumbnail__link display-block"
-                                                        href="product-details.html">
-                                                        <img class="single__product--thumbnail__img"
-                                                            src="{{ asset('assets/img/product/big-product/product4.webp') }}"
-                                                            alt="product-img">
-                                                    </a>
-                                                    <span class="product__badge style__left">-14%</span>
-                                                    <span class="product__badge--new">New</span>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div class="single__product--thumbnail">
-                                                    <a class="single__product--thumbnail__link display-block"
-                                                        href="product-details.html">
-                                                        <img class="single__product--thumbnail__img"
-                                                            src="{{ asset('assets/img/product/big-product/product5.webp') }}"
-                                                            alt="product-img">
-                                                    </a>
-                                                    <span class="product__badge style__left">-14%</span>
-                                                    <span class="product__badge--new">New</span>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <div class="single__product--thumbnail">
-                                                    <a class="single__product--thumbnail__link display-block"
-                                                        href="product-details.html">
-                                                        <img class="single__product--thumbnail__img"
-                                                            src="{{ asset('assets/img/product/big-product/product6.webp') }}"
-                                                            alt="product-img">
-                                                    </a>
-                                                    <span class="product__badge style__left">-14%</span>
-                                                    <span class="product__badge--new">New</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="single__product--content">
-
-                                        <h3 class="single__product--title h2"><a href="product-details.html">Brendy Bluest
-                                                Headphone </a></h3>
-                                        <div class="product__card--price">
-                                            <span class="current__price">$239.52</span>
-                                            <span class="old__price"> $362.00</span>
-                                        </div>
-                                        <div class="product__sold">
-                                            <span class="product__sold--text">Available: <span
-                                                    class="product__sold--text__number">334</span></span>
-                                            <span class="product__sold--text">Units Sold: <span
-                                                    class="product__sold--text__number">1</span></span>
-                                        </div>
-                                        <div class="single__product--countdown d-flex"
-                                            data-countdown="Sep 30, 2023 00:00:00"></div>
-
-                                        <ul class="single__product--action d-flex align-items-center">
-                                            <li class="single__product--action__list">
-                                                <a class="single__product--cart__btn" href="cart.html">
-                                                    Add to cart
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section> --}}
         <!-- End product section -->
 
         <!-- Start blog section -->
@@ -368,8 +215,42 @@
         </section>
         <!-- End banner video section -->
 
+        <!-- Start product section -->
+        <section class="product__section section--padding pt-0">
+            <div class="container">
+                <div class="section__heading border-bottom mb-30">
+                    <h2 class="section__heading--maintitle"><a href="{{ route('shop') }}">Accessories</a>
+                    </h2>
+                </div>
+                <div class="product__section--inner pb-15 product__swiper--activation swiper">
+                    <div class="swiper-wrapper">
+                        @foreach ($accessoriesProducts as $product)
+                            <x-product-slide :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
+                                :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality"
+                                :hasMultipleVariants="$product->has_multiple_variants" :is_discounted="$product->is_discounted" />
+                        @endforeach
+                    </div>
+                    <div class="swiper__nav--btn swiper-button-next">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class=" -chevron-right">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="swiper__nav--btn swiper-button-prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class=" -chevron-left">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End product section -->
+
         <!-- Start banner section -->
-        {{-- <section class="banner__section section--padding pt-0">
+        <section class="banner__section section--padding pt-0">
             <div class="container">
                 <div class="row  mb--n30">
                     <div class="col-lg-6 col-md-6 mb-30">
@@ -418,7 +299,7 @@
                     </div>
                 </div>
             </div>
-        </section> --}}
+        </section>
         <!-- End banner section -->
     </main>
 @endsection
