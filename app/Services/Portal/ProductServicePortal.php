@@ -247,4 +247,49 @@ class ProductServicePortal
         // Convert back to collection of objects to maintain same return format
         return collect($cachedData)->map(fn($item) => (object) $item);
     }
+
+    public function getProductDetails(string $slug): ?Product
+    {
+        $product = Product::where('slug', $slug)
+            ->with([
+                'category',
+                'quality',
+                'variants' => function ($query) {
+                    $query->active()
+                        ->with([
+                            'color' => function ($q) {
+                                $q->active();
+                            },
+                            'size' => function ($q) {
+                                $q->active();
+                            },
+                        ]);
+                },
+            ])
+            ->active()
+            ->first();
+
+        if (!$product) {
+            return null;
+        }
+
+        $productDiscount = (float) ($product->discount_price ?? 0);
+
+        // Apply discount to each variant if product has discount
+        if ($productDiscount > 0) {
+            $product->variants->each(function ($variant) use ($productDiscount) {
+                $discountCalculation = $this->calculateDiscount(
+                    (float) $variant->price,
+                    $productDiscount
+                );
+                
+                // Add discounted price information to variant
+                $variant->setAttribute('original_price', (float) $variant->price);
+                $variant->setAttribute('price', $discountCalculation['new_price']);
+                $variant->setAttribute('discount_percentage', $discountCalculation['discount_percentage']);
+            });
+        }
+
+        return $product;
+    }
 }
