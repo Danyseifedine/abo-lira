@@ -30,7 +30,7 @@ function registerWebRoutes()
         Route::get('/contact', 'contact')->name('contact');
         Route::get('/shop', 'shop')->name('shop');
         Route::get('/cart', 'cart')->name('cart');
-        Route::get('/detail', 'detail')->name('detail');
+        Route::get('/detail/{slug}', 'detail')->name('detail');
         Route::get('/checkout', 'checkout')->name('checkout');
     });
 
