@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Services\Portal\ProductServicePortal;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -56,9 +57,15 @@ class HomeController extends Controller
         return view('cart');
     }
 
-    public function detail(): View
+    public function detail(string $slug): View|RedirectResponse
     {
-        return view('detail');
+        $product = $this->productService->getProductDetails($slug);
+        
+        if(!$product) {
+            return redirect()->back()->with('error', 'Product not found.');
+        }
+
+        return view('detail', compact('product'));
     }
 
     public function checkout(): View
