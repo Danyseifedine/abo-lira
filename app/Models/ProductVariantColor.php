@@ -22,6 +22,11 @@ class ProductVariantColor extends Model
         ];
     }
 
+    public function getNameAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->name_ar : $this->name_en;
+    }
+
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class, 'color_id');
