@@ -30,7 +30,6 @@ class Product extends Model implements HasMedia
         'has_variants',
         'description_en',
         'description_ar',
-        'price',
         'status',
         'has_multiple_color',
     ];
@@ -46,7 +45,6 @@ class Product extends Model implements HasMedia
             'has_limited_time_discount' => 'boolean',
             'is_discounted' => 'boolean',
             'has_variants' => 'boolean',
-            'price' => 'decimal:2',
             'status' => 'boolean',
             'has_multiple_color' => 'boolean',
         ];
@@ -57,14 +55,24 @@ class Product extends Model implements HasMedia
         'name',
     ];
 
+    public function getPlacementImageAttribute()
+    {
+        return $this->getFirstMediaUrl('placement');
+    }
+
     public function getImageAttribute()
     {
-        return $this->getFirstMediaUrl('product-image');
+        return $this->getFirstMediaUrl('featured');
     }
 
     public function getNameAttribute()
     {
         return app()->getLocale() === 'ar' ? $this->name_ar : $this->name_en;
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->description_ar : $this->description_en;
     }
 
     protected static function boot(): void
