@@ -21,6 +21,93 @@
             }
 
         }
+
+        /* For xs, sm, md (< 992px): Text outside at bottom, full width */
+        @media (max-width: 991px) {
+            .banner__video--inner {
+                padding-right: 0 !important;
+            }
+
+            .banner__video--thumbnail {
+                width: 100%;
+            }
+
+            .banner__video--thumbnail > div {
+                width: 100% !important;
+                max-width: 100%;
+                height: auto !important;
+                aspect-ratio: 817 / 602;
+                display: block;
+            }
+
+            .banner__video--thumbnail img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .banner__video--section .image__width--text {
+                position: relative !important;
+                top: auto !important;
+                transform: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 10px !important;
+                margin-top: 0 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                left: auto !important;
+                right: auto !important;
+                z-index: 1;
+            }
+        }
+
+        /* For lg (992px - 1279px): Text inside at bottom */
+        @media (min-width: 992px) and (max-width: 1279px) {
+            .banner__video--inner {
+                padding-right: 0 !important;
+            }
+
+            .banner__video--thumbnail {
+                width: 100%;
+            }
+
+            .banner__video--thumbnail > div {
+                width: 100% !important;
+                max-width: 100%;
+                height: auto !important;
+                aspect-ratio: 817 / 602;
+                display: block;
+            }
+
+            .banner__video--thumbnail img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .banner__video--section .image__width--text {
+                position: absolute !important;
+                top: auto !important;
+                bottom: -5rem !important;
+                transform: none !important;
+                padding: 20px;
+                width: 90% !important;
+                max-width: 400px !important;
+                margin-top: 0 !important;
+                z-index: 10;
+            }
+
+            .banner__video--section[style*="direction: rtl"] .image__width--text {
+                right: auto !important;
+                left: 2rem;
+            }
+
+            .banner__video--section[style*="direction: ltr"] .image__width--text {
+                left: auto !important;
+                right: 2rem;
+            }
+        }
     </style>
 
     <main class="main__content_wrapper">
@@ -88,7 +175,7 @@
                 <div class="product__section--inner pb-15 product__swiper--activation swiper">
                     <div class="swiper-wrapper">
                         @foreach ($productsLessThanPrice5 as $product)
-                            <x-product-slide :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
+                            <x-product-slide :slug="$product->slug" :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
                                 :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality" :hasMultipleVariants="$product->has_multiple_variants"
                                 :is_discounted="$product->is_discounted" />
                         @endforeach
@@ -192,8 +279,7 @@
                                 $ar_video_play = 'right: 3rem;';
                             }
                         @endphp
-                        <a class="banner__video--play glightbox" style="
-                        {{ $ar_video_play }}"
+                        <a class="banner__video--play glightbox" style="{{ $ar_video_play }}"
                             href="{{ asset('assets/img/abo-lira/vid.mp4') }}" data-gallery="video">
                             <svg width="26" height="25" viewBox="0 0 26 25" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -225,7 +311,7 @@
                 <div class="product__section--inner pb-15 product__swiper--activation swiper">
                     <div class="swiper-wrapper">
                         @foreach ($accessoriesProducts as $product)
-                            <x-product-slide :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
+                            <x-product-slide :slug="$product->slug" :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
                                 :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality"
                                 :hasMultipleVariants="$product->has_multiple_variants" :is_discounted="$product->is_discounted" />
                         @endforeach
