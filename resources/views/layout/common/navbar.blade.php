@@ -255,7 +255,7 @@
     </div>
     <!-- End Offcanvas stikcy toolbar -->
 
-    <!-- Start offCanvas minicart -->
+    <!-- Start offCanvas minicart --------------- cart -->
     <div class="offCanvas__minicart">
         <div class="minicart__header ">
             <div class="minicart__header--top d-flex justify-content-between align-items-center">
@@ -271,7 +271,7 @@
         <div class="minicart__product">
             <x-minicart-item image="assets/img/product/small-product/product1.webp" name="Car & Motorbike Care."
                 variant="Color: Beige" currentPrice="125.00" oldPrice="140.00" :quantity="1"
-                link="{{ route('detail') }}" />
+                link="" />
         </div>
         <div class="minicart__amount">
             <div class="minicart__amount_list d-flex justify-content-between">

@@ -3,19 +3,18 @@
 namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\ProductCategory;
+use App\Http\Requests\Portal\ShopRequest;
+use App\Services\Portal\CartServicePortal;
 use App\Services\Portal\ProductServicePortal;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-
     public function __construct(
-        private ProductServicePortal $productService
+        private ProductServicePortal $productService,
+        private CartServicePortal $cartService
     ) {}
-
 
     public function home(): View
     {
@@ -47,29 +46,21 @@ class HomeController extends Controller
         return view('contact');
     }
 
-    public function shop(): View
+    public function shop(ShopRequest $request): View
     {
-        return view('shop');
-    }
+        $result = $this->productService->getShopProducts($request);
 
-    public function cart(): View
-    {
-        return view('cart');
+        return view('shop', $result);
     }
 
     public function detail(string $slug): View|RedirectResponse
     {
         $product = $this->productService->getProductDetails($slug);
-        
-        if(!$product) {
+
+        if (! $product) {
             return redirect()->back()->with('error', 'Product not found.');
         }
 
         return view('detail', compact('product'));
-    }
-
-    public function checkout(): View
-    {
-        return view('checkout');
     }
 }

@@ -55,7 +55,7 @@
 
             <h3 class="product__card--title"
                 style="min-height: 44px; margin: 0 0 8px 0; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.4;">
-                <a href="{{ route('detail') }}">{{ $name }}</a>
+                <a href="{{ route('detail', ['slug' => $slug]) }}">{{ $name }}</a>
             </h3>
 
             <p class="product__card--description"

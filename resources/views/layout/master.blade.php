@@ -5,6 +5,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="base-url" content="{{ url('/') }}">
+    <meta name="shop-url" content="{{ route('shop') }}">
 
     {{-- SEO Component --}}
     <x-seo :title="get_seo_data('title')" :description="get_seo_data('description')" :keywords="get_seo_data('keywords')" :image="get_seo_data('image')" :type="get_seo_data('type', 'website')" :price="get_seo_data('price')"
@@ -28,6 +31,17 @@
     <link rel="stylesheet" href="{{ asset('assets/css/product-images.css') }}">
 
     @include('layout.common.loading')
+
+    <style>
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 
     @stack('styles')
 </head>
@@ -56,6 +70,9 @@
 
     <!-- Product Image Loader -->
     <script src="{{ asset('assets/js/product-image-loader.js') }}" defer></script>
+
+    <!-- Cart Handler -->
+    <script src="{{ asset('assets/js/cart.js') }}"></script>
 
     @stack('scripts')
 </body>

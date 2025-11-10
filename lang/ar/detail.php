@@ -20,5 +20,8 @@ return [
     'increase_value' => 'زيادة القيمة',
     'quantity_value' => 'قيمة الكمية',
     'no_image' => 'لا يوجد صورة',
+    'validation_error' => 'خطأ في التحقق',
+    'variant' => 'المتغير',
+    'quantity' => 'الكمية',
 ];
 

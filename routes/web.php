@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BaseController;
+use App\Http\Controllers\Portal\CartController;
 use App\Navigation\SuperAdminPath;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,11 +30,17 @@ function registerWebRoutes()
         Route::get('/about', 'about')->name('about');
         Route::get('/contact', 'contact')->name('contact');
         Route::get('/shop', 'shop')->name('shop');
-        Route::get('/cart', 'cart')->name('cart');
         Route::get('/detail/{slug}', 'detail')->name('detail');
-        Route::get('/checkout', 'checkout')->name('checkout');
     });
 
+    Route::controller(CartController::class)->prefix('cart')->group(function () {
+        Route::get('/', 'cart')->name('cart');
+        Route::post('/add-to-cart', 'addToCart')->name('add-to-cart');
+        Route::delete('/remove/{itemId}', 'removeCartItem')->name('remove-cart-item');
+        Route::post('/change-quantity', 'changeQuantity')->name('change-quantity');
+
+        Route::get('/checkout', 'checkout')->name('checkout');
+    });
 
     Route::middleware([
         'auth',

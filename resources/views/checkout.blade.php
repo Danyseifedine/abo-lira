@@ -93,7 +93,7 @@
                                             variant="COLOR: Blue"
                                             :quantity="1"
                                             price="65.00"
-                                            link="{{ route('detail') }}"
+                                            link="{{ route('detail', ['slug' => 'fluids-and-chemicals']) }}"
                                         />
 
                                     </tbody>

@@ -20,5 +20,8 @@ return [
     'increase_value' => 'Increase Value',
     'quantity_value' => 'quantity value',
     'no_image' => 'No Image',
+    'validation_error' => 'Validation Error',
+    'variant' => 'Variant',
+    'quantity' => 'Quantity',
 ];
 
