@@ -405,6 +405,8 @@ class ProductServicePortal
                 'discount_percentage' => round($discountPercentage, 0),
                 'is_discounted' => $product->is_discounted,
                 'has_multiple_variants' => $product->has_multiple_color,
+                'category' => $product->category?->name,
+                'quality' => $product->quality?->name
             ];
         });
 

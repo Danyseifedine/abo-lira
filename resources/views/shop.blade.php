@@ -336,40 +336,6 @@
                                         </svg>
                                         <span class="widget__filter--btn__text">{{ __('shop.filter') }}</span>
                                     </button>
-                                    <div class="product__view--mode__list">
-                                        <div class="product__tab--one product__grid--column__buttons d-flex justify-content-center {{ app()->getLocale() === 'ar' ? 'gap-3' : '' }}">
-                                            <button class="product__grid--column__buttons--icons active" aria-label="grid btn" data-toggle="tab" data-target="#product_grid">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 9 9">
-                                                    <g transform="translate(-1360 -479)">
-                                                        <rect id="Rectangle_5725" data-name="Rectangle 5725" width="4" height="4" transform="translate(1360 479)" fill="currentColor" />
-                                                        <rect id="Rectangle_5727" data-name="Rectangle 5727" width="4" height="4" transform="translate(1360 484)" fill="currentColor" />
-                                                        <rect id="Rectangle_5726" data-name="Rectangle 5726" width="4" height="4" transform="translate(1365 479)" fill="currentColor" />
-                                                        <rect id="Rectangle_5728" data-name="Rectangle 5728" width="4" height="4" transform="translate(1365 484)" fill="currentColor" />
-                                                    </g>
-                                                </svg>
-                                            </button>
-                                            <button class="product__grid--column__buttons--icons" aria-label="list btn" data-toggle="tab" data-target="#product_list">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 13 8">
-                                                    <g id="Group_14700" data-name="Group 14700" transform="translate(-1376 -478)">
-                                                        <g transform="translate(12 -2)">
-                                                            <g id="Group_1326" data-name="Group 1326">
-                                                                <rect id="Rectangle_5729" data-name="Rectangle 5729" width="3" height="2" transform="translate(1364 483)" fill="currentColor" />
-                                                                <rect id="Rectangle_5730" data-name="Rectangle 5730" width="9" height="2" transform="translate(1368 483)" fill="currentColor" />
-                                                            </g>
-                                                            <g id="Group_1328" data-name="Group 1328" transform="translate(0 -3)">
-                                                                <rect id="Rectangle_5729-2" data-name="Rectangle 5729" width="3" height="2" transform="translate(1364 483)" fill="currentColor" />
-                                                                <rect id="Rectangle_5730-2" data-name="Rectangle 5730" width="9" height="2" transform="translate(1368 483)" fill="currentColor" />
-                                                            </g>
-                                                            <g id="Group_1327" data-name="Group 1327" transform="translate(0 -1)">
-                                                                <rect id="Rectangle_5731" data-name="Rectangle 5731" width="3" height="2" transform="translate(1364 487)" fill="currentColor" />
-                                                                <rect id="Rectangle_5732" data-name="Rectangle 5732" width="9" height="2" transform="translate(1368 487)" fill="currentColor" />
-                                                            </g>
-                                                        </g>
-                                                    </g>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="tab_content">
@@ -377,33 +343,21 @@
                                     <div class="product__section--inner">
                                         <div class="row mb--n30">
                                             @forelse($products as $product)
-                                                <x-product
-                                                    :slug="$product->slug"
-                                                    :primaryImage="$product->image"
-                                                    :name="$product->name"
-                                                    :currentPrice="number_format($product->price, 2)"
-                                                    :oldPrice="$product->discount_percentage > 0 ? number_format($product->base_price, 2) : null"
-                                                    :discount="$product->discount_percentage > 0 ? round($product->discount_percentage) : null" />
-                                            @empty
-                                                <div class="col-12">
-                                                    <p class="text-center">{{ __('shop.no_products') }}</p>
+                                                <div class="col-lg-4 col-md-6 col-sm-6 mb-30">
+                                                    <x-product-slide
+                                                        :slug="$product->slug"
+                                                        :primaryImage="$product->image"
+                                                        :name="$product->name"
+                                                        :description="$product->description"
+                                                        :category="$product->category"
+                                                        :quality="$product->quality"
+                                                        :hasMultipleVariants="$product->has_multiple_variants"
+                                                        :is_discounted="$product->is_discounted"
+                                                        :basePrice="number_format($product->base_price, 2)"
+                                                        :price="number_format($product->price, 2)"
+                                                        :oldPrice="$product->discount_percentage > 0 ? number_format($product->base_price, 2) : null"
+                                                        :discountPercentage="$product->discount_percentage > 0 ? round($product->discount_percentage) : null" />
                                                 </div>
-                                            @endforelse
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="product_list" class="tab_pane">
-                                    <div class="product__section--inner product__section--style3__inner">
-                                        <div class="row row-cols-1 mb--n30">
-                                            @forelse($products as $product)
-                                                <x-product-wide
-                                                    :slug="$product->slug"
-                                                    :primaryImage="$product->image"
-                                                    :name="$product->name"
-                                                    :currentPrice="number_format($product->price, 2)"
-                                                    :oldPrice="$product->discount_percentage > 0 ? number_format($product->base_price, 2) : null"
-                                                    :discount="$product->discount_percentage > 0 ? round($product->discount_percentage) : null"
-                                                    :description="$product->description" />
                                             @empty
                                                 <div class="col-12">
                                                     <p class="text-center">{{ __('shop.no_products') }}</p>
