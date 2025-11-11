@@ -22,7 +22,7 @@
                 rootMargin: '300px',
                 threshold: [0, 0.1, 0.5],
                 loadingAttribute: 'data-src',
-                concurrent: 3,
+                concurrent: 5, // Load up to 5 images simultaneously for faster loading
 
                 // Visual settings for product images
                 fadeIn: true,
@@ -47,6 +47,8 @@
             // Internal state
             this.processedImages = new WeakSet();
             this.loadingImages = new Set();
+            this.loadQueue = [];
+            this.activeLoads = 0;
             this.observers = {
                 intersection: null,
                 mutation: [],
@@ -138,8 +140,38 @@
                 }
             });
 
-            // Batch load all intersecting images
-            toLoad.forEach(img => this.loadImage(img));
+            // Add to queue for concurrent loading
+            toLoad.forEach(img => this.queueImage(img));
+        }
+
+        /**
+         * Queue an image for loading (respects concurrent limit)
+         */
+        queueImage(img) {
+            // Skip if already processed, loading, or in queue
+            if (this.isProcessed(img) || this.isLoading(img) || this.loadQueue.includes(img)) {
+                return;
+            }
+
+            const actualSrc = img.getAttribute(this.options.loadingAttribute);
+            if (!actualSrc) return;
+
+            // Add to queue
+            this.loadQueue.push(img);
+
+            // Try to process queue
+            this.processQueue();
+        }
+
+        /**
+         * Process the loading queue with concurrent limit
+         */
+        processQueue() {
+            // Start loading images up to the concurrent limit
+            while (this.activeLoads < this.options.concurrent && this.loadQueue.length > 0) {
+                const img = this.loadQueue.shift();
+                this.loadImage(img);
+            }
         }
 
         /**
@@ -152,7 +184,13 @@
             }
 
             const actualSrc = img.getAttribute(this.options.loadingAttribute);
-            if (!actualSrc) return;
+            if (!actualSrc) {
+                this.processQueue(); // Try next in queue
+                return;
+            }
+
+            // Increment active loads counter
+            this.activeLoads++;
 
             // Mark as loading
             this.markAsLoading(img);
@@ -163,13 +201,19 @@
             preloadImg.onload = () => {
                 this.applyLoadedImage(img, actualSrc);
                 this.markAsLoaded(img);
+                this.activeLoads--;
+                // Process next in queue
+                this.processQueue();
             };
 
             preloadImg.onerror = () => {
                 this.handleLoadError(img);
+                this.activeLoads--;
+                // Process next in queue
+                this.processQueue();
             };
 
-            // Start loading
+            // Start loading immediately (browser will handle actual concurrency)
             preloadImg.src = actualSrc;
         }
 
@@ -276,7 +320,8 @@
                 return this.isElementVisible(img) && !this.isProcessed(img) && !this.isLoading(img);
             });
 
-            visibleImages.forEach(img => this.loadImage(img));
+            // Queue visible images for concurrent loading
+            visibleImages.forEach(img => this.queueImage(img));
             return allImages;
         }
 
@@ -540,9 +585,11 @@
             window.removeEventListener('scroll', this.handleScroll);
             window.removeEventListener('resize', this.handleScroll);
 
-            // Clear sets
+            // Clear sets and queue
             this.processedImages = new WeakSet();
             this.loadingImages.clear();
+            this.loadQueue = [];
+            this.activeLoads = 0;
 
             // Remove styles
             const styles = document.getElementById('product-lazy-styles');
@@ -581,6 +628,7 @@
             containerSelectors: ['.product__section--inner', '.swiper-wrapper'],
             rootMargin: '300px',
             threshold: [0, 0.1, 0.5],
+            concurrent: 5, // Increased from 3 to 5 for faster loading of small images
             fadeIn: true,
             fadeDuration: 300,
             productImageHeight: '250px',
