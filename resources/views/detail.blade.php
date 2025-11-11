@@ -107,6 +107,11 @@
                             @csrf
                             <input type="hidden" name="slug" value="{{ $product->slug }}">
 
+                            <!-- Dynamic Alert (hidden by default) -->
+                            <div id="dynamic-alert" class="alert alert-dismissible fade mb-15 alert-dynamic" role="alert" style="display: none; flex-direction: row; justify-content: space-between; align-items: center; gap: 1rem;">
+                                <span id="dynamic-alert-message" style="flex: 1;"></span>
+                            </div>
+
                             @if(session('success'))
                             <div class="alert alert-success alert-dismissible fade show mb-15" role="alert">
                                 {{ session('success') }}
@@ -215,16 +220,24 @@
 
                                 <div class="product__variant--list quantity d-flex align-items-center mb-20">
                                     <div class="quantity__box">
-                                        <button type="button" class="quantity__value quickview__value--quantity decrease" aria-label="{{ __('detail.quantity_value') }}" value="{{ __('detail.decrease_value') }}">-</button>
+                                        <button type="button" class="quantity__value quickview__value--quantity decrease" id="quantity-decrease-btn" aria-label="{{ __('detail.quantity_value') }}" value="{{ __('detail.decrease_value') }}">-</button>
                                         <label>
-                                            <input type="number" name="quantity" class="quantity__number quickview__value--number @error('quantity') is-invalid @enderror" value="{{ old('quantity', 1) }}" data-counter min="1" />
+                                            <input type="number" name="quantity" class="quantity__number quickview__value--number @error('quantity') is-invalid @enderror" value="{{ old('quantity', 1) }}" data-counter min="1" id="quantity-input" />
                                         </label>
-                                        <button type="button" class="quantity__value quickview__value--quantity increase" aria-label="{{ __('detail.quantity_value') }}" value="{{ __('detail.increase_value') }}">+</button>
+                                        <button type="button" class="quantity__value quickview__value--quantity increase" id="quantity-increase-btn" aria-label="{{ __('detail.quantity_value') }}" value="{{ __('detail.increase_value') }}">+</button>
                                     </div>
                                     @error('quantity')
                                     <div class="text-danger small ms-2">{{ $message }}</div>
                                     @enderror
-                                    <button class="primary__btn quickview__cart--btn" type="submit" form="add-to-cart-form">{{ __('detail.add_to_cart') }}</button>
+                                    <button class="primary__btn quickview__cart--btn" type="button" id="add-to-cart-btn" style="position: relative;">
+                                        <span class="add-to-cart-text">{{ __('detail.add_to_cart') }}</span>
+                                        <span class="add-to-cart-loading" style="display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-opacity="0.25"></circle>
+                                                <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" stroke-opacity="0.75"></path>
+                                            </svg>
+                                        </span>
+                                    </button>
                                 </div>
                                 @error('variant_id')
                                 <div class="text-danger small mb-2">{{ $message }}</div>
@@ -318,6 +331,15 @@
         display: block;
         margin: 0 auto;
         width: 100%;
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
     }
 
     /* Arabic (RTL) specific styles */
@@ -622,6 +644,157 @@
 
         // Initialize with default selection
         updateVariantDisplay();
+
+        // Add to cart functionality with AJAX
+        const addToCartBtn = document.getElementById('add-to-cart-btn');
+        const addToCartForm = document.getElementById('add-to-cart-form');
+        const quantityDecreaseBtn = document.getElementById('quantity-decrease-btn');
+        const quantityIncreaseBtn = document.getElementById('quantity-increase-btn');
+        const quantityInput = document.getElementById('quantity-input');
+        const addToCartText = addToCartBtn?.querySelector('.add-to-cart-text');
+        const addToCartLoading = addToCartBtn?.querySelector('.add-to-cart-loading');
+
+        // Quantity button handlers
+        // Note: There's existing JS in _script.js that handles quantity buttons
+        // We use stopImmediatePropagation to prevent the existing script from also handling it
+        if (quantityIncreaseBtn) {
+            quantityIncreaseBtn.addEventListener('click', function(e) {
+                e.stopImmediatePropagation(); // Stop all other handlers including the existing script
+                e.preventDefault();
+                if (!this.disabled && quantityInput) {
+                    const currentValue = parseInt(quantityInput.value) || 1;
+                    quantityInput.value = currentValue + 1;
+                }
+            }, true); // Use capture phase to run before existing handlers
+        }
+
+        if (quantityDecreaseBtn) {
+            quantityDecreaseBtn.addEventListener('click', function(e) {
+                e.stopImmediatePropagation(); // Stop all other handlers including the existing script
+                e.preventDefault();
+                if (!this.disabled && quantityInput) {
+                    const currentValue = parseInt(quantityInput.value) || 1;
+                    if (currentValue > 1) {
+                        quantityInput.value = currentValue - 1;
+                    }
+                }
+            }, true); // Use capture phase to run before existing handlers
+        }
+
+        // Prevent form submission on Enter key
+        if (addToCartForm) {
+            addToCartForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+            });
+        }
+
+        // Add to cart button handler
+        if (addToCartBtn && addToCartForm) {
+            addToCartBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Get form data FIRST before disabling any fields
+                // (disabled fields are not included in FormData)
+                const formData = new FormData(addToCartForm);
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+                                 document.querySelector('input[name="_token"]')?.value;
+
+                // Ensure quantity is included (in case it's empty or invalid)
+                const quantityValue = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
+                formData.set('quantity', quantityValue);
+
+                // Disable button and quantity controls AFTER collecting data
+                if (addToCartBtn) {
+                    addToCartBtn.disabled = true;
+                    addToCartBtn.style.pointerEvents = 'none';
+                    addToCartBtn.style.opacity = '0.7';
+                }
+
+                if (quantityDecreaseBtn) quantityDecreaseBtn.disabled = true;
+                if (quantityIncreaseBtn) quantityIncreaseBtn.disabled = true;
+                if (quantityInput) quantityInput.disabled = true;
+
+                // Show loading state
+                if (addToCartText) addToCartText.style.opacity = '0';
+                if (addToCartLoading) addToCartLoading.style.display = 'block';
+
+                // Make AJAX request
+                fetch(addToCartForm.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success message
+                        showAlert('success', data.message || 'Product added to cart successfully!');
+                        
+                        // Update minicart if it exists
+                        // if (typeof fetchMinicartItems === 'function') {
+                        //     fetchMinicartItems();
+                        // }
+                    } else {
+                        showAlert('error', data.message || 'An error occurred while adding to cart.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('error', 'An error occurred while adding to cart.');
+                })
+                .finally(() => {
+                    // Re-enable button and quantity controls
+                    if (addToCartBtn) {
+                        addToCartBtn.disabled = false;
+                        addToCartBtn.style.pointerEvents = 'auto';
+                        addToCartBtn.style.opacity = '1';
+                    }
+
+                    if (quantityDecreaseBtn) quantityDecreaseBtn.disabled = false;
+                    if (quantityIncreaseBtn) quantityIncreaseBtn.disabled = false;
+                    if (quantityInput) quantityInput.disabled = false;
+
+                    // Hide loading state
+                    if (addToCartText) addToCartText.style.opacity = '1';
+                    if (addToCartLoading) addToCartLoading.style.display = 'none';
+                });
+            });
+        }
+
+        // Function to show alert messages
+        function showAlert(type, message) {
+            const alertDiv = document.getElementById('dynamic-alert');
+            const alertMessage = document.getElementById('dynamic-alert-message');
+            
+            if (!alertDiv || !alertMessage) {
+                return;
+            }
+
+            // Remove existing alert classes and add the new type
+            alertDiv.classList.remove('alert-success', 'alert-danger', 'show');
+            alertDiv.classList.add(`alert-${type === 'success' ? 'success' : 'danger'}`);
+            
+            // Set the message
+            alertMessage.textContent = message;
+            
+            // Show the alert
+            alertDiv.style.display = 'flex';
+            alertDiv.classList.add('show');
+
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => {
+                        alertDiv.style.display = 'none';
+                    }, 150);
+                }
+            }, 5000);
+        }
     });
 </script>
 @endpush

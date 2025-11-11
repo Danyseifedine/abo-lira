@@ -171,7 +171,7 @@ class CartServicePortal
         });
 
         return [
-            'items' => $formattedItems,
+            'items' => $formattedItems->values()->toArray(),
             'subtotal_formatted' => number_format($subtotal, 2, '.', ''),
         ];
     }
@@ -185,7 +185,7 @@ class CartServicePortal
 
         return [
             'subtotal' => $cartData['subtotal_formatted'],
-            'items_count' => $cartData['items']->count(),
+            'items_count' => count($cartData['items']),
         ];
     }
 
@@ -200,13 +200,18 @@ class CartServicePortal
         // Get updated cart data
         $cartData = $this->getCart();
 
-        // Find the updated item
-        $updatedItem = $cartData['items']->firstWhere('id', $itemId);
+        // Find the updated item (items is now an array)
+        $updatedItem = collect($cartData['items'])->firstWhere('id', $itemId);
+
+        if (!$updatedItem) {
+            throw new \Exception('Item not found in cart');
+        }
 
         $data = [
             'item' => [
                 'quantity' => $updatedItem->quantity,
                 'total' => $updatedItem->total,
+                'price_formatted' => $updatedItem->price_formatted,
             ],
             'subtotal' => $cartData['subtotal_formatted'],
         ];

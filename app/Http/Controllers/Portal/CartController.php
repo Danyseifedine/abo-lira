@@ -22,9 +22,14 @@ class CartController extends Controller
 
         // If request wants JSON (for minicart)
         if ($request->wantsJson() || $request->expectsJson()) {
+            $html = view('components.modal-cart-product', [
+                'cartItems' => $cartData['items'],
+                'subtotal' => $cartData['subtotal_formatted'],
+            ])->render();
+
             return response()->json([
                 'success' => true,
-                'data' => $cartData,
+                'html' => $html,
             ]);
         }
 
@@ -35,14 +40,20 @@ class CartController extends Controller
         ]);
     }
 
-    public function addToCart(AddToCartRequest $request): RedirectResponse
+    public function addToCart(AddToCartRequest $request): JsonResponse
     {
         try {
             $this->cartService->addToCart($request->validated());
 
-            return redirect()->back()->with('success', 'Product added to cart successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => __('cart.added_successfully'),
+            ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
         }
     }
 
@@ -53,7 +64,7 @@ class CartController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Item removed from cart successfully!',
+                'message' => __('cart.removed_successfully'),
                 'data' => $result,
             ]);
         } catch (\Exception $e) {
@@ -77,7 +88,7 @@ class CartController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Quantity changed successfully!',
+                'message' => __('cart.quantity_changed_successfully'),
                 'data' => $updatedItem,
             ]);
         } catch (\Exception $e) {

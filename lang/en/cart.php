@@ -16,5 +16,11 @@ return [
     'update' => 'Update',
     'checkout' => 'Checkout',
     'remove_confirm' => 'Are you sure you want to remove this item from your cart?',
+    'added_successfully' => 'Product added to cart successfully!',
+    'removed_successfully' => 'Item removed from cart successfully!',
+    'quantity_changed_successfully' => 'Quantity changed successfully!',
+    'error_occurred' => 'An error occurred',
+    'error_updating_quantity' => 'Error updating quantity',
+    'error_removing_item' => 'Error removing item',
 ];
 

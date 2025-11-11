@@ -5,7 +5,7 @@
             <div class="header__topbar--inner d-flex align-items-center justify-content-between">
                 <ul class="header__topbar--info d-none d-lg-flex">
                     <li class="header__info--list" style="{{ app()->getLocale() === 'ar' ? 'direction: ltr;' : 'margin-right: auto;' }}">
-                        <a  class="header__info--link text-white" href="https://wa.link/03etwr">
+                        <a class="header__info--link text-white" href="https://wa.link/03etwr">
                             <svg width="15" height="13" viewBox="0 0 15 13" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -28,7 +28,7 @@
                                         d="M7.62891 8.625L8.01172 6.10938H5.57812V4.46875C5.57812 3.75781 5.90625 3.10156 7 3.10156H8.12109V0.941406C8.12109 0.941406 7.10938 0.75 6.15234 0.75C4.15625 0.75 2.84375 1.98047 2.84375 4.16797V6.10938H0.601562V8.625H2.84375V14.75H5.57812V8.625H7.62891Z"
                                         fill="currentColor" />
                                 </svg>
-                                <span class="visually-hidden">Facebook</span>
+                                <span class="visually-hidden">{{ __('nav.facebook') }}</span>
                             </a>
                         </li>
                         <li class="social__share--list">
@@ -40,7 +40,7 @@
                                         d="M7.125 3.60547C5.375 3.60547 3.98047 5.02734 3.98047 6.75C3.98047 8.5 5.375 9.89453 7.125 9.89453C8.84766 9.89453 10.2695 8.5 10.2695 6.75C10.2695 5.02734 8.84766 3.60547 7.125 3.60547ZM7.125 8.80078C6.00391 8.80078 5.07422 7.89844 5.07422 6.75C5.07422 5.62891 5.97656 4.72656 7.125 4.72656C8.24609 4.72656 9.14844 5.62891 9.14844 6.75C9.14844 7.89844 8.24609 8.80078 7.125 8.80078ZM11.1172 3.49609C11.1172 3.08594 10.7891 2.75781 10.3789 2.75781C9.96875 2.75781 9.64062 3.08594 9.64062 3.49609C9.64062 3.90625 9.96875 4.23438 10.3789 4.23438C10.7891 4.23438 11.1172 3.90625 11.1172 3.49609ZM13.1953 4.23438C13.1406 3.25 12.9219 2.375 12.2109 1.66406C11.5 0.953125 10.625 0.734375 9.64062 0.679688C8.62891 0.625 5.59375 0.625 4.58203 0.679688C3.59766 0.734375 2.75 0.953125 2.01172 1.66406C1.30078 2.375 1.08203 3.25 1.02734 4.23438C0.972656 5.24609 0.972656 8.28125 1.02734 9.29297C1.08203 10.2773 1.30078 11.125 2.01172 11.8633C2.75 12.5742 3.59766 12.793 4.58203 12.8477C5.59375 12.9023 8.62891 12.9023 9.64062 12.8477C10.625 12.793 11.5 12.5742 12.2109 11.8633C12.9219 11.125 13.1406 10.2773 13.1953 9.29297C13.25 8.28125 13.25 5.24609 13.1953 4.23438ZM11.8828 10.3594C11.6914 10.9062 11.2539 11.3164 10.7344 11.5352C9.91406 11.8633 8 11.7812 7.125 11.7812C6.22266 11.7812 4.30859 11.8633 3.51562 11.5352C2.96875 11.3164 2.55859 10.9062 2.33984 10.3594C2.01172 9.56641 2.09375 7.65234 2.09375 6.75C2.09375 5.875 2.01172 3.96094 2.33984 3.14062C2.55859 2.62109 2.96875 2.21094 3.51562 1.99219C4.30859 1.66406 6.22266 1.74609 7.125 1.74609C8 1.74609 9.91406 1.66406 10.7344 1.99219C11.2539 2.18359 11.6641 2.62109 11.8828 3.14062C12.2109 3.96094 12.1289 5.875 12.1289 6.75C12.1289 7.65234 12.2109 9.56641 11.8828 10.3594Z"
                                         fill="currentColor" />
                                 </svg>
-                                <span class="visually-hidden">Instagram</span>
+                                <span class="visually-hidden">{{ __('nav.instagram') }}</span>
                             </a>
                         </li>
                         <li class="social__share--list">
@@ -52,7 +52,7 @@
                                         d="M11.375 0.96875H8.75V10.0625C8.75 11.3125 7.71875 12.3438 6.46875 12.3438C5.21875 12.3438 4.1875 11.3125 4.1875 10.0625C4.1875 8.84375 5.1875 7.84375 6.375 7.78125V5.125C3.78125 5.1875 1.6875 7.3125 1.6875 9.9375C1.6875 12.5938 3.8125 14.7188 6.46875 14.7188C9.125 14.7188 11.25 12.5938 11.25 9.9375V5.75C12.2188 6.46875 13.4062 6.875 14.6875 6.90625V4.28125C12.7812 4.1875 11.375 2.71875 11.375 0.96875Z"
                                         fill="currentColor" />
                                 </svg>
-                                <span class="visually-hidden">TikTok</span>
+                                <span class="visually-hidden">{{ __('nav.tiktok') }}</span>
                             </a>
                         </li>
                     </ul>
@@ -70,7 +70,7 @@
                             <path fill="currentColor" stroke="currentColor" stroke-linecap="round"
                                 stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352" />
                         </svg>
-                        <span class="visually-hidden">Offcanvas Menu Open</span>
+                        <span class="visually-hidden">{{ __('nav.offcanvas_menu_open') }}</span>
                     </a>
                 </div>
                 <div class="main__logo">
@@ -83,16 +83,16 @@
                         <ul class="header__menu--wrapper d-flex">
                             <li class="header__menu--items">
                                 <a class="header__menu--link {{ request()->routeIs('home') ? 'active' : '' }}"
-                                    href="{{ route('home') }}">Home</a>
+                                    href="{{ route('home') }}">{{ __('nav.home') }}</a>
                             </li>
                             <li class="header__menu--items">
-                                <a class="header__menu--link" href="{{ route('shop') }}">Shop</a>
+                                <a class="header__menu--link" href="{{ route('shop') }}">{{ __('nav.shop') }}</a>
                             </li>
                             <li class="header__menu--items">
-                                <a class="header__menu--link" href="{{ route('about') }}">About Us</a>
+                                <a class="header__menu--link" href="{{ route('about') }}">{{ __('nav.about_us') }}</a>
                             </li>
                             <li class="header__menu--items">
-                                <a class="header__menu--link" href="{{ route('contact') }}">Contact </a>
+                                <a class="header__menu--link" href="{{ route('contact') }}">{{ __('nav.contact') }}</a>
                             </li>
                         </ul>
                     </nav>
@@ -109,12 +109,13 @@
                                     <path fill="none" stroke="currentColor" stroke-linecap="round"
                                         stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448" />
                                 </svg>
-                                <span class="visually-hidden">Search</span>
+                                <span class="visually-hidden">{{ __('nav.search') }}</span>
                             </a>
                         </li>
+                        @if(Route::currentRouteName() !== 'cart')
                         <li class="header__account--items header__minicart--items">
                             <a class="header__account--btn minicart__open--btn" href="javascript:void(0)"
-                                data-offcanvas>
+                                data-offcanvas id="minicart-open-btn">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22.706" height="22.534"
                                     viewBox="0 0 14.706 13.534">
                                     <g transform="translate(0 0)">
@@ -134,6 +135,7 @@
                                 <span class="items__count">2</span>
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -146,25 +148,25 @@
                 <a class="offcanvas__logo_link" href="{{ route('home') }}">
                     <img src="{{ asset('logos/logo.png') }}" alt="Grocee Logo" width="158" height="36">
                 </a>
-                <button class="offcanvas__close--btn" data-offcanvas>close</button>
+                <button class="offcanvas__close--btn" data-offcanvas>{{ __('nav.close') }}</button>
             </div>
             <nav class="offcanvas__menu">
                 <ul class="offcanvas__menu_ul">
                     <li class="offcanvas__menu_li">
-                        <a class="offcanvas__menu_item" href="{{ route('home') }}">Home</a>
+                        <a class="offcanvas__menu_item" href="{{ route('home') }}">{{ __('nav.home') }}</a>
                     </li>
                     <li class="offcanvas__menu_li">
-                        <a class="offcanvas__menu_item" href="{{ route('shop') }}">Shop</a>
+                        <a class="offcanvas__menu_item" href="{{ route('shop') }}">{{ __('nav.shop') }}</a>
                     </li>
                     <li class="offcanvas__menu_li">
-                        <a class="offcanvas__menu_item" href="{{ route('about') }}">About Us</a>
+                        <a class="offcanvas__menu_item" href="{{ route('about') }}">{{ __('nav.about_us') }}</a>
                     </li>
                     <li class="offcanvas__menu_li"><a class="offcanvas__menu_item"
-                            href="{{ route('contact') }}">Contact</a></li>
+                            href="{{ route('contact') }}">{{ __('nav.contact') }}</a></li>
                 </ul>
                 <div class="language__currency--list">
                     <a class="offcanvas__language--switcher" href="javascript:void(0)">
-                        <span>Arabic</span>
+                        <span>{{ __('nav.arabic') }}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="9.797" height="6.05"
                             viewBox="0 0 9.797 6.05">
                             <path d="M14.646,8.59,10.9,12.329,7.151,8.59,6,9.741l4.9,4.9,4.9-4.9Z"
@@ -173,7 +175,7 @@
                     </a>
                     <div class="offcanvas__dropdown--language">
                         <ul>
-                            <li class="language__items"><a class="language__text" href="#">English</a></li>
+                            <li class="language__items"><a class="language__text" href="#">{{ __('nav.english') }}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -196,7 +198,7 @@
                             </path>
                         </svg>
                     </span>
-                    <span class="offcanvas__stikcy--toolbar__label">Home</span>
+                    <span class="offcanvas__stikcy--toolbar__label">{{ __('nav.home') }}</span>
                 </a>
             </li>
             <li class="offcanvas__stikcy--toolbar__list">
@@ -209,7 +211,7 @@
                             </path>
                         </svg>
                     </span>
-                    <span class="offcanvas__stikcy--toolbar__label">Shop</span>
+                    <span class="offcanvas__stikcy--toolbar__label">{{ __('nav.shop') }}</span>
                 </a>
             </li>
             <li class="offcanvas__stikcy--toolbar__list ">
@@ -223,12 +225,13 @@
                                 stroke-width="32" d="M338.29 338.29L448 448" />
                         </svg>
                     </span>
-                    <span class="offcanvas__stikcy--toolbar__label">Search</span>
+                    <span class="offcanvas__stikcy--toolbar__label">{{ __('nav.search') }}</span>
                 </a>
             </li>
+            @if(Route::currentRouteName() !== 'cart')
             <li class="offcanvas__stikcy--toolbar__list">
                 <a class="offcanvas__stikcy--toolbar__btn minicart__open--btn" href="javascript:void(0)"
-                    data-offcanvas>
+                    data-offcanvas id="minicart-open-btn">
                     <span class="offcanvas__stikcy--toolbar__icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22.706" height="22.534"
                             viewBox="0 0 14.706 13.534">
@@ -247,10 +250,11 @@
                             </g>
                         </svg>
                     </span>
-                    <span class="offcanvas__stikcy--toolbar__label">Cart</span>
+                    <span class="offcanvas__stikcy--toolbar__label">{{ __('nav.cart') }}</span>
                     <span class="items__count">3</span>
                 </a>
             </li>
+            @endif
         </ul>
     </div>
     <!-- End Offcanvas stikcy toolbar -->
@@ -259,8 +263,8 @@
     <div class="offCanvas__minicart">
         <div class="minicart__header ">
             <div class="minicart__header--top d-flex justify-content-between align-items-center">
-                <h3 class="minicart__title"> Shopping Cart</h3>
-                <button class="minicart__close--btn" aria-label="minicart close btn" data-offcanvas>
+                <h3 class="minicart__title">{{ __('nav.shopping_cart') }}</h3>
+                <button class="minicart__close--btn" aria-label="{{ __('nav.minicart_close_btn') }}" data-offcanvas>
                     <svg class="minicart__close--icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <path fill="currentColor" stroke="currentColor" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="32" d="M368 368L144 144M368 144L144 368" />
@@ -268,33 +272,41 @@
                 </button>
             </div>
         </div>
-        <div class="minicart__product">
-            <x-minicart-item image="assets/img/product/small-product/product1.webp" name="Car & Motorbike Care."
-                variant="Color: Beige" currentPrice="125.00" oldPrice="140.00" :quantity="1"
-                link="" />
+
+        <div id="minicart-loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; display: none;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-opacity="0.25"></circle>
+                <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" stroke-opacity="0.75"></path>
+            </svg>
         </div>
-        <div class="minicart__amount">
-            <div class="minicart__amount_list d-flex justify-content-between">
-                <span>Total:</span>
-                <span><b>$240.00</b></span>
-            </div>
-        </div>
-        <div class="minicart__button d-flex justify-content-center pt-3">
-            <a class="primary__btn minicart__button--link" href="{{ route('cart') }}">View cart</a>
-            <a class="primary__btn minicart__button--link" href="{{ route('checkout') }}">Checkout</a>
-        </div>
+
+        <div id="minicart-container"></div>
     </div>
     <!-- End offCanvas minicart -->
+
+    @push('styles')
+    <style>
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    @endpush
 
     <!-- Start serch box area -->
     <div class="predictive__search--box ">
         <div class="predictive__search--box__inner">
-            <h2 class="predictive__search--title">Search Products</h2>
+            <h2 class="predictive__search--title">{{ __('nav.search_products') }}</h2>
             <form class="predictive__search--form" action="#">
                 <label>
-                    <input class="predictive__search--input" placeholder="Search Here" type="text">
+                    <input class="predictive__search--input" placeholder="{{ __('nav.search_here') }}" type="text">
                 </label>
-                <button class="predictive__search--button text-white" aria-label="search button"><svg
+                <button class="predictive__search--button text-white" aria-label="{{ __('nav.search_button') }}"><svg
                         class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg" width="30.51"
                         height="25.443" viewBox="0 0 512 512">
                         <path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none"
@@ -304,7 +316,7 @@
                     </svg> </button>
             </form>
         </div>
-        <button class="predictive__search--close__btn" aria-label="search close" data-offcanvas>
+        <button class="predictive__search--close__btn" aria-label="{{ __('nav.search_close') }}" data-offcanvas>
             <svg class="predictive__search--close__icon" xmlns="http://www.w3.org/2000/svg" width="40.51"
                 height="30.443" viewBox="0 0 512 512">
                 <path fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"

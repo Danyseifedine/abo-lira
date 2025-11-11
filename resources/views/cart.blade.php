@@ -27,19 +27,6 @@
     <section class="cart__section section--padding">
         <div class="container-fluid">
             <!-- Hidden div for cart translations and routes -->
-            <div id="cart-data" 
-                 data-error-occurred="{{ __('cart.error_occurred') }}"
-                 data-error-updating-quantity="{{ __('cart.error_updating_quantity') }}"
-                 data-error-removing-item="{{ __('cart.error_removing_item') }}"
-                 data-remove-confirm="{{ __('cart.remove_confirm') }}"
-                 data-empty-cart="{{ __('cart.empty_cart') }}"
-                 data-continue-shopping="{{ __('cart.continue_shopping') }}"
-                 data-change-quantity-url="{{ route('change-quantity') }}"
-                 data-remove-url="{{ url('/cart/remove') }}"
-                 data-shop-url="{{ route('shop') }}"
-                 data-csrf-token="{{ csrf_token() }}"
-                 style="display: none;"></div>
-            
             <div class="cart__section--inner">
                 <form action="#">
                     <h2 class="cart__title mb-30">{{ __('cart.shopping_cart') }}</h2>
@@ -79,6 +66,10 @@
                                         @endforelse
                                     </tbody>
                                 </table>
+                                <div class="w-100 text-center py-5" id="cart-empty-container" style="display: none;">
+                                    <p class="mb-0">{{ __('cart.empty_cart') }}</p>
+                                    <a href="{{ route('shop') }}" class="primary__btn mt-3">{{ __('cart.continue_shopping') }}</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -95,8 +86,7 @@
                                 </div>
                                 <div class="cart__summary--footer">
                                     <ul class="d-flex justify-content-center gap-3">
-                                        <li><button class="cart__summary--footer__btn primary__btn cart" type="submit" id="update-cart-btn">{{ __('cart.update') }}</button></li>
-                                        <li><a class="cart__summary--footer__btn primary__btn checkout" href="{{ route('checkout') }}" id="checkout-btn">{{ __('cart.checkout') }}</a></li>
+                                        <li><a class="cart__summary--footer__btn primary__btn checkout disabled-on-fetch" href="{{ route('checkout') }}" id="checkout-btn" @if($subtotal==0) style="pointer-events: none; opacity: 0.5; cursor: not-allowed;" @endif>{{ __('cart.checkout') }}</a></li>
                                     </ul>
                                 </div>
                             </div>
