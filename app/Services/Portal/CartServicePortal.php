@@ -218,4 +218,14 @@ class CartServicePortal
 
         return $data;
     }
+
+    public function getCartCount(): int
+    {
+        return Cart::count();
+    }
+
+    public function clearCart(): void
+    {
+        Cart::clear();
+    }
 }

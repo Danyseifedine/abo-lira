@@ -1,6 +1,6 @@
 <!doctype html>
 <html dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+    @class(['dark'=> ($appearance ?? 'system') == 'dark'])>
 
 <head>
     <meta charset="utf-8">
@@ -23,7 +23,7 @@
 
     <!-- Plugin css -->
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/bootstrap.min.css') }}">
-    
+
     <!-- Custom Style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
@@ -37,8 +37,40 @@
             from {
                 transform: rotate(0deg);
             }
+
             to {
                 transform: rotate(360deg);
+            }
+        }
+
+        /* Arabic (RTL) specific styles */
+        [dir="rtl"] .product__variant--list.quantity {
+            gap: 1.5rem !important;
+        }
+
+        [dir="rtl"] .variant__color {
+            gap: 1rem !important;
+        }
+
+        [dir="rtl"] .variant__size {
+            gap: 1rem !important;
+        }
+
+        [dir="rtl"] .quantity__value {
+            border-radius: 3px !important;
+        }
+
+        @media (max-width: 767px) {
+            [dir="rtl"] .product__variant--list.quantity {
+                gap: 1rem !important;
+            }
+
+            [dir="rtl"] .variant__color {
+                gap: 0.75rem !important;
+            }
+
+            [dir="rtl"] .variant__size {
+                gap: 0.75rem !important;
             }
         }
     </style>
@@ -70,6 +102,9 @@
 
     <!-- Product Image Loader -->
     <script src="{{ asset('assets/js/product-image-loader.js') }}" defer></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Cart Handler -->
     <script src="{{ asset('assets/js/cart.js') }}"></script>

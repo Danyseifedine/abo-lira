@@ -234,7 +234,7 @@
                     <div class="breadcrumb__content text-center">
                         <h1 class="breadcrumb__content--title">{{ __('shop.title') }}</h1>
                         <nav aria-label="breadcrumb">
-                            <div class="d-flex align-items-center justify-content-center gap-2 flex-wrap" @if(app()->getLocale() === 'ar') dir="rtl" @endif>
+                            <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap" @if(app()->getLocale() === 'ar') dir="rtl" @endif>
                                 <a href="{{ route('home') }}" class="text-decoration-none breadcrumb-link" style="font-size: 15px; line-height: 22px; color: #333; transition: color 0.3s ease;">{{ __('shop.breadcrumb_home') }}</a>
                                 <span style="color: var(--secondary-color, #dc3545); font-size: 15px; line-height: 22px; user-select: none;">/</span>
                                 <span class="fw-medium" style="font-size: 15px; line-height: 22px; color: #333;" aria-current="page">{{ __('shop.breadcrumb_product') }}</span>
@@ -297,14 +297,16 @@
                                 <div class="section__heading border-bottom mb-30">
                                     <h2 class="section__heading--maintitle">{{ __('shop.shop_by_categories') }}</h2>
                                 </div>
-                                <div class="categories__inner--style3 d-flex" style="flex-wrap: nowrap; overflow-x: auto;">
+                                <div class="d-flex gap-3" style="flex-wrap: nowrap; overflow-x: auto;">
                                     @foreach($categories as $category)
                                         <x-category
                                             :image="$category->image"
-                                            :link="route('shop', ['category' => $category->id])"
+                                            :link="route('shop', ['category' => $category->slug])"
                                             :name="$category->name"
                                             :selectedCategory="$activeCategory?->id == $category->id"
-                                            :itemCount="$category->products_count" />
+                                            :itemCount="$category->products_count"
+                                            :isFixedWidth="true"
+                                        />
                                     @endforeach
                                 </div>
                         </section>

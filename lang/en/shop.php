@@ -20,5 +20,6 @@ return [
     'items' => 'Items',
     'add_to_cart' => 'Add to cart',
     'close' => 'Close',
+    'details' => 'Details',
 ];
 

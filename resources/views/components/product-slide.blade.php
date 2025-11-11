@@ -77,14 +77,14 @@
                 @endif
             </div>
             <div class="product__card--footer" style="margin-top: auto;">
-                <a class="product__card--btn primary__btn" href="{{ route('detail', ['slug' => $slug]) }}">
+                <a class="product__card--btn primary__btn d-flex justify-content-center align-items-center gap-2" href="{{ route('detail', ['slug' => $slug]) }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
                         <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         <circle cx="12" cy="16" r="1" fill="currentColor"/>
                     </svg>
-                    Details
+                    <span>{{ __('shop.details') }}</span>
                 </a>
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Portal\CartController;
+use App\Http\Controllers\Portal\CheckoutController;
 use App\Navigation\SuperAdminPath;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -38,8 +39,11 @@ function registerWebRoutes()
         Route::post('/add-to-cart', 'addToCart')->name('add-to-cart');
         Route::delete('/remove/{itemId}', 'removeCartItem')->name('remove-cart-item');
         Route::post('/change-quantity', 'changeQuantity')->name('change-quantity');
+    });
 
-        Route::get('/checkout', 'checkout')->name('checkout');
+    Route::controller(CheckoutController::class)->prefix('checkout')->group(function () {
+        Route::get('/', 'checkout')->name('checkout');
+        Route::post('/', 'store')->name('checkout.store');
     });
 
     Route::middleware([

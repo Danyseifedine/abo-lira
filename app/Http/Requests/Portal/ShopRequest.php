@@ -15,7 +15,7 @@ class ShopRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => ['nullable', 'integer', 'exists:product_categories,id'],
+            'category' => ['nullable', 'string', 'exists:product_categories,slug'],
             'price_min' => ['nullable', 'numeric', 'min:0'],
             'price_max' => ['nullable', 'numeric', 'min:0', 'gte:price_min'],
             'sort' => ['nullable', 'string', Rule::in(['latest', 'popularity', 'newness', 'rating', 'price_low', 'price_high'])],

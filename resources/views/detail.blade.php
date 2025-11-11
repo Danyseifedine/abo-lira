@@ -11,7 +11,7 @@
                 <div class="col">
                     <div class="breadcrumb__content text-center">
                         <nav aria-label="breadcrumb">
-                            <div class="d-flex align-items-center justify-content-center gap-2 flex-wrap" @if(app()->getLocale() === 'ar') dir="rtl" @endif>
+                            <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap" @if(app()->getLocale() === 'ar') dir="rtl" @endif>
                                 <a href="{{ route('home') }}" class="text-decoration-none breadcrumb-link" style="font-size: 15px; line-height: 22px; color: #333; transition: color 0.3s ease;">
                                     {{ __('detail.home') }}
                                 </a>
@@ -163,7 +163,7 @@
                                 <div class="product__variant--list mb-10">
                                     <fieldset class="variant__input--fieldset">
                                         <legend class="product__variant--title mb-8">{{ __('detail.color_label') }}</legend>
-                                        <div class="variant__color d-flex">
+                                        <div class="variant__color d-flex gap-1" style="flex-wrap: wrap;">
                                             @foreach($product->variants->pluck('color')->filter()->unique('id') as $idx => $color)
                                             @php
                                             $variantIds = $product->variants->where('color_id', $color->id)->pluck('id')->toArray();
@@ -197,7 +197,7 @@
                                 <div class="product__variant--list mb-20">
                                     <fieldset class="variant__input--fieldset">
                                         <legend class="product__variant--title mb-8">{{ __('detail.size_label') }}</legend>
-                                        <ul class="variant__size d-flex">
+                                        <ul class="variant__size d-flex gap-1" style="flex-wrap: wrap;">
                                             @foreach($product->variants->pluck('size')->filter()->unique('id') as $idx => $size)
                                             @php
                                             $variantIds = $product->variants->where('size_id', $size->id)->pluck('id')->toArray();
@@ -222,7 +222,7 @@
                                     <div class="quantity__box">
                                         <button type="button" class="quantity__value quickview__value--quantity decrease" id="quantity-decrease-btn" aria-label="{{ __('detail.quantity_value') }}" value="{{ __('detail.decrease_value') }}">-</button>
                                         <label>
-                                            <input type="number" name="quantity" class="quantity__number quickview__value--number @error('quantity') is-invalid @enderror" value="{{ old('quantity', 1) }}" data-counter min="1" id="quantity-input" />
+                                            <input type="number" name="quantity" class="quantity__number quickview__value--number @error('quantity') is-invalid @enderror" value="{{ old('quantity', 1) }}" data-counter min="1" id="quantity-input" style="pointer-events: none;" readonly />
                                         </label>
                                         <button type="button" class="quantity__value quickview__value--quantity increase" id="quantity-increase-btn" aria-label="{{ __('detail.quantity_value') }}" value="{{ __('detail.increase_value') }}">+</button>
                                     </div>
@@ -337,39 +337,9 @@
         from {
             transform: rotate(0deg);
         }
+
         to {
             transform: rotate(360deg);
-        }
-    }
-
-    /* Arabic (RTL) specific styles */
-    [dir="rtl"] .product__variant--list.quantity {
-        gap: 1.5rem !important;
-    }
-
-    [dir="rtl"] .variant__color {
-        gap: 1rem !important;
-    }
-
-    [dir="rtl"] .variant__size {
-        gap: 1rem !important;
-    }
-
-    [dir="rtl"] .quantity__value {
-        border-radius: 3px !important;
-    }
-
-    @media (max-width: 767px) {
-        [dir="rtl"] .product__variant--list.quantity {
-            gap: 1rem !important;
-        }
-
-        [dir="rtl"] .variant__color {
-            gap: 0.75rem !important;
-        }
-
-        [dir="rtl"] .variant__size {
-            gap: 0.75rem !important;
         }
     }
 </style>
@@ -696,11 +666,11 @@
                 // Get form data FIRST before disabling any fields
                 // (disabled fields are not included in FormData)
                 const formData = new FormData(addToCartForm);
-                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
-                                 document.querySelector('input[name="_token"]')?.value;
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                    document.querySelector('input[name="_token"]')?.value;
 
                 // Ensure quantity is included (in case it's empty or invalid)
-                const quantityValue = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
+                const quantityValue = quantityInput ? parseInt(quantityInput.value) || 0 : 0;
                 formData.set('quantity', quantityValue);
 
                 // Disable button and quantity controls AFTER collecting data
@@ -720,80 +690,60 @@
 
                 // Make AJAX request
                 fetch(addToCartForm.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Show success message
-                        showAlert('success', data.message || 'Product added to cart successfully!');
-                        
-                        // Update minicart if it exists
-                        // if (typeof fetchMinicartItems === 'function') {
-                        //     fetchMinicartItems();
-                        // }
-                    } else {
-                        showAlert('error', data.message || 'An error occurred while adding to cart.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showAlert('error', 'An error occurred while adding to cart.');
-                })
-                .finally(() => {
-                    // Re-enable button and quantity controls
-                    if (addToCartBtn) {
-                        addToCartBtn.disabled = false;
-                        addToCartBtn.style.pointerEvents = 'auto';
-                        addToCartBtn.style.opacity = '1';
-                    }
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            showAlert('success', data.message || 'Product added to cart successfully!');
 
-                    if (quantityDecreaseBtn) quantityDecreaseBtn.disabled = false;
-                    if (quantityIncreaseBtn) quantityIncreaseBtn.disabled = false;
-                    if (quantityInput) quantityInput.disabled = false;
+                            // Update minicart if it exists
+                            // if (typeof fetchMinicartItems === 'function') {
+                            //     fetchMinicartItems();
+                            // }
+                        } else {
+                            showAlert('error', data.message || 'An error occurred while adding to cart.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    })
+                    .finally(() => {
+                        // Re-enable button and quantity controls
+                        if (addToCartBtn) {
+                            addToCartBtn.disabled = false;
+                            addToCartBtn.style.pointerEvents = 'auto';
+                            addToCartBtn.style.opacity = '1';
+                        }
 
-                    // Hide loading state
-                    if (addToCartText) addToCartText.style.opacity = '1';
-                    if (addToCartLoading) addToCartLoading.style.display = 'none';
-                });
+                        if (quantityDecreaseBtn) quantityDecreaseBtn.disabled = false;
+                        if (quantityIncreaseBtn) quantityIncreaseBtn.disabled = false;
+                        if (quantityInput) quantityInput.disabled = false;
+
+                        // Hide loading state
+                        if (addToCartText) addToCartText.style.opacity = '1';
+                        if (addToCartLoading) addToCartLoading.style.display = 'none';
+                    });
             });
         }
 
         // Function to show alert messages
         function showAlert(type, message) {
-            const alertDiv = document.getElementById('dynamic-alert');
-            const alertMessage = document.getElementById('dynamic-alert-message');
-            
-            if (!alertDiv || !alertMessage) {
-                return;
-            }
+            Swal.fire({
+                position: "top-end",
+                icon: type,
+                text: message,
+                showConfirmButton: false,
+                timer: 1500
+            });
 
-            // Remove existing alert classes and add the new type
-            alertDiv.classList.remove('alert-success', 'alert-danger', 'show');
-            alertDiv.classList.add(`alert-${type === 'success' ? 'success' : 'danger'}`);
-            
-            // Set the message
-            alertMessage.textContent = message;
-            
-            // Show the alert
-            alertDiv.style.display = 'flex';
-            alertDiv.classList.add('show');
-
-            // Auto-dismiss after 5 seconds
-            setTimeout(() => {
-                if (alertDiv.parentNode) {
-                    alertDiv.classList.remove('show');
-                    setTimeout(() => {
-                        alertDiv.style.display = 'none';
-                    }, 150);
-                }
-            }, 5000);
         }
     });
 </script>

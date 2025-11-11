@@ -10,7 +10,7 @@
                     <div class="breadcrumb__content text-center">
                         <h1 class="breadcrumb__content--title mb-25">{{ __('cart.title') }}</h1>
                         <nav aria-label="breadcrumb">
-                            <div class="d-flex align-items-center justify-content-center gap-2 flex-wrap" @if(app()->getLocale() === 'ar') dir="rtl" @endif>
+                            <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap" @if(app()->getLocale() === 'ar') dir="rtl" @endif>
                                 <a href="{{ route('home') }}" class="text-decoration-none breadcrumb-link" style="font-size: 15px; line-height: 22px; color: #333; transition: color 0.3s ease;">{{ __('cart.home') }}</a>
                                 <span style="color: var(--secondary-color, #dc3545); font-size: 15px; line-height: 22px; user-select: none;">/</span>
                                 <span class="fw-medium" style="font-size: 15px; line-height: 22px; color: #333;" aria-current="page">{{ __('cart.shopping_cart') }}</span>
@@ -86,7 +86,9 @@
                                 </div>
                                 <div class="cart__summary--footer">
                                     <ul class="d-flex justify-content-center gap-3">
-                                        <li><a class="cart__summary--footer__btn primary__btn checkout disabled-on-fetch" href="{{ route('checkout') }}" id="checkout-btn" @if($subtotal==0) style="pointer-events: none; opacity: 0.5; cursor: not-allowed;" @endif>{{ __('cart.checkout') }}</a></li>
+                                        <li><a class="cart__summary--footer__btn primary__btn checkout disabled-on-fetch" href="{{ route('checkout') }}" id="checkout-btn" 
+                                        @if($subtotal==0) style="pointer-events: none; opacity: 0.5; cursor: not-allowed;" @endif>
+                                        {{ __('cart.checkout') }}</a></li>
                                     </ul>
                                 </div>
                             </div>

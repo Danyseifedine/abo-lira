@@ -28,6 +28,11 @@ const updateCartItem = (itemId, item, subtotal) => {
     if (cartSubtotal !== null) {
         cartSubtotal.textContent = subtotal + '$';
     }
+
+    const minicartSubtotal = document.getElementById('mini-cart-subtotal');
+    if (minicartSubtotal !== null) {
+        minicartSubtotal.textContent = subtotal + '$';
+    }
 };
 
 handleAfterRemoveCartItem = (itemId, data) => {
@@ -47,10 +52,27 @@ handleAfterRemoveCartItem = (itemId, data) => {
         cartSubtotal.textContent = data.subtotal + '$';
     }
 
+    const minicartSubtotal = document.getElementById('mini-cart-subtotal');
+    if (minicartSubtotal !== null) {
+        minicartSubtotal.textContent = data.subtotal + '$';
+    }
+
     if (data.items_count === 0) {
         const cartEmpty = document.getElementById('cart-empty-container');
         if (cartEmpty !== null) {
             cartEmpty.style.display = 'block';
+        }
+
+        const minicartEmpty = document.getElementById('minicart-empty-container');
+        if (minicartEmpty !== null) {
+            minicartEmpty.style.display = 'block';
+        }
+
+        const mincartCheckoutBn = document.getElementById('mincart-checkout-btn');
+        if (mincartCheckoutBn !== null) {
+            mincartCheckoutBn.style.opacity = '0.5';
+            mincartCheckoutBn.style.cursor = 'not-allowed';
+            mincartCheckoutBn.style.pointerEvents = 'none';
         }
     }
 };
@@ -96,6 +118,16 @@ handleDisabledOnFetch = (isDisabled) => {
     });
 };
 
+const alertNotification = (type, message) => {
+    Swal.fire({
+        position: "top-end",
+        icon: type,
+        text: message,
+        showConfirmButton: false,
+        timer: 1000
+    });
+};
+
 const updateQuantity = (itemId, action, number = 1) => {
     handleInputLoading(itemId, true);
     handleDisabledOnFetch(true);
@@ -116,14 +148,15 @@ const updateQuantity = (itemId, action, number = 1) => {
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
+                alertNotification('success', data.message);
+
                 updateCartItem(itemId, data.data.item, data.data.subtotal);
             } else {
-                alert(data.message);
+                console.error('Error:', data.message);
             }
         })
         .catch((error) => {
             console.error('Error:', error);
-            alert('Error updating quantity');
         })
         .finally(() => {
             handleInputLoading(itemId, false);
@@ -146,14 +179,15 @@ const removeCartItem = (itemId) => {
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
+                alertNotification('success', data.message);
+
                 handleAfterRemoveCartItem(itemId, data.data);
             } else {
-                alert(data.message);
+                console.error('Error:', data.message);
             }
         })
         .catch((error) => {
             console.error('Error:', error);
-            alert('Error removing cart item');
         })
         .finally(() => {
             handleRemoveLoading(itemId, false);
@@ -184,12 +218,17 @@ const fetchMiniCartItems = () => {
                     minicartContainer.innerHTML = data.html;
                 }
 
+                const minicartSubtotal = document.getElementById('mini-cart-subtotal');
+                if (minicartSubtotal !== null) {
+                    minicartSubtotal.innerHTML = '';
+                    minicartSubtotal.innerHTML = data.subtotal + '$';
+                }
+
                 handleDom();
             }
         })
         .catch((error) => {
             console.error('Error fetching mini cart items:', error);
-            alert('Error fetching mini cart items');
         })
         .finally(() => {
             const minicartLoading = document.getElementById('minicart-loading');
@@ -246,5 +285,3 @@ const handleDom = () => {
 document.addEventListener('DOMContentLoaded', function () {
     handleDom();
 });
-
-

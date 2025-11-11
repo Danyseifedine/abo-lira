@@ -4,6 +4,7 @@
     'name' => 'Category',
     'itemCount' => 0,
     'selectedCategory' => false,
+    'isFixedWidth' => false,
 ])
 
 @php
@@ -12,7 +13,9 @@
     $imageAlt = $name . ' category' . (config('app.name') ? ' - ' . config('app.name') : '');
 @endphp
 
-<div class="categories__card--style3 text-center {{ $selectedCategory ? 'active-category' : '' }}" style="min-width: 200px;" itemscope itemtype="https://schema.org/Category">
+<div class="categories__card--style3 text-center {{ $selectedCategory ? 'active-category' : '' }}" style="{{ $isFixedWidth ? 'min-width: 180px; max-width: 180px;' : '' }}" 
+   itemscope itemtype="https://schema.org/Category"
+>
     <a class="categories__card--link" href="{{ $link }}" title="{{ $categoryTitle }}"
         aria-label="{{ $categoryTitle }}">
         <div class="categories__thumbnail">

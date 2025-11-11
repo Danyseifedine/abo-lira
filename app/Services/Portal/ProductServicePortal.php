@@ -300,10 +300,10 @@ class ProductServicePortal
     {
         $categories = $this->getProductCategoriesCached();
 
-        $categoryId = $request->validated('category');
+        $categorySlug = $request->validated('category');
         $activeCategory = null;
-        if ($categoryId) {
-            $activeCategory = $categories->firstWhere('id', $categoryId);
+        if ($categorySlug) {
+            $activeCategory = $categories->firstWhere('slug', $categorySlug);
         }
 
         $filters = [
@@ -315,7 +315,7 @@ class ProductServicePortal
         // Remove null values
         $filters = array_filter($filters, fn($value) => $value !== null);
 
-        $products = $this->getProductsPaginated($categoryId, $filters, 6);
+        $products = $this->getProductsPaginated($categorySlug, $filters, 6);
 
         // Append query parameters to pagination links
         $products->appends($request->query());
@@ -336,7 +336,7 @@ class ProductServicePortal
      * @param  int  $perPage
      * @return LengthAwarePaginator
      */
-    private function getProductsPaginated(?int $categoryId = null, array $filters = [], int $perPage = 6): LengthAwarePaginator
+    private function getProductsPaginated(?string $categorySlug = null, array $filters = [], int $perPage = 6): LengthAwarePaginator
     {
         $query = Product::with([
             'variants' => function ($query) {
@@ -347,8 +347,10 @@ class ProductServicePortal
         ])->active();
 
         // Filter by category
-        if ($categoryId) {
-            $query->where('category_id', $categoryId);
+        if ($categorySlug) {
+            $query->whereHas('category', function ($query) use ($categorySlug) {
+                $query->where('slug', $categorySlug);
+            });
         }
 
         // Price filtering - need to check both product price and variant prices

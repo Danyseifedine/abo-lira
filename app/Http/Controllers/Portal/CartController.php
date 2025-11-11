@@ -29,6 +29,7 @@ class CartController extends Controller
 
             return response()->json([
                 'success' => true,
+                'subtotal' => $cartData['subtotal_formatted'],
                 'html' => $html,
             ]);
         }
@@ -97,10 +98,5 @@ class CartController extends Controller
                 'message' => $e->getMessage(),
             ], 400);
         }
-    }
-
-    public function checkout(): View
-    {
-        return view('checkout');
     }
 }

@@ -8127,7 +8127,7 @@ input.quickview__value--number {
 .about__author--signature {
   position: absolute;
   top: 50%;
-  left: 105px;
+  left: 200px;
   transform: translatey(-50%);
 }
 

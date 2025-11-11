@@ -98,7 +98,7 @@
                     </nav>
                 </div>
                 <div class="header__account">
-                    <ul class="header__account--wrapper d-flex align-items-center">
+                    <ul class="header__account--wrapper d-flex align-items-center gap-4">
                         <li class="header__account--items  header__account--search__items d-sm-2-none">
                             <a class="header__account--btn search__open--btn" href="javascript:void(0)" data-offcanvas>
                                 <svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg"
@@ -112,8 +112,7 @@
                                 <span class="visually-hidden">{{ __('nav.search') }}</span>
                             </a>
                         </li>
-                        @if(Route::currentRouteName() !== 'cart')
-                        <li class="header__account--items header__minicart--items">
+                        <li class="header__account--items header__minicart--items" style="margin: 0 !important;">
                             <a class="header__account--btn minicart__open--btn" href="javascript:void(0)"
                                 data-offcanvas id="minicart-open-btn">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22.706" height="22.534"
@@ -135,7 +134,6 @@
                                 <span class="items__count">2</span>
                             </a>
                         </li>
-                        @endif
                     </ul>
                 </div>
             </div>
@@ -228,7 +226,6 @@
                     <span class="offcanvas__stikcy--toolbar__label">{{ __('nav.search') }}</span>
                 </a>
             </li>
-            @if(Route::currentRouteName() !== 'cart')
             <li class="offcanvas__stikcy--toolbar__list">
                 <a class="offcanvas__stikcy--toolbar__btn minicart__open--btn" href="javascript:void(0)"
                     data-offcanvas id="minicart-open-btn">
@@ -254,7 +251,6 @@
                     <span class="items__count">3</span>
                 </a>
             </li>
-            @endif
         </ul>
     </div>
     <!-- End Offcanvas stikcy toolbar -->
@@ -273,14 +269,44 @@
             </div>
         </div>
 
-        <div id="minicart-loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; display: none;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-opacity="0.25"></circle>
-                <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" stroke-opacity="0.75"></path>
-            </svg>
+        <style>
+            .minicart-container {
+                position: relative;
+                min-height: 300px;
+                max-height: 450px;
+                width: 100%;
+                overflow-y: auto;
+            }
+            @media (min-width: 1200px) {
+                .minicart-container {
+                    max-height: 550px;
+                }
+            }
+        </style>
+        <div class="minicart-container">
+            <div id="minicart-loading" style="position: absolute; top: 0; left: 0; width: 100%; min-height: 2000px; display: flex; justify-content: center; align-items: start; z-index: 1000; padding-top: 150px; display: none; backdrop-filter: blur(3px);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-opacity="0.25"></circle>
+                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" stroke-opacity="0.75"></path>
+                </svg>
+            </div>
+
+            <div id="minicart-container" class="pb-5"></div>
         </div>
 
-        <div id="minicart-container"></div>
+        <div class="minicart__amount">
+            <div class="minicart__amount_list d-flex justify-content-between">
+                <span>{{ __('nav.total') }}</span>
+                <span class="minicart-subtotal" id="mini-cart-subtotal"><b></b></span>
+            </div>
+        </div>
+        <div class="minicart__button d-flex justify-content-center pt-3 gap-3">
+            <a class="primary__btn minicart__button--link" href="{{ route('cart') }}" style="margin: 0 !important;">{{ __('nav.view_cart') }}</a>
+            <a class="primary__btn minicart__button--link disabled-on-fetch" 
+            href="{{ route('checkout') }}" id="mincart-checkout-btn" style="margin: 0 !important;">
+                {{ __('nav.checkout') }}
+            </a>
+        </div>
     </div>
     <!-- End offCanvas minicart -->
 

@@ -15,23 +15,32 @@
     $usedVariants = app()->getLocale() === 'ar' ? $variantsAr : $variants;
 @endphp
 
-<div class="minicart__product--items d-flex" data-item-id="{{ $itemId }}" id="parent-cart-item">
-    <div class="minicart__thumb">
-        <a href="{{ $link }}"><img src="{{ asset($image) }}" alt="prduct-img"></a>
+<div class="minicart__product--items d-flex {{ app()->getLocale() === 'ar' ? 'gap-3' : '' }}" data-item-id="{{ $itemId }}" id="parent-cart-item">
+    <div class="minicart__thumb" style="margin: 0 !important;">
+        <a href="{{ $link }}">
+            @if($image)
+            <img src="{{ asset($image) }}" alt="prduct-img" style="height: 140px !important; object-fit: cover;"></a>
+            @else
+                <div class="d-flex justify-content-center align-items-center" style="height: 170px; width: 105px; background-color: #f0f0f0;">
+                    <span class="text-muted" style="font-size: 1.4rem;">{{ __('detail.no_image') }}</span>
+                </div>
+            @endif
     </div>
-    <div class="minicart__text">
+    <div class="minicart__text" style="margin: 0 !important;">
         <h4 class="minicart__subtitle"><a href="{{ $link }}">{{ app()->getLocale() === 'ar' ? $nameAr : $name }}</a></h4>
-        @foreach($usedVariants as $variant)
-            <span class="color__variant"><b>{{ $variant }}</b></span>
-        @endforeach
+        <div class="d-flex flex-column">
+            @foreach($usedVariants as $variant)
+                <span class="color__variant" style="color: var(--foreground-sub-color); font-size: 1.4rem;">{{ $variant }}</span>
+            @endforeach
+        </div>
         <div class="minicart__price">
             <span class="minicart__current--price">$<span class="minicart-item-price" id="cart-item-total" data-item-id="{{ $itemId }}">{{ $currentPrice }}</span></span>
             @if($oldPrice)
                 <span class="minicart__old--price">${{ $oldPrice }}</span>
             @endif
         </div>
-        <div class="minicart__text--footer d-flex align-items-center">
-            <div class="quantity__box minicart__quantity">
+        <div class="minicart__text--footer d-flex align-items-center gap-3">
+            <div class="quantity__box minicart__quantity" style="margin: 0 !important;">
                 <button type="button" class="quantity__value decrease disabled-on-fetch" id="cart-decrease-quantity" data-item-id="{{ $itemId }}" aria-label="{{ __('nav.quantity_value') }}" value="{{ __('nav.decrease_value') }}">-</button>
                 <label style="position: relative;">
                     <input type="number" class="quantity__number" value="{{ $quantity }}" id="input-cart-quantity" data-item-id="{{ $itemId }}" data-counter readonly />
@@ -44,7 +53,7 @@
                 </label>
                 <button type="button" class="quantity__value increase disabled-on-fetch" id="cart-increase-quantity" data-item-id="{{ $itemId }}" aria-label="{{ __('nav.quantity_value') }}" value="{{ __('nav.increase_value') }}">+</button>
             </div>
-            <button class="minicart__product--remove remove-cart-item disabled-on-fetch" type="button" id="cart-remove-btn" data-item-id="{{ $itemId }}" style="position: relative;">
+            <button class="minicart__product--remove remove-cart-item disabled-on-fetch" type="button" id="cart-remove-btn" data-item-id="{{ $itemId }}" style="position: relative; margin: 0 !important;">
                 <span class="remove-icon disabled-on-fetch" style="display: block;" id="cart-remove-icon">{{ __('nav.remove') }}</span>
                 <span class="remove-loading" data-item-id="{{ $itemId }}" id="cart-remove-loading" style="display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
