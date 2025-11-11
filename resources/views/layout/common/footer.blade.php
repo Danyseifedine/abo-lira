@@ -2,42 +2,42 @@
  <section class="shipping__section section--padding">
      <div class="container">
          <div class="shipping__inner mb-0 style2 d-flex">
-             <div class="shipping__items style2 d-flex align-items-center">
-                 <div class="shipping__icon">
-                     <img src="{{ asset('assets/img/other/shipping1.webp') }}" alt="icon-img">
-                 </div>
-                 <div class="shipping__content">
-                     <h2 class="shipping__content--title h3">{{ __('footer.quality_guarantee') }}</h2>
-                     <p class="shipping__content--desc">{{ __('footer.quality_desc') }}</p>
-                 </div>
-             </div>
-             <div class="shipping__items style2 d-flex align-items-center">
-                 <div class="shipping__icon">
-                     <img src="{{ asset('assets/img/other/shipping2.webp') }}" alt="icon-img">
-                 </div>
-                 <div class="shipping__content">
-                     <h2 class="shipping__content--title h3">{{ __('footer.support_24_7') }}</h2>
-                     <p class="shipping__content--desc">{{ __('footer.support_desc') }}</p>
-                 </div>
-             </div>
-             <div class="shipping__items style2 d-flex align-items-center">
-                 <div class="shipping__icon">
-                     <img src="{{ asset('assets/img/other/shipping3.webp') }}" alt="icon-img">
-                 </div>
-                 <div class="shipping__content">
-                     <h2 class="shipping__content--title h3">{{ __('footer.fast_delivery') }}</h2>
-                     <p class="shipping__content--desc">{{ __('footer.delivery_desc') }}</p>
-                 </div>
-             </div>
-             <div class="shipping__items style2 d-flex align-items-center">
-                 <div class="shipping__icon">
-                     <img src="{{ asset('assets/img/other/shipping4.webp') }}" alt="icon-img">
-                 </div>
-                 <div class="shipping__content">
-                     <h2 class="shipping__content--title h3">{{ __('footer.payment_secure') }}</h2>
-                     <p class="shipping__content--desc">{{ __('footer.payment_desc') }}</p>
-                 </div>
-             </div>
+            <div class="shipping__items style2 d-flex align-items-center justify-content-start justify-content-md-center w-100">
+                <div class="shipping__icon">
+                    <img src="{{ asset('assets/img/other/shipping1.webp') }}" alt="icon-img">
+                </div>
+                <div class="shipping__content">
+                    <h2 class="shipping__content--title h3">{{ __('footer.quality_guarantee') }}</h2>
+                    <p class="shipping__content--desc">{{ __('footer.quality_desc') }}</p>
+                </div>
+            </div>
+            <div class="shipping__items style2 d-flex align-items-center justify-content-start justify-content-md-center w-100">
+                <div class="shipping__icon">
+                    <img src="{{ asset('assets/img/other/shipping2.webp') }}" alt="icon-img">
+                </div>
+                <div class="shipping__content">
+                    <h2 class="shipping__content--title h3">{{ __('footer.support_24_7') }}</h2>
+                    <p class="shipping__content--desc">{{ __('footer.support_desc') }}</p>
+                </div>
+            </div>
+            <div class="shipping__items style2 d-flex align-items-center justify-content-start justify-content-md-center w-100">
+                <div class="shipping__icon">
+                    <img src="{{ asset('assets/img/other/shipping3.webp') }}" alt="icon-img">
+                </div>
+                <div class="shipping__content">
+                    <h2 class="shipping__content--title h3">{{ __('footer.fast_delivery') }}</h2>
+                    <p class="shipping__content--desc">{{ __('footer.delivery_desc') }}</p>
+                </div>
+            </div>
+            <div class="shipping__items style2 d-flex align-items-center justify-content-start justify-content-md-center w-100">
+                <div class="shipping__icon">
+                    <img src="{{ asset('assets/img/other/shipping4.webp') }}" alt="icon-img">
+                </div>
+                <div class="shipping__content">
+                    <h2 class="shipping__content--title h3">{{ __('footer.payment_secure') }}</h2>
+                    <p class="shipping__content--desc">{{ __('footer.payment_desc') }}</p>
+                </div>
+            </div>
          </div>
      </div>
  </section>

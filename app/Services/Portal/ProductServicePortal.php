@@ -2,8 +2,10 @@
 
 namespace App\Services\Portal;
 
+use App\Http\Requests\Portal\ShopRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -42,6 +44,9 @@ class ProductServicePortal
             now()->addHours(24),
             function () use ($locale) {
                 return ProductCategory::with('media')
+                    ->withCount(['products' => function ($query) {
+                        $query->active();
+                    }])
                     ->active()
                     ->get()
                     ->map(function ($category) use ($locale) {
@@ -53,6 +58,7 @@ class ProductServicePortal
                             'name' => $locale === 'ar' ? $category->name_ar : $category->name_en,
                             'slug' => $category->slug,
                             'image' => $category->image, // Uses the accessor
+                            'products_count' => $category->products_count ?? 0,
                         ];
                     })
                     ->toArray();
@@ -246,5 +252,166 @@ class ProductServicePortal
 
         // Convert back to collection of objects to maintain same return format
         return collect($cachedData)->map(fn($item) => (object) $item);
+    }
+
+    public function getProductDetails(string $slug): ?Product
+    {
+        $product = Product::where('slug', $slug)
+            ->with([
+                'category',
+                'quality',
+                'variants' => function ($query) {
+                    $query->active()->with(['color', 'size']);
+                },
+            ])
+            ->active()
+            ->first();
+
+        if (!$product) {
+            return null;
+        }
+
+        $productDiscount = (float) ($product->discount_price ?? 0);
+
+        // Apply discount to each variant if product has discount
+        if ($productDiscount > 0) {
+            $product->variants->each(function ($variant) use ($productDiscount) {
+                $discountCalculation = $this->calculateDiscount(
+                    (float) $variant->price,
+                    $productDiscount
+                );
+                
+                // Add discounted price information to variant
+                $variant->setAttribute('original_price', (float) $variant->price);
+                $variant->setAttribute('price', $discountCalculation['new_price']);
+                $variant->setAttribute('discount_percentage', $discountCalculation['discount_percentage']);
+            });
+        }
+
+        return $product;
+    }
+
+    /**
+     * Get shop products with pagination, category filtering, and price filtering.
+     *
+     * @return array{categories: Collection, products: LengthAwarePaginator, activeCategory: object|null, filters: array}
+     */
+    public function getShopProducts(ShopRequest $request): array
+    {
+        $categories = $this->getProductCategoriesCached();
+
+        $categorySlug = $request->validated('category');
+        $activeCategory = null;
+        if ($categorySlug) {
+            $activeCategory = $categories->firstWhere('slug', $categorySlug);
+        }
+
+        $filters = [
+            'price_min' => $request->validated('price_min'),
+            'price_max' => $request->validated('price_max'),
+            'sort' => $request->validated('sort', 'latest'),
+        ];
+
+        // Remove null values
+        $filters = array_filter($filters, fn($value) => $value !== null);
+
+        $products = $this->getProductsPaginated($categorySlug, $filters, 6);
+
+        // Append query parameters to pagination links
+        $products->appends($request->query());
+
+        return [
+            'categories' => $categories,
+            'products' => $products,
+            'activeCategory' => $activeCategory,
+            'filters' => $filters,
+        ];
+    }
+
+    /**
+     * Get products with pagination, category filtering, and price filtering.
+     *
+     * @param  int|null  $categoryId
+     * @param  array  $filters  ['price_min' => float, 'price_max' => float, 'sort' => string]
+     * @param  int  $perPage
+     * @return LengthAwarePaginator
+     */
+    private function getProductsPaginated(?string $categorySlug = null, array $filters = [], int $perPage = 6): LengthAwarePaginator
+    {
+        $query = Product::with([
+            'variants' => function ($query) {
+                $query->active()->orderBy('id')->limit(1);
+            },
+            'category',
+            'quality',
+        ])->active();
+
+        // Filter by category
+        if ($categorySlug) {
+            $query->whereHas('category', function ($query) use ($categorySlug) {
+                $query->where('slug', $categorySlug);
+            });
+        }
+
+        // Price filtering - need to check both product price and variant prices
+        if (isset($filters['price_min']) || isset($filters['price_max'])) {
+            $priceMin = $filters['price_min'] ?? 0;
+            $priceMax = $filters['price_max'] ?? PHP_FLOAT_MAX;
+
+            $query->where(function ($q) use ($priceMin, $priceMax) {
+                // Products with variants (check variant prices)
+                $q->whereHas('variants', function ($variantQ) use ($priceMin, $priceMax) {
+                    $variantQ->active()
+                        ->whereBetween('price', [$priceMin, $priceMax]);
+                });
+            });
+        }
+
+        // Sorting
+        $sort = $filters['sort'] ?? 'latest';
+        match ($sort) {
+            'latest' => $query->latest('created_at'),
+            'popularity' => $query->orderBy('bought_count', 'desc'),
+            'newness' => $query->orderBy('is_new', 'desc')->latest('created_at'),
+            'rating' => $query->latest('created_at'), // TODO: Add rating system if needed
+            'price_low' => $query->orderByRaw('COALESCE((SELECT MIN(price) FROM product_variants WHERE product_id = products.id AND status = 1), price) ASC'),
+            'price_high' => $query->orderByRaw('COALESCE((SELECT MAX(price) FROM product_variants WHERE product_id = products.id AND status = 1), price) DESC'),
+            default => $query->latest('created_at'),
+        };
+
+        $products = $query->paginate($perPage);
+
+        // Transform products to include calculated prices
+        $products->getCollection()->transform(function ($product) {
+            $firstVariant = $product->variants->first();
+
+            // Priority: Use variant price if available, otherwise use product price
+            $basePrice = $firstVariant?->price ?? 0;
+
+            // Calculate prices based on discount
+            $discountCalculation = $this->calculateDiscount($basePrice, $product->discount_price);
+            $newPrice = $discountCalculation['new_price'];
+            $discountPercentage = $discountCalculation['discount_percentage'];
+
+            // Resolve image: prefer firstVariant->image, else product->image
+            $image = $firstVariant?->image ?: $product->image;
+
+            return (object) [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'description' => Str::limit($product->description, 100, '...'),
+                'image' => $image,
+                'base_price' => $basePrice,
+                'price' => $newPrice,
+                'discount_percentage' => round($discountPercentage, 0),
+                'is_discounted' => $product->is_discounted,
+                'has_multiple_variants' => $product->has_multiple_color,
+                'category' => $product->category?->name,
+                'quality' => $product->quality?->name
+            ];
+        });
+
+        return $products;
     }
 }

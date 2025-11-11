@@ -1,10 +1,13 @@
 <!doctype html>
 <html dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+    @class(['dark'=> ($appearance ?? 'system') == 'dark'])>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="base-url" content="{{ url('/') }}">
+    <meta name="shop-url" content="{{ route('shop') }}">
 
     {{-- SEO Component --}}
     <x-seo :title="get_seo_data('title')" :description="get_seo_data('description')" :keywords="get_seo_data('keywords')" :image="get_seo_data('image')" :type="get_seo_data('type', 'website')" :price="get_seo_data('price')"
@@ -20,7 +23,7 @@
 
     <!-- Plugin css -->
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/bootstrap.min.css') }}">
-    
+
     <!-- Custom Style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
@@ -28,6 +31,49 @@
     <link rel="stylesheet" href="{{ asset('assets/css/product-images.css') }}">
 
     @include('layout.common.loading')
+
+    <style>
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Arabic (RTL) specific styles */
+        [dir="rtl"] .product__variant--list.quantity {
+            gap: 1.5rem !important;
+        }
+
+        [dir="rtl"] .variant__color {
+            gap: 1rem !important;
+        }
+
+        [dir="rtl"] .variant__size {
+            gap: 1rem !important;
+        }
+
+        [dir="rtl"] .quantity__value {
+            border-radius: 3px !important;
+        }
+
+        @media (max-width: 767px) {
+            [dir="rtl"] .product__variant--list.quantity {
+                gap: 1rem !important;
+            }
+
+            [dir="rtl"] .variant__color {
+                gap: 0.75rem !important;
+            }
+
+            [dir="rtl"] .variant__size {
+                gap: 0.75rem !important;
+            }
+        }
+    </style>
 
     @stack('styles')
 </head>
@@ -56,6 +102,12 @@
 
     <!-- Product Image Loader -->
     <script src="{{ asset('assets/js/product-image-loader.js') }}" defer></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Cart Handler -->
+    <script src="{{ asset('assets/js/cart.js') }}"></script>
 
     @stack('scripts')
 </body>
