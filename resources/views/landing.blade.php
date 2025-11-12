@@ -223,7 +223,7 @@
                             <div class="blog__card--thumbnail">
                                 <span class="blog__card--thumbnail__link">
                                     <img class="blog__card--thumbnail__img"
-                                        src="{{ asset('assets/img/abo-lira/blog-1.png') }}" alt="blog-img">
+                                        src="{{ asset('assets/img/abo-lira/blog-1.jpeg') }}" alt="blog-img">
                                 </span>
                                 <span class="blog__card--meta__date">20 <br> {{ __('landing.month_oct') }}</span>
                             </div>

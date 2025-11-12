@@ -19,23 +19,23 @@
                 containerSelectors: ['.product__section--inner', '.swiper-wrapper'],
 
                 // Loading behavior
-                rootMargin: '300px',
+                rootMargin: '500px', // Increased to start loading earlier
                 threshold: [0, 0.1, 0.5],
                 loadingAttribute: 'data-src',
-                concurrent: 3,
+                concurrent: 10, // Maximum concurrent loading for very fast performance
 
                 // Visual settings for product images
                 fadeIn: true,
-                fadeDuration: 300,
+                fadeDuration: 200, // Reduced for faster visual feedback
                 productImageHeight: '250px',
                 productImageWidth: '100%',
                 objectFit: 'cover',
 
-                // Performance
-                debounceDelay: 50,
-                scrollThrottle: 100,
-                checkDelay: 300,
-                useRequestIdleCallback: true,
+                // Performance - Optimized for maximum speed
+                debounceDelay: 10, // Reduced for faster response
+                scrollThrottle: 16, // One frame (60fps) for smooth scrolling
+                checkDelay: 50, // Reduced for faster initial load
+                useRequestIdleCallback: false, // Disabled for immediate processing
 
                 // Swiper detection
                 detectSwiper: true,
@@ -47,6 +47,9 @@
             // Internal state
             this.processedImages = new WeakSet();
             this.loadingImages = new Set();
+            this.loadQueue = [];
+            this.activeLoads = 0;
+            this.scrollTicking = false;
             this.observers = {
                 intersection: null,
                 mutation: [],
@@ -88,11 +91,14 @@
             // Setup intersection observer
             this.setupIntersectionObserver();
 
-            // Initial observation
+            // Initial observation - immediate
             this.observeImages();
 
-            // Check again after a delay to catch any missed images
+            // Check again quickly to catch any missed images
             setTimeout(() => this.observeImages(), this.options.checkDelay);
+
+            // Additional immediate check for maximum coverage
+            requestAnimationFrame(() => this.observeImages());
 
             // Setup mutation observers for dynamic content
             this.setupMutationObservers();
@@ -138,12 +144,47 @@
                 }
             });
 
-            // Batch load all intersecting images
-            toLoad.forEach(img => this.loadImage(img));
+            // Add to queue with priority (they're intersecting = visible)
+            toLoad.forEach(img => this.queueImage(img, true));
         }
 
         /**
-         * Load a single image
+         * Queue an image for loading (respects concurrent limit)
+         * Prioritizes visible images
+         */
+        queueImage(img, priority = false) {
+            // Skip if already processed, loading, or in queue
+            if (this.isProcessed(img) || this.isLoading(img) || this.loadQueue.includes(img)) {
+                return;
+            }
+
+            const actualSrc = img.getAttribute(this.options.loadingAttribute);
+            if (!actualSrc) return;
+
+            // Add to queue with priority (visible images go to front)
+            if (priority) {
+                this.loadQueue.unshift(img);
+            } else {
+                this.loadQueue.push(img);
+            }
+
+            // Process queue immediately
+            this.processQueue();
+        }
+
+        /**
+         * Process the loading queue with concurrent limit
+         */
+        processQueue() {
+            // Start loading images up to the concurrent limit
+            while (this.activeLoads < this.options.concurrent && this.loadQueue.length > 0) {
+                const img = this.loadQueue.shift();
+                this.loadImage(img);
+            }
+        }
+
+        /**
+         * Load a single image with maximum performance
          */
         loadImage(img) {
             // Skip if already processed or loading
@@ -152,53 +193,59 @@
             }
 
             const actualSrc = img.getAttribute(this.options.loadingAttribute);
-            if (!actualSrc) return;
+            if (!actualSrc) {
+                this.processQueue(); // Try next in queue
+                return;
+            }
+
+            // Increment active loads counter
+            this.activeLoads++;
 
             // Mark as loading
             this.markAsLoading(img);
 
-            // Create preloader
+            // Create preloader with fetchpriority hint for modern browsers
             const preloadImg = new Image();
+
+            // Use fetchpriority="high" for faster loading (modern browsers)
+            if ('fetchPriority' in preloadImg) {
+                preloadImg.fetchPriority = 'high';
+            }
 
             preloadImg.onload = () => {
                 this.applyLoadedImage(img, actualSrc);
                 this.markAsLoaded(img);
+                this.activeLoads--;
+                // Process next in queue immediately
+                this.processQueue();
             };
 
             preloadImg.onerror = () => {
                 this.handleLoadError(img);
+                this.activeLoads--;
+                // Process next in queue immediately
+                this.processQueue();
             };
 
-            // Start loading
+            // Start loading immediately - browser handles concurrency
             preloadImg.src = actualSrc;
         }
 
         /**
-         * Apply loaded image with smooth transition
+         * Apply loaded image with optimized transition
          */
         applyLoadedImage(img, src) {
-            // Use requestAnimationFrame for smooth transition
+            // Apply source immediately for fastest display
+            img.src = src;
+            img.style.objectFit = this.options.objectFit;
+            img.style.height = this.options.productImageHeight;
+            img.style.width = this.options.productImageWidth;
+
+            // Use single requestAnimationFrame for immediate update
             requestAnimationFrame(() => {
-                // Prepare for transition
                 img.style.transition = `opacity ${this.options.fadeDuration}ms ease-in-out`;
-                img.style.opacity = '0';
-
-                // Force reflow
-                void img.offsetHeight;
-
-                requestAnimationFrame(() => {
-                    // Apply new source and styles
-                    img.src = src;
-                    img.style.objectFit = this.options.objectFit;
-                    img.style.height = this.options.productImageHeight;
-                    img.style.width = this.options.productImageWidth;
-
-                    // Fade in
-                    setTimeout(() => {
-                        img.style.opacity = '1';
-                        img.classList.add('loaded');
-                    }, 10);
-                });
+                img.style.opacity = '1';
+                img.classList.add('loaded');
             });
         }
 
@@ -268,7 +315,7 @@
         }
 
         /**
-         * Load all visible images
+         * Load all visible images with priority
          */
         loadVisibleImages() {
             const allImages = this.getAllImages();
@@ -276,7 +323,8 @@
                 return this.isElementVisible(img) && !this.isProcessed(img) && !this.isLoading(img);
             });
 
-            visibleImages.forEach(img => this.loadImage(img));
+            // Queue visible images with priority for immediate loading
+            visibleImages.forEach(img => this.queueImage(img, true));
             return allImages;
         }
 
@@ -296,17 +344,14 @@
         }
 
         /**
-         * Debounced observe for performance
+         * Debounced observe for performance - optimized for speed
          */
         debouncedObserve() {
             clearTimeout(this.timers.debounce);
 
             this.timers.debounce = setTimeout(() => {
-                if (this.options.useRequestIdleCallback && window.requestIdleCallback) {
-                    requestIdleCallback(() => this.observeImages(), { timeout: 500 });
-                } else {
-                    this.observeImages();
-                }
+                // Process immediately for maximum speed
+                this.observeImages();
             }, this.options.debounceDelay);
         }
 
@@ -380,14 +425,19 @@
         }
 
         /**
-         * Setup scroll listener as fallback
+         * Setup scroll listener as fallback - optimized for 60fps
          */
         setupScrollListener() {
+            let ticking = false;
+
             const scrollHandler = () => {
-                clearTimeout(this.timers.scroll);
-                this.timers.scroll = setTimeout(() => {
-                    this.loadVisibleImages();
-                }, this.options.scrollThrottle);
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        this.loadVisibleImages();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
             };
 
             window.addEventListener('scroll', scrollHandler, { passive: true });
@@ -423,13 +473,16 @@
         }
 
         /**
-         * Handle scroll events
+         * Handle scroll events - optimized with requestAnimationFrame
          */
         handleScroll() {
-            clearTimeout(this.timers.scroll);
-            this.timers.scroll = setTimeout(() => {
-                this.loadVisibleImages();
-            }, this.options.scrollThrottle);
+            if (!this.scrollTicking) {
+                window.requestAnimationFrame(() => {
+                    this.loadVisibleImages();
+                    this.scrollTicking = false;
+                });
+                this.scrollTicking = true;
+            }
         }
 
         /**
@@ -540,9 +593,11 @@
             window.removeEventListener('scroll', this.handleScroll);
             window.removeEventListener('resize', this.handleScroll);
 
-            // Clear sets
+            // Clear sets and queue
             this.processedImages = new WeakSet();
             this.loadingImages.clear();
+            this.loadQueue = [];
+            this.activeLoads = 0;
 
             // Remove styles
             const styles = document.getElementById('product-lazy-styles');
@@ -579,19 +634,20 @@
         window.productImageLoader = new ProductImageLoader({
             imageSelector: '.product__card--image[data-src]',
             containerSelectors: ['.product__section--inner', '.swiper-wrapper'],
-            rootMargin: '300px',
+            rootMargin: '500px', // Increased for earlier loading
             threshold: [0, 0.1, 0.5],
+            concurrent: 10, // Maximum concurrent loading for ultra-fast performance
             fadeIn: true,
-            fadeDuration: 300,
+            fadeDuration: 200, // Reduced for faster visual feedback
             productImageHeight: '250px',
             productImageWidth: '100%',
             objectFit: 'cover',
-            debounceDelay: 50,
-            scrollThrottle: 100,
-            checkDelay: 300,
+            debounceDelay: 10, // Minimal delay for maximum responsiveness
+            scrollThrottle: 16, // One frame (60fps)
+            checkDelay: 50, // Fast recheck
             detectSwiper: true,
             swiperSelectors: ['.swiper-slide', '.product__card'],
-            useRequestIdleCallback: true
+            useRequestIdleCallback: false // Disabled for immediate processing
         });
 
         // Log initial stats

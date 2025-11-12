@@ -254,6 +254,99 @@ class ProductServicePortal
         return collect($cachedData)->map(fn($item) => (object) $item);
     }
 
+    public function getOldestProductsByCategoryCached(int $categoryId, int $limit = 6, bool $includeFirstVariant = true): Collection|array
+    {
+        $locale = app()->getLocale();
+
+        // Cache key includes categoryId, limit, locale, and includeFirstVariant to ensure proper cache segmentation
+        $cacheKey = "portal.oldest_products_by_category_{$categoryId}_{$limit}_{$locale}_" . ($includeFirstVariant ? '1' : '0');
+
+        $cachedData = Cache::remember(
+            $cacheKey,
+            now()->addWeek(), // Cache for 1 week
+            function () use ($categoryId, $limit, $locale, $includeFirstVariant) {
+                // Use oldest products first
+                $products = Product::with([
+                    'variants' => function ($query) {
+                        $query->active()->orderBy('id')->limit(1);
+                    },
+                    'variants.media',
+                    'category:id,name_en,name_ar',
+                    'quality:id,name_en,name_ar',
+                ])
+                    ->where('category_id', $categoryId)
+                    ->active()
+                    ->orderBy('created_at', 'asc')
+                    ->limit($limit)
+                    ->get();
+
+                if ($includeFirstVariant && $products->isNotEmpty()) {
+                    return $products->map(function ($product) use ($locale) {
+                        $firstVariant = $product->variants->first();
+
+                        $name = $locale === 'ar'
+                            ? ($product->name_ar ?? $product->name)
+                            : ($product->name_en ?? $product->name);
+
+                        $description = $locale === 'ar'
+                            ? ($product->description_ar ?? $product->description)
+                            : ($product->description_en ?? $product->description);
+
+                        // Priority: Use variant price if available, otherwise use product price
+                        $basePrice = $firstVariant?->price ?? $product->price;
+
+                        // Calculate prices based on discount using the reusable method
+                        $discountCalculation = $this->calculateDiscount($basePrice, $product->discount_price);
+                        $newPrice = $discountCalculation['new_price'];
+                        $discountPercentage = $discountCalculation['discount_percentage'];
+
+                        // Resolve image: prefer firstVariant->image, else product->image
+                        $image = $firstVariant?->image ?: $product->image;
+
+                        // Category and quality names, fallback to null if relation missing
+                        $categoryModel = $product->category;
+                        $category = null;
+                        if ($categoryModel) {
+                            $category = $locale === 'ar'
+                                ? ($categoryModel->name_ar ?? $categoryModel->name_en)
+                                : ($categoryModel->name_en ?? $categoryModel->name_ar);
+                        }
+
+                        $qualityModel = $product->quality;
+                        $quality = null;
+                        if ($qualityModel) {
+                            $quality = $locale === 'ar'
+                                ? ($qualityModel->name_ar ?? $qualityModel->name_en)
+                                : ($qualityModel->name_en ?? $qualityModel->name_ar);
+                        }
+
+                        // Return as array for efficient caching (not object)
+                        return [
+                            'id' => $product->id,
+                            'name' => $name,
+                            'slug' => $product->slug,
+                            'description' => Str::limit($description, 100, '...'),
+                            'image' => $image,
+                            'base_price' => $basePrice,
+                            'price' => $newPrice,
+                            'discount_percentage' => $discountPercentage,
+                            'is_discounted' => $product->is_discounted,
+                            'category' => $category,
+                            'quality' => $quality,
+                            'has_multiple_variants' => $product->has_multiple_color,
+                        ];
+                    })->toArray();
+                }
+
+                // If includeFirstVariant is false, return products as-is
+                return $products->toArray();
+            }
+        );
+
+        // Convert back to collection of objects to maintain same return format
+        return collect($cachedData)->map(fn($item) => (object) $item);
+    }
+
     public function getProductDetails(string $slug): ?Product
     {
         $product = Product::where('slug', $slug)

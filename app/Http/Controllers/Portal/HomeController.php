@@ -32,10 +32,10 @@ class HomeController extends Controller
 
         $accessoriesProducts = null;
         if ($accessoriesCategory) {
-            $accessoriesProducts = $this->productService->getRandomProductsByCategoryCached($accessoriesCategory->id, 8);
+            $accessoriesProducts = $this->productService->getOldestProductsByCategoryCached($accessoriesCategory->id, 6);
         }
 
-        $productsLessThanPrice5 = $this->productService->getProductLessThanPriceCached(5, 8);
+        $productsLessThanPrice5 = $this->productService->getOldestProductsByCategoryCached(5, 6);
 
         $cartItemsCount = $this->cartService->getCartCount();
 
