@@ -44,6 +44,23 @@
         }
 
         /* Arabic (RTL) specific styles */
+
+        /* For the header (used in the landing and in the shop pages) */
+        [dir="rtl"] .section__heading::before {
+            left: auto !important;
+            right: 0 !important;
+        }
+
+        [dir="rtl"] .section__heading::after {
+            left: auto !important;
+            right: 7px !important;
+        }
+
+        [dir="rtl"] .section__heading--maintitle {
+            padding-left: 0 !important;
+            padding-right: 3.4rem !important;
+        }
+
         [dir="rtl"] .product__variant--list.quantity {
             gap: 1.5rem !important;
         }
@@ -103,11 +120,11 @@
     <!-- Product Image Loader -->
     <script src="{{ asset('assets/js/product-image-loader.js') }}" defer></script>
 
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <!-- Cart Handler -->
     <script src="{{ asset('assets/js/cart.js') }}"></script>
+
+    <!-- Search -->
+    <script src="{{ asset('assets/js/search.js') }}"></script>
 
     @stack('scripts')
 </body>

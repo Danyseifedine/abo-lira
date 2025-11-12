@@ -26,7 +26,10 @@ class CheckoutController extends Controller
         if ($cartCount !== 0) {
             $cartData = $this->cartService->getCart();
         }
-        return view('checkout', compact('cartCount', 'cartData'));
+
+        $cartItemsCount = $this->cartService->getCartCount();
+
+        return view('checkout', compact('cartCount', 'cartData', 'cartItemsCount'));
     }
 
     public function store(StoreOrderRequest $request): RedirectResponse
@@ -103,7 +106,7 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            return redirect()->route('checkout')
+            return redirect()->route('track-order', ['order_number' => $orderNumber])
                 ->with('success', __('checkout.order_placed_success', ['orderNumber' => $orderNumber]));
         } catch (\Exception $e) {
             DB::rollBack();

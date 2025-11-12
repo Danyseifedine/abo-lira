@@ -3,8 +3,6 @@
 namespace App\Services\Portal;
 
 use Hnooz\LaravelCart\Facades\Cart;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Session;
 
 class CartServicePortal
 {

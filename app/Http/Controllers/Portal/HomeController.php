@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Portal\NeedRequest;
 use App\Http\Requests\Portal\ShopRequest;
+use App\Models\Need;
 use App\Services\Portal\CartServicePortal;
 use App\Services\Portal\ProductServicePortal;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -33,24 +37,47 @@ class HomeController extends Controller
 
         $productsLessThanPrice5 = $this->productService->getProductLessThanPriceCached(5, 8);
 
-        return view('landing', compact('categories', 'accessoriesProducts', 'productsLessThanPrice5'));
+        $cartItemsCount = $this->cartService->getCartCount();
+
+        return view('landing', compact('categories', 'accessoriesProducts', 'productsLessThanPrice5', 'cartItemsCount'));
     }
 
     public function about(): View
     {
-        return view('about');
+        $cartItemsCount = $this->cartService->getCartCount();
+
+        return view('about', compact('cartItemsCount'));
     }
 
-    public function contact(): View
+    public function needs(): View
     {
-        return view('contact');
+        $cartItemsCount = $this->cartService->getCartCount();
+
+        return view('needs', compact('cartItemsCount'));
+    }
+
+    public function requestProduct(NeedRequest $request): RedirectResponse
+    {
+        Need::create([
+            'f_name' => $request->input('f_name'),
+            'l_name' => $request->input('l_name'),
+            'phone_number' => $request->input('phone_number'),
+            'message' => $request->input('message'),
+        ]);
+
+        return redirect()->route('needs')->with('success', 'Need created successfully');
     }
 
     public function shop(ShopRequest $request): View
     {
         $result = $this->productService->getShopProducts($request);
+        $categories = $result['categories'];
+        $products = $result['products'];
+        $activeCategory = $result['activeCategory'];
 
-        return view('shop', $result);
+        $cartItemsCount = $this->cartService->getCartCount();
+
+        return view('shop', compact('categories', 'products', 'activeCategory', 'cartItemsCount'));
     }
 
     public function detail(string $slug): View|RedirectResponse
@@ -61,6 +88,21 @@ class HomeController extends Controller
             return redirect()->back()->with('error', 'Product not found.');
         }
 
-        return view('detail', compact('product'));
+        $cartItemsCount = $this->cartService->getCartCount();
+
+        return view('detail', compact('product', 'cartItemsCount'));
+    }
+
+    public function searchProducts(string $search): JsonResponse
+    {
+        $products = $this->productService->getSearchProducts($search);
+
+        $html = view('components.search-results', compact('products'))->render();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product found',
+            'html' => $html,
+        ]);
     }
 }

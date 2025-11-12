@@ -29,40 +29,73 @@
             <div class="main__contact--area position__relative">
                 <div class="contact__form">
                     <h3 class="contact__form--title mb-30">Contact Me</h3>
-                    <form class="contact__form--inner" action="#">
+                    <form class="contact__form--inner" id="contact-form" action="{{ route('request-product') }}" method="POST">
+                        @csrf
+                        @if(session('success'))
+                            <div class="alert alert-success mb-4">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if(session('error'))
+                            <div class="alert alert-danger mb-4">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                        @if($errors->any())
+                            <div class="alert alert-danger mb-4">
+                                <ul class="mb-0">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div class="row">
                             <div class="col-lg-6 col-md-6">
                                 <div class="contact__form--list mb-20">
                                     <label class="contact__form--label" for="input1">First Name <span class="contact__form--label__star">*</span></label>
-                                    <input class="contact__form--input" name="firstname" id="input1" placeholder="Your First Name" type="text">
+                                    <input class="contact__form--input @error('f_name') is-invalid @enderror" name="f_name" id="input1" placeholder="Your First Name" type="text" value="{{ old('f_name') }}" required>
+                                    @error('f_name')
+                                        <div class="text-danger small mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="contact__form--list mb-20">
                                     <label class="contact__form--label" for="input2">Last Name <span class="contact__form--label__star">*</span></label>
-                                    <input class="contact__form--input" name="lastname" id="input2" placeholder="Your Last Name" type="text">
+                                    <input class="contact__form--input @error('l_name') is-invalid @enderror" name="l_name" id="input2" placeholder="Your Last Name" type="text" value="{{ old('l_name') }}" required>
+                                    @error('l_name')
+                                        <div class="text-danger small mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="contact__form--list mb-20">
                                     <label class="contact__form--label" for="input3">Phone Number <span class="contact__form--label__star">*</span></label>
-                                    <input class="contact__form--input" name="number" id="input3" placeholder="Phone number" type="text">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6">
-                                <div class="contact__form--list mb-20">
-                                    <label class="contact__form--label" for="input4">Email <span class="contact__form--label__star">*</span></label>
-                                    <input class="contact__form--input" name="email" id="input4" placeholder="Email" type="text">
+                                    <label class="d-flex align-items-center" style="position: relative; direction: ltr;">
+                                        <span class="d-flex justify-content-center align-items-center"
+                                            style="width: 50px; position: absolute; left: 0; top: 0; bottom: 0; margin: auto;">+961
+                                        </span>
+                                        <input class="checkout__input--field border-radius-5 @error('phone_number') is-invalid @enderror" id="input3" name="phone_number" placeholder="{{ __('checkout.phone_number_placeholder') }}" type="text" value="{{ old('phone_number') }}" style="padding-left: 50px;" required>
+                                    </label>
+                                    @error('phone_number')
+                                        <div class="text-danger small mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="contact__form--list mb-15">
                                     <label class="contact__form--label" for="input5">Write Your Message <span class="contact__form--label__star">*</span></label>
-                                    <textarea class="contact__form--textarea" name="message" id="input5" placeholder="Write Your Message"></textarea>
+                                    <textarea class="contact__form--textarea @error('message') is-invalid @enderror" name="message" id="input5" placeholder="Write Your Message" required>{{ old('message') }}</textarea>
+                                    @error('message')
+                                        <div class="text-danger small mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
-                        <button class="contact__form--btn primary__btn" type="submit"> <span>Submit Now</span></button>
+                        <button class="contact__form--btn primary__btn" id="submit-btn" type="submit">
+                            <span id="submit-text">Submit Now</span>
+                        </button>
                     </form>
                 </div>
                 <div class="contact__info border-radius-5">
@@ -159,5 +192,16 @@
     <!-- End brand section -->
 
 </main>
+
+@push('scripts')
+<script>
+    document.getElementById('contact-form').addEventListener('submit', function() {
+        const submitBtn = document.getElementById('submit-btn');
+
+        submitBtn.style.opacity = '0.5';
+        submitBtn.disabled = true;
+    });
+</script>
+@endpush
 
 @endsection

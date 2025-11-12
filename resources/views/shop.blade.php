@@ -299,14 +299,16 @@
                                 </div>
                                 <div class="d-flex gap-3" style="flex-wrap: nowrap; overflow-x: auto;">
                                     @foreach($categories as $category)
-                                        <x-category
-                                            :image="$category->image"
-                                            :link="route('shop', ['category' => $category->slug])"
-                                            :name="$category->name"
-                                            :selectedCategory="$activeCategory?->id == $category->id"
-                                            :itemCount="$category->products_count"
-                                            :isFixedWidth="true"
-                                        />
+                                        @if($category->products_count > 0)
+                                            <x-category
+                                                :image="$category->image"
+                                                :link="route('shop', ['category' => $category->slug])"
+                                                :name="$category->name"
+                                                :selectedCategory="$activeCategory?->id == $category->id"
+                                                :itemCount="$category->products_count"
+                                                :isShopCategory="true"
+                                            />
+                                        @endif
                                     @endforeach
                                 </div>
                         </section>
@@ -321,7 +323,6 @@
                                                 <option value="latest" {{ (request('sort', 'latest') == 'latest') ? 'selected' : '' }}>{{ __('shop.sort_latest') }}</option>
                                                 <option value="popularity" {{ (request('sort') == 'popularity') ? 'selected' : '' }}>{{ __('shop.sort_popularity') }}</option>
                                                 <option value="newness" {{ (request('sort') == 'newness') ? 'selected' : '' }}>{{ __('shop.sort_newness') }}</option>
-                                                <option value="rating" {{ (request('sort') == 'rating') ? 'selected' : '' }}>{{ __('shop.sort_rating') }}</option>
                                                 <option value="price_low" {{ (request('sort') == 'price_low') ? 'selected' : '' }}>{{ __('shop.sort_price_low') }}</option>
                                                 <option value="price_high" {{ (request('sort') == 'price_high') ? 'selected' : '' }}>{{ __('shop.sort_price_high') }}</option>
                                             </select>
@@ -358,7 +359,8 @@
                                                         :basePrice="number_format($product->base_price, 2)"
                                                         :price="number_format($product->price, 2)"
                                                         :oldPrice="$product->discount_percentage > 0 ? number_format($product->base_price, 2) : null"
-                                                        :discountPercentage="$product->discount_percentage > 0 ? round($product->discount_percentage) : null" />
+                                                        :discountPercentage="$product->discount_percentage > 0 ? round($product->discount_percentage) : null" 
+                                                    />
                                                 </div>
                                             @empty
                                                 <div class="col-12">

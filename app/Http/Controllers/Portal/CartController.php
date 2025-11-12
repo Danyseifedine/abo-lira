@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddToCartRequest;
 use App\Services\Portal\CartServicePortal;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -38,6 +37,7 @@ class CartController extends Controller
         return view('cart', [
             'cartItems' => $cartData['items'],
             'subtotal' => $cartData['subtotal_formatted'],
+            'cartItemsCount' => $this->cartService->getCartCount()
         ]);
     }
 
@@ -49,6 +49,7 @@ class CartController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => __('cart.added_successfully'),
+                'cartItemsCount' => $this->cartService->getCartCount()
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -67,6 +68,7 @@ class CartController extends Controller
                 'success' => true,
                 'message' => __('cart.removed_successfully'),
                 'data' => $result,
+                'cartItemsCount' => $this->cartService->getCartCount()
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -91,6 +93,7 @@ class CartController extends Controller
                 'success' => true,
                 'message' => __('cart.quantity_changed_successfully'),
                 'data' => $updatedItem,
+                'cartItemsCount' => $this->cartService->getCartCount(),
             ]);
         } catch (\Exception $e) {
             return response()->json([

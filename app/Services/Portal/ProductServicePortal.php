@@ -280,7 +280,7 @@ class ProductServicePortal
                     (float) $variant->price,
                     $productDiscount
                 );
-                
+
                 // Add discounted price information to variant
                 $variant->setAttribute('original_price', (float) $variant->price);
                 $variant->setAttribute('price', $discountCalculation['new_price']);
@@ -373,7 +373,6 @@ class ProductServicePortal
             'latest' => $query->latest('created_at'),
             'popularity' => $query->orderBy('bought_count', 'desc'),
             'newness' => $query->orderBy('is_new', 'desc')->latest('created_at'),
-            'rating' => $query->latest('created_at'), // TODO: Add rating system if needed
             'price_low' => $query->orderByRaw('COALESCE((SELECT MIN(price) FROM product_variants WHERE product_id = products.id AND status = 1), price) ASC'),
             'price_high' => $query->orderByRaw('COALESCE((SELECT MAX(price) FROM product_variants WHERE product_id = products.id AND status = 1), price) DESC'),
             default => $query->latest('created_at'),
@@ -413,5 +412,53 @@ class ProductServicePortal
         });
 
         return $products;
+    }
+
+    public function getSearchProducts(string $search, int $limit = 4): Collection
+    {
+        $products = Product::with([
+            'variants' => function ($query) {
+                $query->active();
+            },
+            'category',
+            'quality',
+        ])
+            ->where(function ($query) use ($search) {
+                $query->where('name_en', 'like', '%' . $search . '%')
+                    ->orWhere('name_ar', 'like', '%' . $search . '%');
+            })
+            ->active()
+            ->limit($limit)
+            ->get();
+
+        return $products->transform(function ($product) {
+            $firstVariant = $product->variants->first();
+
+            // Priority: Use variant price if available, otherwise use product price
+            $basePrice = $firstVariant?->price ?? 0;
+
+            // Calculate prices based on discount
+            $discountCalculation = $this->calculateDiscount($basePrice, $product->discount_price);
+            $newPrice = $discountCalculation['new_price'];
+            $discountPercentage = $discountCalculation['discount_percentage'];
+
+            // Resolve image: prefer firstVariant->image, else product->image
+            $image = $firstVariant?->image ?: $product->image;
+
+            return (object) [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'description' => Str::limit($product->description, 100, '...'),
+                'image' => $image,
+                'base_price' => $basePrice,
+                'price' => $newPrice,
+                'discount_percentage' => round($discountPercentage, 0),
+                'is_discounted' => $product->is_discounted,
+                'has_multiple_variants' => $product->has_multiple_color,
+                'category' => $product->category?->name,
+                'quality' => $product->quality?->name
+            ];
+        });
     }
 }

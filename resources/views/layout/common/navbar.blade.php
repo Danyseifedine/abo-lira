@@ -86,21 +86,25 @@
                                     href="{{ route('home') }}">{{ __('nav.home') }}</a>
                             </li>
                             <li class="header__menu--items">
-                                <a class="header__menu--link" href="{{ route('shop') }}">{{ __('nav.shop') }}</a>
+                                <a class="header__menu--link {{ request()->routeIs('shop') ? 'active' : '' }}" href="{{ route('shop') }}">{{ __('nav.shop') }}</a>
                             </li>
                             <li class="header__menu--items">
-                                <a class="header__menu--link" href="{{ route('about') }}">{{ __('nav.about_us') }}</a>
+                                <a class="header__menu--link {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">{{ __('nav.about_us') }}</a>
                             </li>
                             <li class="header__menu--items">
-                                <a class="header__menu--link" href="{{ route('contact') }}">{{ __('nav.contact') }}</a>
+                                <a class="header__menu--link {{ request()->routeIs('needs') ? 'active' : '' }}" href="{{ route('needs') }}">{{ __('nav.need') }}</a>
+                            </li>
+                            <li class="header__menu--items">
+                                <a class="header__menu--link {{ request()->routeIs('track-order') ? 'active' : '' }}" href="{{ route('track-order') }}">
+                                    {{ app()->getLocale() === 'ar' ? 'تتبع الطلب' : 'Track Order' }}</a>
                             </li>
                         </ul>
                     </nav>
                 </div>
                 <div class="header__account">
                     <ul class="header__account--wrapper d-flex align-items-center gap-4">
-                        <li class="header__account--items  header__account--search__items d-sm-2-none">
-                            <a class="header__account--btn search__open--btn" href="javascript:void(0)" data-offcanvas>
+                        <li class="header__account--items  header__account--search__items d-sm-2-none" style="margin-left: 0 !important;">
+                            <div class="header__account--btn search__open--btn" style="cursor: pointer; margin-left: 0 !important;" data-offcanvas>
                                 <svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg"
                                     width="22.51" height="20.443" viewBox="0 0 512 512">
                                     <path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z"
@@ -110,11 +114,35 @@
                                         stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448" />
                                 </svg>
                                 <span class="visually-hidden">{{ __('nav.search') }}</span>
-                            </a>
+                            </div>
                         </li>
+
+                        <!-- Lang -->
+                        <li class="offcanvas__stikcy--toolbar__list">
+                            <x-language-switcher />
+                        </li>
+
                         <li class="header__account--items header__minicart--items" style="margin: 0 !important;">
-                            <a class="header__account--btn minicart__open--btn" href="javascript:void(0)"
+                            <div class="header__account--btn minicart__open--btn" style="cursor: pointer;"
                                 data-offcanvas id="minicart-open-btn">
+                                @if(app()->getLocale() === 'ar')
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22.706" height="22.534"
+                                    viewBox="0 0 14.706 13.534">
+                                    <g transform="translate(14.706, 0) scale(-1, 1)">
+                                        <g>
+                                            <path data-name="Path 16787"
+                                                d="M4.738,472.271h7.814a.434.434,0,0,0,.414-.328l1.723-6.316a.466.466,0,0,0-.071-.4.424.424,0,0,0-.344-.179H3.745L3.437,463.6a.435.435,0,0,0-.421-.353H.431a.451.451,0,0,0,0,.9h2.24c.054.257,1.474,6.946,1.555,7.33a1.36,1.36,0,0,0-.779,1.242,1.326,1.326,0,0,0,1.293,1.354h7.812a.452.452,0,0,0,0-.9H4.74a.451.451,0,0,1,0-.9Zm8.966-6.317-1.477,5.414H5.085l-1.149-5.414Z"
+                                                transform="translate(0 -463.248)" fill="currentColor" />
+                                            <path data-name="Path 16788"
+                                                d="M5.5,478.8a1.294,1.294,0,1,0,1.293-1.353A1.325,1.325,0,0,0,5.5,478.8Zm1.293-.451a.452.452,0,1,1-.431.451A.442.442,0,0,1,6.793,478.352Z"
+                                                transform="translate(-1.191 -466.622)" fill="currentColor" />
+                                            <path data-name="Path 16789"
+                                                d="M13.273,478.8a1.294,1.294,0,1,0,1.293-1.353A1.325,1.325,0,0,0,13.273,478.8Zm1.293-.451a.452.452,0,1,1-.431.451A.442.442,0,0,1,14.566,478.352Z"
+                                                transform="translate(-2.875 -466.622)" fill="currentColor" />
+                                        </g>
+                                    </g>
+                                </svg>
+                                @else
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22.706" height="22.534"
                                     viewBox="0 0 14.706 13.534">
                                     <g transform="translate(0 0)">
@@ -131,8 +159,15 @@
                                         </g>
                                     </g>
                                 </svg>
-                                <span class="items__count">2</span>
-                            </a>
+                                @endif
+                                <span class="items__count" id="cart_items_count">{{ $cartItemsCount }}</span>
+                                <style>
+                                    [dir="rtl"] .items__count {
+                                        left: auto !important;
+                                        right: 1.8rem !important;
+                                    }
+                                </style>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -151,35 +186,24 @@
             <nav class="offcanvas__menu">
                 <ul class="offcanvas__menu_ul">
                     <li class="offcanvas__menu_li">
-                        <a class="offcanvas__menu_item" href="{{ route('home') }}">{{ __('nav.home') }}</a>
+                        <a class="offcanvas__menu_item {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">{{ __('nav.home') }}</a>
                     </li>
                     <li class="offcanvas__menu_li">
-                        <a class="offcanvas__menu_item" href="{{ route('shop') }}">{{ __('nav.shop') }}</a>
+                        <a class="offcanvas__menu_item {{ request()->routeIs('shop') ? 'active' : '' }}" href="{{ route('shop') }}">{{ __('nav.shop') }}</a>
                     </li>
                     <li class="offcanvas__menu_li">
-                        <a class="offcanvas__menu_item" href="{{ route('about') }}">{{ __('nav.about_us') }}</a>
+                        <a class="offcanvas__menu_item {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">{{ __('nav.about_us') }}</a>
                     </li>
-                    <li class="offcanvas__menu_li"><a class="offcanvas__menu_item"
-                            href="{{ route('contact') }}">{{ __('nav.contact') }}</a></li>
+                    <li class="offcanvas__menu_li"><a class="offcanvas__menu_item {{ request()->routeIs('needs') ? 'active' : '' }}"
+                            href="{{ route('needs') }}">{{ __('nav.need') }}</a>
+                    </li>
+                    <li class="offcanvas__menu_li">
+                        <a class="offcanvas__menu_item {{ request()->routeIs('track-order') ? 'active' : '' }}" href="{{ route('track-order') }}">
+                            {{ app()->getLocale() === 'ar' ? 'تتبع الطلب' : 'Track Order' }}</a>
+                    </li>
                 </ul>
-                <div class="language__currency--list">
-                    <a class="offcanvas__language--switcher" href="javascript:void(0)">
-                        <span>{{ __('nav.arabic') }}</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="9.797" height="6.05"
-                            viewBox="0 0 9.797 6.05">
-                            <path d="M14.646,8.59,10.9,12.329,7.151,8.59,6,9.741l4.9,4.9,4.9-4.9Z"
-                                transform="translate(-6 -8.59)" fill="currentColor" opacity="0.7" />
-                        </svg>
-                    </a>
-                    <div class="offcanvas__dropdown--language">
-                        <ul>
-                            <li class="language__items"><a class="language__text" href="#">{{ __('nav.english') }}</a></li>
-                        </ul>
-                    </div>
-                </div>
+            </nav>
         </div>
-        </nav>
-    </div>
     </div>
     <!-- End Offcanvas header menu -->
 
@@ -213,7 +237,7 @@
                 </a>
             </li>
             <li class="offcanvas__stikcy--toolbar__list ">
-                <a class="offcanvas__stikcy--toolbar__btn search__open--btn" href="javascript:void(0)" data-offcanvas>
+                <div class="offcanvas__stikcy--toolbar__btn search__open--btn" data-offcanvas>
                     <span class="offcanvas__stikcy--toolbar__icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22.51" height="20.443"
                             viewBox="0 0 512 512">
@@ -224,12 +248,30 @@
                         </svg>
                     </span>
                     <span class="offcanvas__stikcy--toolbar__label">{{ __('nav.search') }}</span>
-                </a>
+                </div>
             </li>
             <li class="offcanvas__stikcy--toolbar__list">
-                <a class="offcanvas__stikcy--toolbar__btn minicart__open--btn" href="javascript:void(0)"
-                    data-offcanvas id="minicart-open-btn">
+                <div class="offcanvas__stikcy--toolbar__btn minicart__open--btn""
+                    data-offcanvas id=" minicart-open-btn">
                     <span class="offcanvas__stikcy--toolbar__icon">
+                        @if(app()->getLocale() === 'ar')
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22.706" height="22.534"
+                            viewBox="0 0 14.706 13.534">
+                            <g transform="translate(14.706, 0) scale(-1, 1)">
+                                <g>
+                                    <path data-name="Path 16787"
+                                        d="M4.738,472.271h7.814a.434.434,0,0,0,.414-.328l1.723-6.316a.466.466,0,0,0-.071-.4.424.424,0,0,0-.344-.179H3.745L3.437,463.6a.435.435,0,0,0-.421-.353H.431a.451.451,0,0,0,0,.9h2.24c.054.257,1.474,6.946,1.555,7.33a1.36,1.36,0,0,0-.779,1.242,1.326,1.326,0,0,0,1.293,1.354h7.812a.452.452,0,0,0,0-.9H4.74a.451.451,0,0,1,0-.9Zm8.966-6.317-1.477,5.414H5.085l-1.149-5.414Z"
+                                        transform="translate(0 -463.248)" fill="currentColor" />
+                                    <path data-name="Path 16788"
+                                        d="M5.5,478.8a1.294,1.294,0,1,0,1.293-1.353A1.325,1.325,0,0,0,5.5,478.8Zm1.293-.451a.452.452,0,1,1-.431.451A.442.442,0,0,1,6.793,478.352Z"
+                                        transform="translate(-1.191 -466.622)" fill="currentColor" />
+                                    <path data-name="Path 16789"
+                                        d="M13.273,478.8a1.294,1.294,0,1,0,1.293-1.353A1.325,1.325,0,0,0,13.273,478.8Zm1.293-.451a.452.452,0,1,1-.431.451A.442.442,0,0,1,14.566,478.352Z"
+                                        transform="translate(-2.875 -466.622)" fill="currentColor" />
+                                </g>
+                            </g>
+                        </svg>
+                        @else
                         <svg xmlns="http://www.w3.org/2000/svg" width="22.706" height="22.534"
                             viewBox="0 0 14.706 13.534">
                             <g transform="translate(0 0)">
@@ -246,10 +288,11 @@
                                 </g>
                             </g>
                         </svg>
+                        @endif
                     </span>
                     <span class="offcanvas__stikcy--toolbar__label">{{ __('nav.cart') }}</span>
-                    <span class="items__count">3</span>
-                </a>
+                    <span class="items__count" id="cart_items_count">{{ $cartItemsCount }}</span>
+                </div>
             </li>
         </ul>
     </div>
@@ -277,6 +320,7 @@
                 width: 100%;
                 overflow-y: auto;
             }
+
             @media (min-width: 1200px) {
                 .minicart-container {
                     max-height: 550px;
@@ -302,8 +346,8 @@
         </div>
         <div class="minicart__button d-flex justify-content-center pt-3 gap-3">
             <a class="primary__btn minicart__button--link" href="{{ route('cart') }}" style="margin: 0 !important;">{{ __('nav.view_cart') }}</a>
-            <a class="primary__btn minicart__button--link disabled-on-fetch" 
-            href="{{ route('checkout') }}" id="mincart-checkout-btn" style="margin: 0 !important;">
+            <a class="primary__btn minicart__button--link disabled-on-fetch"
+                href="{{ route('checkout') }}" id="mincart-checkout-btn" style="margin: 0 !important;">
                 {{ __('nav.checkout') }}
             </a>
         </div>
@@ -328,19 +372,30 @@
     <div class="predictive__search--box ">
         <div class="predictive__search--box__inner">
             <h2 class="predictive__search--title">{{ __('nav.search_products') }}</h2>
-            <form class="predictive__search--form" action="#">
+            <div class="predictive__search--form">
                 <label>
-                    <input class="predictive__search--input" placeholder="{{ __('nav.search_here') }}" type="text">
+                    <input class="predictive__search--input" placeholder="{{ __('nav.search_here') }}" type="text" id="nav-search-input">
                 </label>
-                <button class="predictive__search--button text-white" aria-label="{{ __('nav.search_button') }}"><svg
+                <button type="button" id="nav-search-button" class="predictive__search--button text-white d-flex justify-content-center align-items-center" aria-label="{{ __('nav.search_button') }}">
+                    <!-- <svg
                         class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg" width="30.51"
                         height="25.443" viewBox="0 0 512 512">
                         <path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none"
                             stroke="currentColor" stroke-miterlimit="10" stroke-width="32" />
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10"
                             stroke-width="32" d="M338.29 338.29L448 448" />
-                    </svg> </button>
-            </form>
+                    </svg>  -->
+                    <span id="nav-search-button-text">{{ app()->getLocale() === 'ar' ? 'ابحث' : 'Search' }}</span>
+                    <span id="nav-search-loading" style="display: none;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-opacity="0.25"></circle>
+                            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" stroke-opacity="0.75"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+
+            <div class="mt-4 text-start" id="nav-search-results"></div>
         </div>
         <button class="predictive__search--close__btn" aria-label="{{ __('nav.search_close') }}" data-offcanvas>
             <svg class="predictive__search--close__icon" xmlns="http://www.w3.org/2000/svg" width="40.51"
@@ -350,6 +405,23 @@
             </svg>
         </button>
     </div>
+
+    <style>
+        #nav-search-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.3rem;
+            max-width: 100%;
+            max-height: 500px;
+            overflow: auto;
+        }
+
+        @media (max-width: 768px) {
+            #nav-search-results {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
     <!-- End serch box area -->
 
 </header>

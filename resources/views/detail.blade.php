@@ -333,14 +333,24 @@
         width: 100%;
     }
 
-    @keyframes spin {
+    @keyframes slideDownFadeIn {
         from {
-            transform: rotate(0deg);
+            opacity: 0;
+            transform: translateY(-20px);
         }
 
         to {
-            transform: rotate(360deg);
+            opacity: 1;
+            transform: translateY(0);
         }
+    }
+
+    .alert-dynamic {
+        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    }
+
+    .alert-dynamic.show {
+        animation: slideDownFadeIn 0.4s ease-out;
     }
 </style>
 @endpush
@@ -701,6 +711,8 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
+                            updateCartItemsCount(data.cartItemsCount);
+                            
                             // Show success message
                             showAlert('success', data.message || 'Product added to cart successfully!');
 
@@ -736,14 +748,29 @@
 
         // Function to show alert messages
         function showAlert(type, message) {
-            Swal.fire({
-                position: "top-end",
-                icon: type,
-                text: message,
-                showConfirmButton: false,
-                timer: 1500
-            });
+            const alertDiv = document.getElementById('dynamic-alert');
+            const alertMessage = document.getElementById('dynamic-alert-message');
+            
+            if (!alertDiv || !alertMessage) {
+                return;
+            }
 
+            // Remove existing alert classes and add the new type
+            alertDiv.classList.remove('alert-success', 'alert-danger', 'show');
+            alertDiv.classList.add(`alert-${type === 'success' ? 'success' : 'danger'}`);
+            
+            // Set the message
+            alertMessage.textContent = message;
+            
+            // Show the alert with animation
+            alertDiv.style.display = 'flex';
+            
+            // Use requestAnimationFrame to ensure the display change is applied before adding the animation class
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    alertDiv.classList.add('show');
+                });
+            });
         }
     });
 </script>

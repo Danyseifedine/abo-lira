@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Portal\HomeController;
+use App\Http\Controllers\Portal\OrderController;
 
 if (config('app.features.multi_lang')) {
     Route::group(
@@ -29,9 +30,11 @@ function registerWebRoutes()
     Route::controller(HomeController::class)->group(function () {
         Route::get('/', 'home')->name('home');
         Route::get('/about', 'about')->name('about');
-        Route::get('/contact', 'contact')->name('contact');
+        Route::get('/request-product', 'needs')->name('needs');
+        Route::post('/request-product', 'requestProduct')->name('request-product');
         Route::get('/shop', 'shop')->name('shop');
         Route::get('/detail/{slug}', 'detail')->name('detail');
+        Route::get('/search-products/{search}', 'searchProducts')->name('search-products');
     });
 
     Route::controller(CartController::class)->prefix('cart')->group(function () {
@@ -44,6 +47,11 @@ function registerWebRoutes()
     Route::controller(CheckoutController::class)->prefix('checkout')->group(function () {
         Route::get('/', 'checkout')->name('checkout');
         Route::post('/', 'store')->name('checkout.store');
+    });
+
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('/track-order', 'trackOrder')->name('track-order');
+        Route::post('/get-order', 'getOrder')->name('get-order');
     });
 
     Route::middleware([

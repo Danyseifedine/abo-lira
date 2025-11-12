@@ -6,7 +6,7 @@ return [
     'home' => 'Home',
     'shop' => 'Shop',
     'about_us' => 'About Us',
-    'contact' => 'Contact',
+    'need' => 'Request a product',
     'search' => 'Search',
     'cart' => 'Cart',
     'offcanvas_menu_open' => 'Offcanvas Menu Open',

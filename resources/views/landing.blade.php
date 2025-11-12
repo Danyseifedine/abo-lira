@@ -117,27 +117,26 @@
                 <img class="slider__thumbnail--img__style5" src="{{ asset('assets/img/abo-lira/hero.svg') }}" alt="slider-img">
                 <div class="hero__content--style5 text-center">
                     <h2 class="hero__content--style5__title h1">
-                        <span class="hero-titles">Push the Limits.</span><br>
-                        <span class="text__secondary">Fuel Your Adventure</span><br>
-                        <span class="hero-titles">With Top Motorcycle Gear</span>
+                        <span class="hero-titles">{{ __('landing.hero_title_1') }}</span><br>
+                        <span class="text__secondary">{{ __('landing.hero_title_2') }}</span><br>
+                        <span class="hero-titles">{{ __('landing.hero_title_3') }}</span>
                     </h2>
 
                     <!-- Enhanced Hero Content -->
                     <div class="hero__enhanced--content mt-4">
                         <p class="hero__description hero-description mb-4">
-                            Discover premium motorcycle gear designed for riders who demand excellence.
-                            From helmets to protective gear, we've got everything you need for your next adventure.
+                            {{ __('landing.hero_description') }}
                         </p>
 
                         <!-- Call to Action Buttons -->
                         <div class="hero__cta--buttons d-flex gap-3 justify-content-center flex-wrap mb-4">
                             <a href="{{ route('shop') }}" class="hero__btn hero__btn--primary">
                                 <i class="fas fa-shopping-bag me-2"></i>
-                                Shop Now
+                                {{ __('landing.shop_now') }}
                             </a>
                             <a href="{{ route('about') }}" class="hero__btn hero__btn--secondary hero-learn-more">
                                 <i class="fas fa-info-circle me-2"></i>
-                                Learn More
+                                {{ __('landing.learn_more') }}
                             </a>
                         </div>
 
@@ -152,7 +151,7 @@
         <section class="categories__section section--padding">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
-                    <h2 class="section__heading--maintitle">Shop by <span>Categories</span></h2>
+                    <h2 class="section__heading--maintitle">{{ __('landing.shop_by') }} <span>{{ __('landing.categories') }}</span></h2>
                 </div>
                 <div class="categories__inner--style3 d-flex">
                     @foreach ($categories as $category)
@@ -169,7 +168,7 @@
         <section class="product__section section--padding pt-0">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
-                    <h2 class="section__heading--maintitle"><a href="{{ route('shop') }}">Products Less Than $5</a>
+                    <h2 class="section__heading--maintitle"><a href="{{ route('shop') }}">{{ __('landing.products_less_than_5') }}</a>
                     </h2>
                 </div>
                 <div class="product__section--inner pb-15 product__swiper--activation swiper">
@@ -183,17 +182,29 @@
                     <div class="swiper__nav--btn swiper-button-next">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class=" -chevron-right">
+                            stroke-linejoin="round" class=" -chevron-right" style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </div>
                     <div class="swiper__nav--btn swiper-button-prev">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class=" -chevron-left">
+                            stroke-linejoin="round" class=" -chevron-left" style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </div>
+
+                    <style>
+                        [dir="rtl"] .swiper__nav--btn.swiper-button-next {
+                            right: auto !important;
+                            left: 0 !important;
+                        }
+
+                        [dir="rtl"] .swiper__nav--btn.swiper-button-prev {
+                            left: auto !important;
+                            right: 0 !important;
+                        }
+                    </style>
                 </div>
             </div>
         </section>
@@ -204,7 +215,7 @@
             <div class="container">
                 <div
                     class="section__heading section__heading--flex border-bottom d-flex justify-content-between align-items-end mb-30">
-                    <h2 class="section__heading--maintitle">Blog & article</h2>
+                    <h2 class="section__heading--maintitle">{{ __('landing.blog_article') }}</h2>
                 </div>
                 <div class="blog__section--inner row">
                     <div class="col-md-6 mb-4">
@@ -305,7 +316,7 @@
         <section class="product__section section--padding pt-0">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
-                    <h2 class="section__heading--maintitle"><a href="{{ route('shop') }}">Accessories</a>
+                    <h2 class="section__heading--maintitle"><a href="{{ route('shop') }}">{{ __('landing.accessories') }}</a>
                     </h2>
                 </div>
                 <div class="product__section--inner pb-15 product__swiper--activation swiper">
@@ -319,14 +330,14 @@
                     <div class="swiper__nav--btn swiper-button-next">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class=" -chevron-right">
+                            stroke-linejoin="round" class=" -chevron-right" style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </div>
                     <div class="swiper__nav--btn swiper-button-prev">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class=" -chevron-left">
+                            stroke-linejoin="round" class=" -chevron-left" style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </div>
@@ -345,11 +356,10 @@
                                     class="banner__thumbnail--img banner__max--height"
                                     src="{{ asset('assets/img/banner/banner1.webp') }}" alt="banner-img">
                                 <div class="banner__content">
-                                    <span class="banner__content--subtitle text__secondary">Toyota Combo</span>
-                                    <h2 class="banner__content--title"><span class="banner__content--title__inner">CAR
-                                            PARTS</span> COLLECTION</h2>
-                                    <span class="banner__content--price">$22.99</span>
-                                    <span class="banner__content--btn">Buy now
+                                    <span class="banner__content--subtitle text__secondary">{{ __('landing.banner_subtitle_1') }}</span>
+                                    <h2 class="banner__content--title"><span class="banner__content--title__inner">{{ __('landing.banner_title_1') }}</span> {{ __('landing.banner_collection') }}</h2>
+                                    <span class="banner__content--price">{{ __('landing.banner_price_1') }}</span>
+                                    <span class="banner__content--btn">{{ __('landing.buy_now') }}
                                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -358,7 +368,7 @@
                                         </svg>
                                     </span>
                                 </div>
-                                <span class="banner__badge">25% <br> off</span>
+                                <span class="banner__badge">{{ __('landing.banner_discount_1') }} <br> {{ __('landing.off') }}</span>
                             </a>
                         </div>
                     </div>
@@ -368,10 +378,10 @@
                                     class="banner__thumbnail--img banner__max--height"
                                     src="{{ asset('assets/img/banner/banner2.webp') }}" alt="banner-img">
                                 <div class="banner__content right">
-                                    <span class="banner__badge--style2">20% Off</span>
-                                    <h2 class="banner__content--title">BODY PARTS <br> FOR ANY <span
-                                            class="banner__content--title__inner"> VEHICLE </span></h2>
-                                    <span class="banner__content--btn mt-0">Buy now
+                                    <span class="banner__badge--style2">{{ __('landing.banner_discount_2') }}</span>
+                                    <h2 class="banner__content--title">{{ __('landing.banner_title_2_part1') }} <br> {{ __('landing.banner_title_2_part2') }} <span
+                                            class="banner__content--title__inner"> {{ __('landing.banner_title_2_part3') }} </span></h2>
+                                    <span class="banner__content--btn mt-0">{{ __('landing.buy_now') }}
                                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path

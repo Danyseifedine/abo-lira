@@ -2,6 +2,17 @@ const cartData = {
     csrfToken: '{{ csrf_token() }}',
 };
 
+const updateCartItemsCount = (newCount) => {
+    const countElement = document.querySelectorAll('#cart_items_count');
+
+    if (countElement.length > 0) {
+        countElement.forEach((el) => {
+            el.textContent = '';
+            el.textContent = newCount;
+        });
+    }
+};
+
 const updateCartItem = (itemId, item, subtotal) => {
     // Update quantity input
     const inputCartQuantities = document.querySelectorAll('#input-cart-quantity');
@@ -118,16 +129,6 @@ handleDisabledOnFetch = (isDisabled) => {
     });
 };
 
-const alertNotification = (type, message) => {
-    Swal.fire({
-        position: "top-end",
-        icon: type,
-        text: message,
-        showConfirmButton: false,
-        timer: 1000
-    });
-};
-
 const updateQuantity = (itemId, action, number = 1) => {
     handleInputLoading(itemId, true);
     handleDisabledOnFetch(true);
@@ -148,9 +149,8 @@ const updateQuantity = (itemId, action, number = 1) => {
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
-                alertNotification('success', data.message);
-
                 updateCartItem(itemId, data.data.item, data.data.subtotal);
+                updateCartItemsCount(data.cartItemsCount);
             } else {
                 console.error('Error:', data.message);
             }
@@ -179,9 +179,8 @@ const removeCartItem = (itemId) => {
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
-                alertNotification('success', data.message);
-
                 handleAfterRemoveCartItem(itemId, data.data);
+                updateCartItemsCount(data.cartItemsCount);
             } else {
                 console.error('Error:', data.message);
             }

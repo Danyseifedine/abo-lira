@@ -147,7 +147,7 @@
                                 </span>
                             </div>
                         </div>
-                        <button class="checkout__now--btn primary__btn" style="{{ $cartCount == 0 ? 'pointer-events: none; opacity: 0.5; cursor: not-allowed;' : '' }}" type="submit" form="checkout-form" 
+                        <button class="checkout__now--btn primary__btn" id="submit-checkout-btn" style="{{ $cartCount == 0 ? 'pointer-events: none; opacity: 0.5; cursor: not-allowed;' : '' }}" type="submit" form="checkout-form" 
                         {{ $cartCount == 0 ? 'disabled' : '' }}>{{ __('checkout.checkout_now') }}</button>
                     </aside>
                 </div>
@@ -157,5 +157,15 @@
     </div>
     <!-- End checkout page area -->
 </main>
+
+@push('scripts')
+<script>
+    document.getElementById('checkout-form').addEventListener('submit', function() {
+        const submitBtn = document.getElementById('submit-checkout-btn');
+        submitBtn.style.opacity = '0.5';
+        submitBtn.disabled = true;
+    });
+</script>
+@endpush
 
 @endsection

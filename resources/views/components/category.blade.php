@@ -4,7 +4,7 @@
     'name' => 'Category',
     'itemCount' => 0,
     'selectedCategory' => false,
-    'isFixedWidth' => false,
+    'isShopCategory' => false,
 ])
 
 @php
@@ -13,7 +13,7 @@
     $imageAlt = $name . ' category' . (config('app.name') ? ' - ' . config('app.name') : '');
 @endphp
 
-<div class="categories__card--style3 text-center {{ $selectedCategory ? 'active-category' : '' }}" style="{{ $isFixedWidth ? 'min-width: 180px; max-width: 180px;' : '' }}" 
+<div class="categories__card--style3 text-center {{ $selectedCategory ? 'active-category' : '' }}" style="{{ $isShopCategory ? 'min-width: 180px; max-width: 180px;' : '' }}" 
    itemscope itemtype="https://schema.org/Category"
 >
     <a class="categories__card--link" href="{{ $link }}" title="{{ $categoryTitle }}"
@@ -25,7 +25,9 @@
         </div>
         <div class="categories__content style3">
             <h2 class="categories__content--title {{ $selectedCategory ? 'active-category-title' : '' }}" itemprop="name">{{ $name }}</h2>
-            <span class="categories__content--subtitle" itemprop="description">({{ $itemCount }} {{ __('shop.items') }})</span>
+            @if ($isShopCategory && $itemCount > 0)
+                <span class="categories__content--subtitle" itemprop="description">({{ $itemCount }} {{ __('shop.items') }})</span>
+            @endif
         </div>
     </a>
 </div>
