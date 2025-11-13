@@ -11,12 +11,18 @@
     'quality' => null,
     'hasMultipleVariants' => false,
     'is_discounted' => false,
+    'isForSearch' => false,
 ])
 
 <div class="swiper-slide">
     <article class="product__card" style="height: 100%; display: flex; flex-direction: column;">
         <div class="product__card--thumbnail">
             <a class="product__card--thumbnail__link display-block" href="{{ route('detail', ['slug' => $slug]) }}">
+                @if ($isForSearch)
+                    <img src="{{ asset($primaryImage) }}" alt="{{ $name }}" class="product__card--image" 
+                    style="height: 250px; width: 100%; object-fit: cover; border-radius: 8px; display: block; opacity: 1;"
+                    >
+                @else
                 <img src="{{ asset('assets/img/abo-lira/empty.webp') }}"
                     @if ($primaryImage) data-src="{{ asset($primaryImage) }}" @endif
                     alt="{{ $name }}{{ $category ? ' - ' . $category : '' }}{{ $quality ? ' - ' . $quality : '' }}{{ $description ? ' – ' . Str::limit(strip_tags($description), 80) : '' }}"
@@ -27,7 +33,9 @@
                     @if (isset($discount) && $discount) data-discount="{{ $discount }}" @endif
                     @if ($category) data-category="{{ $category }}" @endif
                     @if ($quality) data-quality="{{ $quality }}" @endif
-                    @if ($hasMultipleVariants) data-has-multiple-variants="true" @endif itemprop="image">
+                    @if ($hasMultipleVariants) data-has-multiple-variants="true" @endif itemprop="image"
+                >
+                @endif
             </a>
             @if ($is_discounted && $discountPercentage && $discountPercentage > 0)
                 <span class="product__badge">-{{ number_format($discountPercentage, 0) }}%</span>
