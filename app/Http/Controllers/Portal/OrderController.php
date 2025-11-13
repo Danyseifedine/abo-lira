@@ -23,9 +23,7 @@ class OrderController extends Controller
 
         $order = null;
         if($orderNumber) {
-            $order = Order::where('order_number', $orderNumber)->first();
-            $order->created_at_formatted = Carbon::parse($order->created_at)->format('d/m/Y');
-            $order->status_formatted = ucfirst($order->status);
+            $order = $this->getOrderDetails($orderNumber);
         }
 
         return view('track-order', compact('cartItemsCount', 'order'));
@@ -39,9 +37,7 @@ class OrderController extends Controller
 
         $orderNumber = $validated['order_number'];
 
-        $order = Order::where('order_number', $orderNumber)->first();
-        $order->created_at_formatted = Carbon::parse($order->created_at)->format('d/m/Y');
-        $order->status_formatted = ucfirst($order->status);
+        $order = $this->getOrderDetails($orderNumber);
 
         if (!$order) {
             return response()->json([
@@ -53,6 +49,38 @@ class OrderController extends Controller
         return response()->json([
             'success' => true,
             'order' => $order,
+            'locale' => app()->getLocale(),
         ]);
+    }
+
+    private function getOrderDetails(string $orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->first();
+        $order->created_at_formatted = Carbon::parse($order->created_at)->format('d/m/Y');
+        $order->status_formatted = $this->translateOrderStatus($order->status);
+
+        return $order;
+    }
+
+    private function translateOrderStatus(string $status): string
+    {
+        $locale = app()->getLocale();
+
+        switch ($status) {
+            case 'pending':
+                return $locale === 'ar' ? 'قيد الإنتظار' : 'Pending';
+            case 'accepted':
+                return $locale === 'ar' ? 'مقبول' : 'Accepted';
+            case 'on_the_way':
+                return $locale === 'ar' ? 'قيد التسليم' : 'On the Way';
+            case 'completed':
+                return $locale === 'ar' ? 'مكتمل' : 'Completed';
+            case 'refunded':
+                return $locale === 'ar' ? 'مسترجع' : 'Refunded';
+            case 'rejected':
+                return $locale === 'ar' ? 'مرفوض' : 'Rejected';
+            default:
+                return $status;
+        }
     }
 }

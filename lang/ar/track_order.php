@@ -20,5 +20,16 @@ return [
     'no_order_details_found' => 'لم يتم العثور على تفاصيل الطلب',
     'put_your_order_first' => 'أدخل رقم الطلب الخاص بك للحصول على تفاصيل الطلب',
     'order_placed_success' => 'تم إنشاء الطلب بنجاح. يمكنك تتبعه باستخدام رقم الطلب <span class="fw-bold">:order_number</span>.',
+    'first_name' => 'الاسم الأول',
+    'last_name' => 'اسم العائلة',
+    'phone_number' => 'رقم الهاتف',
+    'total_amount' => 'المبلغ الإجمالي',
+    'address' => 'العنوان',
+    'pending' => 'قيد الإنتظار',
+    'accepted' => 'مقبول',
+    'on_the_way' => 'قيد التسليم',
+    'completed' => 'مكتمل',
+    'refunded' => 'مسترجع',
+    'rejected' => 'مرفوض',
 ];
 

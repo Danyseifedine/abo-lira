@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('city');
             $table->decimal('total_amount', 10, 2);
-            $table->enum('status', ['pending', 'accepted', 'delivered', 'rejected', 'refunded'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'on_the_way', 'completed', 'rejected', 'refunded'])->default('pending');
             $table->timestamps();
         });
     }

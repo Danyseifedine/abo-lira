@@ -12,9 +12,9 @@
 ])
 
 @php
-    $isArabic = app()->getLocale() === 'ar';
-    $displayName = $isArabic && $nameAr ? $nameAr : $name;
-    $displayVariants = $isArabic && !empty($variantsAr) ? $variantsAr : $variants;
+$isArabic = app()->getLocale() === 'ar';
+$displayName = $isArabic && $nameAr ? $nameAr : $name;
+$displayVariants = $isArabic && !empty($variantsAr) ? $variantsAr : $variants;
 @endphp
 
 <tr class="cart__table--body__items" data-item-id="{{ $itemId }}" id="parent-cart-item">
@@ -32,7 +32,15 @@
                 </span>
             </button>
             <div class="cart__thumbnail">
-                <a href="{{ $link }}"><img class="border-radius-5" src="{{ asset($image) }}" alt="{{ $displayName }}" style="height: 130px; object-fit: cover;"></a>
+                <a href="{{ $link }}">
+                    @if($image)
+                    <img class="border-radius-5" src="{{ asset($image) }}" alt="{{ $displayName }}" style="height: 130px; object-fit: cover;">
+                    @else
+                    <div class="d-flex justify-content-center align-items-center px-5" style="height: 130px; background-color: #f0f0f0;">
+                        <span class="text-muted" style="font-size: 1.4rem;">{{ __('detail.no_image') }}</span>
+                    </div>
+                    @endif
+                </a>
             </div>
             <div class="cart__content">
                 <h3 class="cart__content--title h4"><a href="{{ $link }}">{{ $displayName }}</a></h3>

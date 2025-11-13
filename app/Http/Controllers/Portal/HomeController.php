@@ -58,12 +58,16 @@ class HomeController extends Controller
 
     public function requestProduct(NeedRequest $request): RedirectResponse
     {
-        Need::create([
+        $need = Need::create([
             'f_name' => $request->input('f_name'),
             'l_name' => $request->input('l_name'),
             'phone_number' => $request->input('phone_number'),
             'message' => $request->input('message'),
         ]);
+
+        if ($request->hasFile('image')) {
+            $need->addMediaFromRequest('image')->toMediaCollection('request-image');
+        }
 
         return redirect()->route('needs')->with('success', 'Need created successfully');
     }

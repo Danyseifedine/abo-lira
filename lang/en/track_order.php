@@ -20,5 +20,16 @@ return [
     'no_order_details_found' => 'No order details found',
     'put_your_order_first' => 'Enter your order number to get order details',
     'order_placed_success' => 'Your order number <span class="fw-bold">:order_number</span> save it to still track your order.',
+    'first_name' => 'First Name',
+    'last_name' => 'Last Name',
+    'phone_number' => 'Phone Number',
+    'total_amount' => 'Total Amount',
+    'address' => 'Address',
+    'pending' => 'Pending',
+    'accepted' => 'Accepted',
+    'on_the_way' => 'On the Way',
+    'completed' => 'Completed',
+    'refunded' => 'Refunded',
+    'rejected' => 'Rejected',
 ];
 

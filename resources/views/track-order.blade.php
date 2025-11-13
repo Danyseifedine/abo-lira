@@ -119,6 +119,61 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="order__detail--item p-3 border-radius-5">
+                                                <label class="order__detail--label d-block" style="font-size: 1rem; color: #666; font-weight: 600;">
+                                                    {{ __('track_order.first_name') }}
+                                                </label>
+                                                <div class="order__detail--value px-3 py-2" id="display-order-f-name"
+                                                    style="font-size: 1.25rem; font-weight: 700; background-color: #fff; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                                    {{ $order ? $order->f_name : '' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="order__detail--item p-3 border-radius-5">
+                                                <label class="order__detail--label d-block" style="font-size: 1rem; color: #666; font-weight: 600;">
+                                                    {{ __('track_order.last_name') }}
+                                                </label>
+                                                <div class="order__detail--value px-3 py-2" id="display-order-l-name"
+                                                    style="font-size: 1.25rem; font-weight: 700; background-color: #fff; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                                    {{ $order ? $order->l_name : '' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="order__detail--item p-3 border-radius-5">
+                                                <label class="order__detail--label d-block" style="font-size: 1rem; color: #666; font-weight: 600;">
+                                                    {{ __('track_order.phone_number') }}
+                                                </label>
+                                                <a href="tel:+961{{ $order ? $order->phone_number : '' }}" class="order__detail--value px-3 py-2" id="display-order-phone-number"
+                                                    style="width: 100%; direction: ltr; font-size: 1.25rem; font-weight: 700; background-color: #fff; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                                    +961{{ $order ? $order->phone_number : '' }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="order__detail--item p-3 border-radius-5">
+                                                <label class="order__detail--label d-block" style="font-size: 1rem; color: #666; font-weight: 600;">
+                                                    {{ __('track_order.total_amount') }}
+                                                </label>
+                                                <div class="order__detail--value px-3 py-2" id="display-order-total-amount"
+                                                    style="color:#dc3545; font-size: 1.25rem; font-weight: 700; background-color: #fff; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                                    {{ $order ? $order->total_amount . '$' : '' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="order__detail--item p-3 border-radius-5">
+                                                <label class="order__detail--label d-block" style="font-size: 1rem; color: #666; font-weight: 600;">
+                                                    {{ __('track_order.address') }}
+                                                </label>
+                                                <div class="order__detail--value px-3 py-2" id="display-order-address"
+                                                    style="font-size: 1.25rem; font-weight: 700; background-color: #fff; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                                    {{ $order ? $order->address . ', ' . $order->city : '' }}
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-12 d-flex justify-content-end">
                                             <span id="display-order-date" style="font-size: 1.25rem; font-weight: 400; color: #2c3e50;">
                                                 {{ $order ? $order->created_at_formatted : '' }}
@@ -163,6 +218,8 @@
                 return 'completed-status-class';
             case 'refunded':
                 return 'refunded-status-class';
+            case 'rejected':
+                return 'rejected-status-class';
             default:
                 return 'pending-status-class';
         }
@@ -172,6 +229,11 @@
         const orderNumberElement = document.getElementById('display-order-number');
         const orderStatusElement = document.getElementById('display-order-status');
         const orderDateElement = document.getElementById('display-order-date');
+        const orderFNameElement = document.getElementById('display-order-f-name');
+        const orderLNameElement = document.getElementById('display-order-l-name');
+        const orderPhoneNumberElement = document.getElementById('display-order-phone-number');
+        const orderTotalAmountElement = document.getElementById('display-order-total-amount');
+        const orderAddressElement = document.getElementById('display-order-address');
 
         if (orderNumberElement !== null) {
             orderNumberElement.textContent = order.order_number;
@@ -183,12 +245,33 @@
         if (orderDateElement !== null) {
             orderDateElement.textContent = order.created_at_formatted;
         }
+        if (orderFNameElement !== null) {
+            orderFNameElement.textContent = order.f_name;
+        }
+        if (orderLNameElement !== null) {
+            orderLNameElement.textContent = order.l_name;
+        }
+        if (orderPhoneNumberElement !== null) {
+            orderPhoneNumberElement.href = 'tel:+961' + order.phone_number;
+            orderPhoneNumberElement.textContent = '+961' + order.phone_number;
+        }
+        if (orderTotalAmountElement !== null) {
+            orderTotalAmountElement.textContent = order.total_amount + '$';
+        }
+        if (orderAddressElement !== null) {
+            orderAddressElement.textContent = order.address + ', ' + order.city;
+        }
     }
 
     const fetchOrder = (orderNumber) => {
         handleTrackLoading(true);
 
-        fetch('/get-order', {
+        const currentPath = window.location.pathname;
+        const localePrefix = currentPath.split('/')[1];
+        const isLocalized = ['ar', 'en'].includes(localePrefix);
+        const apiUrl = isLocalized ? `/${localePrefix}/get-order` : '/get-order';
+
+        fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -308,6 +391,10 @@
 
     .completed-status-class {
         color: #28a745;
+    }
+
+    .rejected-status-class {
+        color: #ff0000;
     }
 
     .refunded-status-class {
