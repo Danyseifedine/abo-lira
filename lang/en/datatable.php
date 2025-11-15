@@ -6,6 +6,7 @@ return [
     'search_placeholder' => 'Search here...',
     'all_status' => 'All Status',
     'search' => 'Search',
+    'product' => 'Product Name',
     'created_from' => 'Created From',
     'select_created_from' => 'Select Created From',
     'created_to' => 'Created To',

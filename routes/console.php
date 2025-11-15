@@ -5,10 +5,10 @@ use Illuminate\Support\Facades\Artisan;
 
 
 
-Schedule::command('telescope:prune --hours=48')->daily();
 
-Schedule::call(function () {
-    \Log::info('Test schedule running at ' . now());
-})->everyFiveSeconds();
 
 Schedule::command('temp:cleanup --hours=24')->daily();
+
+Schedule::command('discounts:expire')->twiceDaily(1, 13);
+
+Schedule::command('discounts:activate')->hourly();
