@@ -43,9 +43,13 @@ return [
     'separator' => 'فاصل',
     'edit' => 'تعديل',
     'delete' => 'حذف',
+    'view' => 'عرض',
     'color_id' => 'معرف اللون',
+    'order_id' => 'معرف الطلب',
     'open_menu' => 'فتح القائمة',
     'actions' => 'الإجراءات',
+    'min_amount' => 'الحد الأدنى للمبلغ',
+    'max_amount' => 'الحد الأقصى للمبلغ',
     'today' => 'اليوم',
     'yesterday' => 'اليوم السابق',
     'days_ago' => 'يومين مضت',
@@ -60,6 +64,23 @@ return [
         'name_ar' => 'الاسم (عربي)',
         'color' => 'اللون',
         'active' => 'نشط',
+        'created' => 'تاريخ الإنشاء',
+    ],
+
+    // Orders
+    'orders' => [
+        'title' => 'الطلبات',
+        'description' => 'إدارة طلبات العملاء',
+    ],
+    'orders_columns' => [
+        'number' => '#',
+        'order_number' => 'رقم الطلب',
+        'f_name' => 'الاسم الأول',
+        'l_name' => 'اسم العائلة',
+        'phone_number' => 'الهاتف',
+        'city' => 'المدينة',
+        'total_amount' => 'المبلغ الإجمالي',
+        'status' => 'الحالة',
         'created' => 'تاريخ الإنشاء',
     ],
 

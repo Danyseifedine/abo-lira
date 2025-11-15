@@ -2,6 +2,7 @@
 
 namespace App\Services\Portal;
 
+use App\Enum\OrderStatus;
 use App\Models\Order;
 use App\Models\OrderHistory;
 use App\Models\OrderItem;
@@ -33,12 +34,12 @@ class OrderServicePortal
             'address' => $request->input('address'),
             'city' => $request->input('city'),
             'total_amount' => $cartData['subtotal_formatted'],
-            'status' => 'pending',
+            'status' => OrderStatus::PENDING->value,
         ]);
 
         OrderHistory::create([
             'order_id' => $order->id,
-            'status' => 'pending',
+            'status' => OrderStatus::PENDING->value,
         ]);
 
         // Fetch all products at once (optimized - avoids N+1 query problem)
@@ -99,15 +100,15 @@ class OrderServicePortal
     {
         foreach ($cartItems as $item) {
             $slug = $item->options->slug ?? null;
-    
-            if (!$slug || !isset($products[$slug])) {
+
+            if (! $slug || ! isset($products[$slug])) {
                 continue;
             }
-    
+
             $product = $products[$slug];
             $product->bought_count += $item->quantity;
         }
-    
+
         // Save all products with one DB trip total
         $products->each->save();
     }

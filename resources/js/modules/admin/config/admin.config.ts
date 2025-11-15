@@ -8,10 +8,10 @@ import {
     Package2,
     FolderTree,
     BadgeCheck,
-    Gift,
     Palette,
     Maximize2,
     ShieldAlert,
+    ShoppingCart,
 } from "lucide-vue-next";
 
 const getAdminSidebarMainItems = (): NavItem[] => [
@@ -34,9 +34,23 @@ const getAdminSidebarMainItems = (): NavItem[] => [
         title: 'sidebar.users',
         href: route('super-admin.users.index'),
         icon: Users,
-        iconColor: '#10b981', // emerald-500 (people/community)
+        iconColor: '#10b981',
         iconSize: '1.25rem',
         permissions: ['access-super-admin-users'],
+    },
+
+    {
+        title: 'sidebar.sales_orders',
+        isSection: true,
+        permissions: ['access-super-admin-orders'],
+    },
+    {
+        title: 'sidebar.orders',
+        href: route('super-admin.orders.index'),
+        icon: ShoppingCart,
+        iconColor: '#22c55e', // green-500 (commerce/sales)
+        iconSize: '1.25rem',
+        permissions: ['access-super-admin-orders'],
     },
 
     {
@@ -87,14 +101,14 @@ const getAdminSidebarMainItems = (): NavItem[] => [
         permissions: ['access-super-admin-product-sizes'],
     },
 
-    {
-        title: 'sidebar.product_bundles',
-        // href: route('super-admin.product-bundles.index'),
-        icon: Gift,
-        iconColor: '#6366f1', // indigo-500 (deals/special offers)
-        iconSize: '1.25rem',
-        permissions: ['access-super-admin-product-bundles'],
-    },
+    // {
+    //     title: 'sidebar.product_bundles',
+    //     // href: route('super-admin.product-bundles.index'),
+    //     icon: Gift,
+    //     iconColor: '#6366f1', // indigo-500 (deals/special offers)
+    //     iconSize: '1.25rem',
+    //     permissions: ['access-super-admin-product-bundles'],
+    // },
 
     {
         title: 'sidebar.settings_security',
@@ -116,6 +130,14 @@ const getAdminSidebarMainItems = (): NavItem[] => [
         iconColor: '#dc2626', // red-600 (security/access control)
         iconSize: '1.25rem',
         permissions: ['access-super-admin-permission'],
+    },
+    {
+        title: 'sidebar.orders',
+        href: route('super-admin.orders.index'),
+        icon: Package2,
+        iconColor: '#f97316', // orange-500 (products/inventory)
+        iconSize: '1.25rem',
+        permissions: ['access-super-admin-orders'],
     },
 ];
 

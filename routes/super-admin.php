@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SuperAdmin\IndexController;
+use App\Http\Controllers\SuperAdmin\OrderController;
 use App\Http\Controllers\SuperAdmin\Privileges\PermissionsController;
 use App\Http\Controllers\SuperAdmin\Privileges\RolesController;
 use App\Http\Controllers\SuperAdmin\Products\ProductCategoriesController;
@@ -57,6 +58,32 @@ Route::prefix('dashboard')->name('super-admin.')->group(function () {
         // Custom route for toggling user status
         Route::patch('/{user}/toggle-status', [UsersController::class, 'toggleStatus'])->name('toggle-status');
     });
+
+    // ================================================
+    // ---------------- End Users --------------------
+    // ================================================
+
+    // ================================================
+    // ---------------- Start Orders -----------------
+    // ================================================
+
+    Route::prefix('orders')->name('orders.')->middleware('permission:access-super-admin-orders')->group(function () {
+        Route::resource('/', OrderController::class)
+            ->parameters(['' => 'order'])
+            ->only(['index', 'show', 'destroy'])
+            ->names([
+                'index' => 'index',
+                'show' => 'show',
+                'destroy' => 'destroy',
+            ]);
+
+        // Custom route for changing order status
+        Route::patch('/{order}/change-status', [OrderController::class, 'changeStatus'])->name('change-status');
+    });
+
+    // ================================================
+    // ---------------- End Orders -------------------
+    // ================================================
 
     // ================================================
     // ---------------- Start Roles ------------------

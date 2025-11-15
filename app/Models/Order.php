@@ -17,11 +17,25 @@ class Order extends Model
         'status',
     ];
 
-    public function items() {
+    public function items()
+    {
         return $this->hasMany(OrderItem::class);
     }
 
-    public function scopeStatus($query, $status) {
+    public function scopeStatus($query, $status)
+    {
         return $query->where('status', $status);
+    }
+
+    public function changeStatus($status)
+    {
+        $this->update([
+            'status' => $status,
+        ]);
+
+        OrderHistory::create([
+            'order_id' => $this->id,
+            'status' => $status,
+        ]);
     }
 }

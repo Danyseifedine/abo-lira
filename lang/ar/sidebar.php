@@ -6,6 +6,8 @@ return [
     'dashboard' => 'لوحة التحكم',
     'pages' => 'الصفحات',
     'users' => 'المستخدمين',
+    'sales_orders' => 'المبيعات والطلبات',
+    'orders' => 'الطلبات',
     'catalog_inventory' => 'الكتالوج والمخزون',
     'products' => 'المنتجات',
     'product_categories' => 'فئات المنتجات',

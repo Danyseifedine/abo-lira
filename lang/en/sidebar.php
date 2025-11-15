@@ -6,6 +6,8 @@ return [
     'dashboard' => 'Dashboard',
     'pages' => 'Pages',
     'users' => 'Users',
+    'sales_orders' => 'Sales & Orders',
+    'orders' => 'Orders',
     'catalog_inventory' => 'Catalog & Inventory',
     'products' => 'Products',
     'product_categories' => 'Product Categories',
