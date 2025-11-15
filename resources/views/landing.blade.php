@@ -32,7 +32,7 @@
                 width: 100%;
             }
 
-            .banner__video--thumbnail > div {
+            .banner__video--thumbnail>div {
                 width: 100% !important;
                 max-width: 100%;
                 height: auto !important;
@@ -72,7 +72,7 @@
                 width: 100%;
             }
 
-            .banner__video--thumbnail > div {
+            .banner__video--thumbnail>div {
                 width: 100% !important;
                 max-width: 100%;
                 height: auto !important;
@@ -151,7 +151,9 @@
         <section class="categories__section section--padding">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
-                    <h2 class="section__heading--maintitle">{{ __('landing.shop_by') }} <span>{{ __('landing.categories') }}</span></h2>
+                    <h2 class="section__heading--maintitle">{{ __('landing.shop_by') }}
+                        <span>{{ __('landing.categories') }}</span>
+                    </h2>
                 </div>
                 <div class="categories__inner--style3 d-flex">
                     @foreach ($categories as $category)
@@ -168,28 +170,31 @@
         <section class="product__section section--padding pt-0">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
-                    <h2 class="section__heading--maintitle"><a href="{{ route('shop') }}">{{ __('landing.products_less_than_5') }}</a>
+                    <h2 class="section__heading--maintitle"><a
+                            href="{{ route('shop') }}">{{ __('landing.products_less_than_5') }}</a>
                     </h2>
                 </div>
                 <div class="product__section--inner pb-15 product__swiper--activation swiper">
                     <div class="swiper-wrapper">
                         @foreach ($productsLessThanPrice5 as $product)
-                            <x-product-slide :slug="$product->slug" :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
-                                :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality" :hasMultipleVariants="$product->has_multiple_variants"
-                                :is_discounted="$product->is_discounted" />
+                            <x-product-slide :slug="$product->slug" :primaryImage="$product->image" :name="$product->name" :description="$product->description"
+                                :price="$product->price" :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality"
+                                :hasMultipleVariants="$product->has_multiple_variants" :is_discounted="$product->is_discounted" />
                         @endforeach
                     </div>
                     <div class="swiper__nav--btn swiper-button-next">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class=" -chevron-right" style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
+                            stroke-linejoin="round" class=" -chevron-right"
+                            style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </div>
                     <div class="swiper__nav--btn swiper-button-prev">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class=" -chevron-left" style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
+                            stroke-linejoin="round" class=" -chevron-left"
+                            style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </div>
@@ -316,28 +321,31 @@
         <section class="product__section section--padding pt-0">
             <div class="container">
                 <div class="section__heading border-bottom mb-30">
-                    <h2 class="section__heading--maintitle"><a href="{{ route('shop') }}">{{ __('landing.accessories') }}</a>
+                    <h2 class="section__heading--maintitle"><a
+                            href="{{ route('shop') }}">{{ __('landing.accessories') }}</a>
                     </h2>
                 </div>
                 <div class="product__section--inner pb-15 product__swiper--activation swiper">
                     <div class="swiper-wrapper">
                         @foreach ($accessoriesProducts as $product)
-                            <x-product-slide :slug="$product->slug" :primaryImage="$product->image" :name="$product->name" :description="$product->description" :price="$product->price"
-                                :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category" :quality="$product->quality"
-                                :hasMultipleVariants="$product->has_multiple_variants" :is_discounted="$product->is_discounted" />
+                            <x-product-slide :slug="$product->slug" :primaryImage="$product->image" :name="$product->name" :description="$product->description"
+                                :price="$product->price" :basePrice="$product->base_price" :discountPercentage="$product->discount_percentage" :category="$product->category"
+                                :quality="$product->quality" :hasMultipleVariants="$product->has_multiple_variants" :is_discounted="$product->is_discounted" />
                         @endforeach
                     </div>
                     <div class="swiper__nav--btn swiper-button-next">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class=" -chevron-right" style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
+                            stroke-linejoin="round" class=" -chevron-right"
+                            style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </div>
                     <div class="swiper__nav--btn swiper-button-prev">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class=" -chevron-left" style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
+                            stroke-linejoin="round" class=" -chevron-left"
+                            style="{{ app()->getLocale() === 'ar' ? 'transform: rotate(180deg);' : '' }}">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </div>
@@ -349,17 +357,20 @@
         <!-- Start banner section -->
         <section class="banner__section section--padding pt-0">
             <div class="container">
-                <div class="row  mb--n30">
+                <div class="row mb--n30">
                     <div class="col-lg-6 col-md-6 mb-30">
                         <div class="banner__items position__relative">
-                            <a class="banner__thumbnail display-block" href="shop.html"><img
+                            <a class="banner__thumbnail display-block" href="{{ route('track-order') }}"><img
                                     class="banner__thumbnail--img banner__max--height"
-                                    src="{{ asset('assets/img/banner/banner1.webp') }}" alt="banner-img">
+                                    src="{{ asset('assets/img/abo-lira/order-track-img.jpeg') }}" alt="order-track-img"
+                                    style="height: 230px; object-fit: cover;">
                                 <div class="banner__content">
-                                    <span class="banner__content--subtitle text__secondary">{{ __('landing.banner_subtitle_1') }}</span>
-                                    <h2 class="banner__content--title"><span class="banner__content--title__inner">{{ __('landing.banner_title_1') }}</span> {{ __('landing.banner_collection') }}</h2>
-                                    <span class="banner__content--price">{{ __('landing.banner_price_1') }}</span>
-                                    <span class="banner__content--btn">{{ __('landing.buy_now') }}
+                                    <span
+                                        class="banner__content--subtitle text__secondary">{{ __('landing.track_order_subtitle') }}</span>
+                                    <h2 class="banner__content--title"><span
+                                            class="banner__content--title__inner">{{ __('landing.track_order_title') }}</span>
+                                        {{ __('landing.track_order_title_2') }}</h2>
+                                    <span class="banner__content--btn">{{ __('landing.track_order_btn') }}
                                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -368,20 +379,23 @@
                                         </svg>
                                     </span>
                                 </div>
-                                <span class="banner__badge">{{ __('landing.banner_discount_1') }} <br> {{ __('landing.off') }}</span>
                             </a>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 mb-30">
                         <div class="banner__items position__relative">
-                            <a class="banner__thumbnail display-block" href="shop.html"><img
+                            <a class="banner__thumbnail display-block" href="{{ route('needs') }}"><img
                                     class="banner__thumbnail--img banner__max--height"
-                                    src="{{ asset('assets/img/banner/banner2.webp') }}" alt="banner-img">
+                                    src="{{ asset('assets/img/abo-lira/request-a-product.jpeg') }}"
+                                    style="height: 230px; object-fit: cover;" alt="banner-img">
                                 <div class="banner__content right">
-                                    <span class="banner__badge--style2">{{ __('landing.banner_discount_2') }}</span>
-                                    <h2 class="banner__content--title">{{ __('landing.banner_title_2_part1') }} <br> {{ __('landing.banner_title_2_part2') }} <span
-                                            class="banner__content--title__inner"> {{ __('landing.banner_title_2_part3') }} </span></h2>
-                                    <span class="banner__content--btn mt-0">{{ __('landing.buy_now') }}
+                                    <span
+                                        class="banner__content--subtitle text__secondary">{{ __('landing.request_product_subtitle') }}</span>
+                                    <h2 class="banner__content--title">{{ __('landing.request_product_title') }} <br>
+                                        <span class="banner__content--title__inner">
+                                            {{ __('landing.request_product_title_2') }} </span>
+                                    </h2>
+                                    <span class="banner__content--btn mt-0">{{ __('landing.request_product_btn') }}
                                         <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
