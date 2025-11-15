@@ -54,6 +54,9 @@ class PermissionSeeder extends Seeder
 
             // Needs permissions
             'access-super-admin-needs',
+
+            // Discounts permissions
+            'access-super-admin-discounts',
             // ================================================
             // ---------------- End Super Admin ---------------
             // ================================================

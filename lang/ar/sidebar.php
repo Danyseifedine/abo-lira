@@ -9,6 +9,7 @@ return [
     'sales_orders' => 'المبيعات والطلبات',
     'orders' => 'الطلبات',
     'needs' => 'طلبات المنتجات',
+    'discounts' => 'الخصومات',
     'catalog_inventory' => 'الكتالوج والمخزون',
     'products' => 'المنتجات',
     'product_categories' => 'فئات المنتجات',

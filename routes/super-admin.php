@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SuperAdmin\DiscountController;
 use App\Http\Controllers\SuperAdmin\IndexController;
 use App\Http\Controllers\SuperAdmin\NeedController;
 use App\Http\Controllers\SuperAdmin\OrderController;
@@ -276,5 +277,28 @@ Route::prefix('dashboard')->name('super-admin.')->group(function () {
 
     // ================================================
     // ------------ End Products ---------------------
+    // ================================================
+
+    // ================================================
+    // ---------------- Start Discounts --------------
+    // ================================================
+
+    Route::prefix('discounts')->name('discounts.')->middleware('permission:access-super-admin-discounts')->group(function () {
+        Route::resource('/', DiscountController::class)
+            ->parameters(['' => 'product'])
+            ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
+            ->names([
+                'index' => 'index',
+                'create' => 'create',
+                'store' => 'store',
+                'show' => 'show',
+                'edit' => 'edit',
+                'update' => 'update',
+                'destroy' => 'destroy',
+            ]);
+    });
+
+    // ================================================
+    // ---------------- End Discounts -----------------
     // ================================================
 });

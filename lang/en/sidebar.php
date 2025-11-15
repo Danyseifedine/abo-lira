@@ -9,6 +9,7 @@ return [
     'sales_orders' => 'Sales & Orders',
     'orders' => 'Orders',
     'needs' => 'Product Requests',
+    'discounts' => 'Discounts',
     'catalog_inventory' => 'Catalog & Inventory',
     'products' => 'Products',
     'product_categories' => 'Product Categories',

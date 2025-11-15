@@ -13,6 +13,7 @@ import {
     ShieldAlert,
     ShoppingCart,
     Bell,
+    Percent,
 } from "lucide-vue-next";
 
 const getAdminSidebarMainItems = (): NavItem[] => [
@@ -109,6 +110,14 @@ const getAdminSidebarMainItems = (): NavItem[] => [
         iconColor: '#06b6d4', // cyan-500 (measurements/dimensions)
         iconSize: '1.25rem',
         permissions: ['access-super-admin-product-sizes'],
+    },
+    {
+        title: 'sidebar.discounts',
+        href: route('super-admin.discounts.index'),
+        icon: Percent,
+        iconColor: '#06b6d4', // cyan-500 (measurements/dimensions)
+        iconSize: '1.25rem',
+        permissions: ['access-super-admin-discounts'],
     },
 
     // {

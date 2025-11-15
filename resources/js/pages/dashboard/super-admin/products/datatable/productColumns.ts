@@ -81,14 +81,14 @@ export function createProductColumns(
         }),
 
         // Price
-        textColumn('price', labels.price, {
-            sortable: true,
-            className: 'font-medium text-start px-2',
-            headerClassName: 'text-start px-0',
-            format: (value: number) => {
-                return value ? value.toString() : '_';
-            },
-        }),
+        // textColumn('price', labels.price, {
+        //     sortable: true,
+        //     className: 'font-medium text-start px-2',
+        //     headerClassName: 'text-start px-0',
+        //     format: (value: number) => {
+        //         return value ? value.toString() : '_';
+        //     },
+        // }),
 
         // Status toggle
         toggleColumn('status', labels.active, {
@@ -122,34 +122,34 @@ export function createProductColumns(
         }),
 
         // Is New toggle
-        toggleColumn('is_new', labels.is_new, {
-            headerClassName: 'text-center px-0',
-            onToggle: (value: boolean, product: Product, control) => {
-                router.patch(route('super-admin.products.toggle-is-new', product.id), { is_new: value }, {
-                    preserveScroll: true,
-                    preserveState: true,
-                    onStart: () => {
-                        isToggleLoading.value = true;
-                    },
-                    onFinish: () => {
-                        isToggleLoading.value = false;
-                    },
-                    onSuccess: (page) => {
-                        const response = (page.props as any).flash?.toast;
-                        if (response?.success === false) {
-                            control.revert();
-                        }
-                    }
-                });
-            },
-            disabled: () => {
-                return isToggleLoading.value;
-            },
-            toggledWhen: (value: any) => {
-                return convertToBoolean(value);
-            },
-            size: 'sm',
-        }),
+        // toggleColumn('is_new', labels.is_new, {
+        //     headerClassName: 'text-center px-0',
+        //     onToggle: (value: boolean, product: Product, control) => {
+        //         router.patch(route('super-admin.products.toggle-is-new', product.id), { is_new: value }, {
+        //             preserveScroll: true,
+        //             preserveState: true,
+        //             onStart: () => {
+        //                 isToggleLoading.value = true;
+        //             },
+        //             onFinish: () => {
+        //                 isToggleLoading.value = false;
+        //             },
+        //             onSuccess: (page) => {
+        //                 const response = (page.props as any).flash?.toast;
+        //                 if (response?.success === false) {
+        //                     control.revert();
+        //                 }
+        //             }
+        //         });
+        //     },
+        //     disabled: () => {
+        //         return isToggleLoading.value;
+        //     },
+        //     toggledWhen: (value: any) => {
+        //         return convertToBoolean(value);
+        //     },
+        //     size: 'sm',
+        // }),
 
         // Actions menu
         actionsColumn([

@@ -34,6 +34,17 @@ class Product extends Model implements HasMedia
         'has_multiple_color',
     ];
 
+    protected static function booted(): void
+    {
+        static::created(function (Product $product): void {
+            cache()->flush();
+        });
+
+        static::updated(function (Product $product): void {
+            cache()->flush();
+        });
+    }
+
     protected function casts(): array
     {
         return [
