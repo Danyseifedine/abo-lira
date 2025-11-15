@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DataTable from '@/common/components/dashboards/datatable/Datatable.vue';
 import DashboardDeleteDialog from '@/common/components/dashboards/datatable/datatableDeleteDialog.vue';
+import DashboardStatusChangeDialog from '@/common/components/dashboards/datatable/datatableStatusChangeDialog.vue';
 import DashboardButton from '@/common/components/dashboards/form/DashboardButton.vue';
 import DashboardDatePicker from '@/common/components/dashboards/form/DashboardDatePicker.vue';
 import DashboardSelect from '@/common/components/dashboards/form/DashboardSelect.vue';
@@ -17,7 +18,7 @@ import { useDeleteDialog } from '@modules/admin/composables/useDeleteDialog';
 import AdminLayout from '@modules/admin/layouts/AdminLayout.vue';
 import { Tag } from '@ui/badge';
 import { Button } from '@ui/button';
-import { onMounted, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { createOrderColumns } from './datatable/orderColumns';
 import type { Order } from './datatable/type';
 
@@ -134,8 +135,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 // Delete dialog using composable
 const { deleteDialogOpen, itemToDelete: orderToDelete, openDeleteDialog } = useDeleteDialog<Order>();
 
-// Create columns with delete dialog function passed as parameter
-const orderColumns = createOrderColumns(openDeleteDialog, props.columnLabels);
+// Status change dialog
+const statusChangeDialogOpen = ref(false);
+const orderToChangeStatus = ref<Order | null>(null);
+
+const openStatusChangeDialog = (order: Order) => {
+    orderToChangeStatus.value = order;
+    statusChangeDialogOpen.value = true;
+};
+
+// Create columns with delete dialog and status change dialog functions passed as parameters
+const orderColumns = createOrderColumns(openDeleteDialog, openStatusChangeDialog, props.columnLabels);
 </script>
 
 <template>
@@ -257,6 +267,18 @@ const orderColumns = createOrderColumns(openDeleteDialog, props.columnLabels);
                 :item-name="orderToDelete?.order_number"
                 route-name="super-admin.orders.destroy"
                 :title="__('datatable.delete_confirmation')"
+            />
+
+            <!-- Status change dialog -->
+            <DashboardStatusChangeDialog
+                v-model:open="statusChangeDialogOpen"
+                :item-id="orderToChangeStatus?.id ?? null"
+                :item-name="orderToChangeStatus?.order_number"
+                route-name="super-admin.orders.change-status"
+                :status-options="statusOptions"
+                :current-status="orderToChangeStatus?.status_raw"
+                :title="__('datatable.change_status')"
+                :description="__('datatable.change_status_description')"
             />
         </div>
     </AdminLayout>

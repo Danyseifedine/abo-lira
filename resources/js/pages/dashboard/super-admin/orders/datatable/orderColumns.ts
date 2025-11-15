@@ -6,7 +6,7 @@ import {
     actionsColumn,
     badgeColumn,
 } from '@/common/components/dashboards/datatable/columnDef';
-import { Copy, Eye, Trash2 } from 'lucide-vue-next';
+import { Copy, Eye, Trash2, RefreshCw } from 'lucide-vue-next';
 import type { Order } from './type';
 import { useToast } from '@/core/composables/useToast';
 import { __ } from '@/core/utils/translations';
@@ -14,10 +14,12 @@ import { __ } from '@/core/utils/translations';
 /**
  * Factory function to create order table columns
  * @param openDeleteDialog - Function to open delete dialog (passed from parent)
+ * @param openStatusChangeDialog - Function to open status change dialog (passed from parent)
  * @param labels - Translated column labels from backend
  */
 export function createOrderColumns(
     openDeleteDialog: (order: Order) => void,
+    openStatusChangeDialog: (order: Order) => void,
     labels: {
         number: string;
         order_number: string;
@@ -96,7 +98,7 @@ export function createOrderColumns(
                 [__('order.status.refunded')]: 'secondary',
             },
             defaultVariant: 'secondary',
-            headerClassName: 'text-start px-0',
+            headerClassName: 'text-start',
             className: 'text-start',
         }),
 
@@ -122,6 +124,14 @@ export function createOrderColumns(
                 label: __('datatable.view'),
                 icon: Eye,
                 href: (order) => route('super-admin.orders.show', order.id),
+            },
+            { separator: true, label: __('datatable.separator') },
+            {
+                label: __('datatable.change_status'),
+                icon: RefreshCw,
+                onClick: (order) => {
+                    openStatusChangeDialog(order);
+                },
             },
             { separator: true, label: __('datatable.separator') },
             {
