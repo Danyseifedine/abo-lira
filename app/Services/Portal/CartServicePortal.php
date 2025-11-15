@@ -10,7 +10,7 @@ class CartServicePortal
         private ProductServicePortal $productService,
     ) {}
 
-    public function addToCart(array $request): void
+    public function addToCart(array $request)
     {
         $product = $this->productService->getProductDetails($request['slug']);
         if (! $product) {
@@ -45,14 +45,6 @@ class CartServicePortal
                 return;
             }
         }
-
-        // Get base price from variant
-        $basePrice = (float) $variant->price;
-
-        // Calculate discount if product has discount
-        $discountAmount = (float) ($product->discount_price ?? 0);
-        $discountCalculation = $this->productService->calculateDiscount($basePrice, $discountAmount);
-        $finalPrice = $discountCalculation['new_price'];
 
         // Get image based on scenarios
         $image = null;
@@ -126,7 +118,7 @@ class CartServicePortal
         Cart::add(
             $itemId,
             $product->name_en,
-            $finalPrice,
+            $variant->price,
             $request['quantity'],
             $options
         );
@@ -137,6 +129,7 @@ class CartServicePortal
         $cartItems = Cart::all();
 
         $formattedItems = collect($cartItems)->map(function ($item, $itemId) {
+
             // Calculate total
             $total = number_format((float) $item['price'] * (int) $item['quantity'], 2, '.', '');
 

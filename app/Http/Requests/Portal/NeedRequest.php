@@ -24,7 +24,7 @@ class NeedRequest extends FormRequest
                 'regex:/^(?:\+961)?(03\d{6}|70\d{6}|71\d{6}|76\d{6}|78\d{6}|79\d{6}|81\d{6})$/'
             ],
             'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
-            'message' => ['required', 'string', 'max:500'],
+            'message' => ['nullable', 'string', 'max:500'],
         ];
     }
 }

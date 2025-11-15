@@ -367,7 +367,7 @@ class ProductServicePortal
         $productDiscount = (float) ($product->discount_price ?? 0);
 
         // Apply discount to each variant if product has discount
-        if ($productDiscount > 0) {
+        if ($product->is_discounted) {
             $product->variants->each(function ($variant) use ($productDiscount) {
                 $discountCalculation = $this->calculateDiscount(
                     (float) $variant->price,

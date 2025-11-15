@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderHistory;
 use App\Services\Portal\CartServicePortal;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class OrderController extends Controller
+class TrackOrderController extends Controller
 {
     public function __construct(
         private CartServicePortal $cartService
@@ -21,12 +22,15 @@ class OrderController extends Controller
         $cartItemsCount = $this->cartService->getCartCount();
         $orderNumber = $request->query('order_number');
 
-        $order = null;
-        if($orderNumber) {
-            $order = $this->getOrderDetails($orderNumber);
+        $data = [];
+        if ($orderNumber) {
+            $data = $this->getOrderDetails($orderNumber);
         }
 
-        return view('track-order', compact('cartItemsCount', 'order'));
+        $order = $data['order'] ?? null;
+        $orderHistories = $data['orderHistories'] ?? null;
+
+        return view('track-order', compact('cartItemsCount', 'order', 'orderHistories'));
     }
 
     public function getOrder(Request $request): JsonResponse
@@ -37,9 +41,12 @@ class OrderController extends Controller
 
         $orderNumber = $validated['order_number'];
 
-        $order = $this->getOrderDetails($orderNumber);
+        $data = $this->getOrderDetails($orderNumber);
 
-        if (!$order) {
+        $order = $data['order'] ?? null;
+        $orderHistories = $data['orderHistories'] ?? null;
+
+        if (! $order) {
             return response()->json([
                 'success' => false,
                 'message' => __('track_order.order_not_found'),
@@ -49,17 +56,35 @@ class OrderController extends Controller
         return response()->json([
             'success' => true,
             'order' => $order,
+            'orderHistories' => $orderHistories,
             'locale' => app()->getLocale(),
         ]);
     }
 
-    private function getOrderDetails(string $orderNumber)
+    private function getOrderDetails(string $orderNumber): array
     {
-        $order = Order::where('order_number', $orderNumber)->first();
-        $order->created_at_formatted = Carbon::parse($order->created_at)->format('d/m/Y');
-        $order->status_formatted = $this->translateOrderStatus($order->status);
+        $orderHistories = OrderHistory::whereHas('order', function ($query) use ($orderNumber) {
+            $query->where('order_number', $orderNumber);
+        })->orderBy('created_at', 'asc')->get();
 
-        return $order;
+        $orderHistories->transform(function ($history) {
+            $history->status_formatted = $this->translateOrderStatus($history->status);
+            $history->created_at_formatted = Carbon::parse($history->created_at)->format('d/m/Y');
+            $history->created_at_time = Carbon::parse($history->created_at)->format('h:i A');
+
+            return $history;
+        });
+
+        $order = Order::where('order_number', $orderNumber)->first();
+        if ($order) {
+            $order->created_at_formatted = Carbon::parse($order->created_at)->format('d/m/Y');
+            $order->status_formatted = $this->translateOrderStatus($order->status);
+        }
+
+        return [
+            'order' => $order,
+            'orderHistories' => $orderHistories,
+        ];
     }
 
     private function translateOrderStatus(string $status): string

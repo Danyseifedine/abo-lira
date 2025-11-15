@@ -88,6 +88,32 @@
                             </div>
                         </div>
 
+                        <!-- Order Histories -->
+                        <div id="order-histories" class="mb-5"
+                            data-title="{{ __('track_order.order_history') }}"
+                            style="display: {{ $order ? 'block' : 'none' }};">
+                            <div class="order__history--card border-radius-10 p-4 mb-4" style="background: #f8f9fa; border: 1px solid #dc3545;">
+                                <h3 class="order__history--title text-center mb-4" style="font-size: 1.5rem; font-weight: 700; text-transform: uppercase;">
+                                    {{ __('track_order.order_history') }}
+                                </h3>
+                                <div class="d-flex gap-3 flex-wrap">
+                                    @if($orderHistories && $orderHistories->count() > 0)
+                                    @foreach($orderHistories as $index => $orderHistory)
+                                    <div class="d-flex align-items-center gap-3 px-3 py-1 shadow-sm" style="background-color: #fff; width: fit-content; box-shadow: 0 5px 12px rgba(0,0,0,0.1); border-radius: 5px;">
+                                        <div class="d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; border-radius: 50%; background-color: #dc3545; color: #fff;">
+                                            {{ $index + 1 }}
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold {{ $orderHistory->status_raw }}-status-text" style="font-size: 1.4rem;">{{ $orderHistory->status_formatted }}</span>
+                                            <span style="font-size: 1rem; direction: ltr;">{{ $orderHistory->created_at_formatted }} - {{ $orderHistory->created_at_time }}</span>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Order Details -->
                         <div id="order-details" style="display: {{ $order ? 'block' : 'none' }};">
                             <div class="order__details--card border-radius-10 p-4" style="background: #f8f9fa; border: 1px solid #dc3545;">
@@ -112,7 +138,7 @@
                                                 <label class="order__detail--label d-block" style="font-size: 1rem; color: #666; font-weight: 600;">
                                                     {{ __('track_order.order_status') }}
                                                 </label>
-                                                <div class="order__detail--value px-3 py-2 {{ $order ? $order->status . '-status-class' : '' }}"
+                                                <div class="order__detail--value px-3 py-2 {{ $order ? $order->status_raw . '-status-class' : '' }}"
                                                     id="display-order-status"
                                                     style="font-size: 1.25rem; font-weight: 700; background-color: #fff; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                                                     {{ $order ? $order->status_formatted : '' }}
@@ -225,6 +251,66 @@
         }
     }
 
+    const getStatusIcon = (status) => {
+        const icons = {
+            'pending': 'fa-clock',
+            'accepted': 'fa-check-circle',
+            'on_the_way': 'fa-truck',
+            'completed': 'fa-check-double',
+            'rejected': 'fa-times-circle',
+            'refunded': 'fa-undo'
+        };
+        return icons[status] || 'fa-circle';
+    }
+
+    const handleOrderHistories = (orderHistories) => {
+        const orderHistoriesContainer = document.getElementById('order-histories');
+        if (!orderHistoriesContainer) {
+            return;
+        }
+
+        if (!orderHistories || orderHistories.length === 0) {
+            orderHistoriesContainer.style.display = 'none';
+            return;
+        }
+
+        const isRTL = document.documentElement.dir === 'rtl' || document.documentElement.getAttribute('lang') === 'ar';
+        const timelineHTML = orderHistories.map((history, index) => {
+            const isLast = index === orderHistories.length - 1;
+            const iconClass = getStatusIcon(history.status);
+            const dirAttr = isRTL ? 'dir="rtl"' : '';
+
+            const lowerCaseStatus = history.status_raw.toLowerCase();
+
+            return `
+                <div class="d-flex align-items-center gap-3 px-3 py-1 shadow-sm" style="background-color: #fff; width: fit-content; box-shadow: 0 5px 12px rgba(0,0,0,0.1); border-radius: 5px;">
+                    <div class="d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; border-radius: 50%; background-color: #dc3545; color: #fff;">
+                        ${index + 1}
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold ${lowerCaseStatus}-status-text" style="font-size: 1.4rem;">${history.status_formatted}</span>
+                        <span class="" style="font-size: 1rem; direction: ltr;">${history.created_at_formatted} - ${history.created_at_time}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        const orderHistoryTitle = orderHistoriesContainer.getAttribute('data-title') || 'Order History';
+        const timelineWrapper = `
+            <div class="order__history--card border-radius-10 p-4 mb-4" style="background: #f8f9fa; border: 1px solid #dc3545;">
+                <h3 class="order__history--title text-center mb-4" style="font-size: 1.5rem; font-weight: 700; text-transform: uppercase;">
+                    ${orderHistoryTitle}
+                </h3>
+                <div class="d-flex flex-wrap gap-3">
+                    ${timelineHTML}
+                </div>
+            </div>
+        `;
+
+        orderHistoriesContainer.innerHTML = timelineWrapper;
+        orderHistoriesContainer.style.display = 'block';
+    }
+
     const handleOrderDetailsData = (order) => {
         const orderNumberElement = document.getElementById('display-order-number');
         const orderStatusElement = document.getElementById('display-order-status');
@@ -292,6 +378,10 @@
                 if (data.success) {
 
                     handleOrderDetailsData(data.order);
+                    handleOrderHistories(data.orderHistories);
+
+                    console.log(data);
+
 
                     if (orderDetails !== null) {
                         orderDetails.style.display = 'block';
@@ -358,6 +448,7 @@
         color: var(--text-white-color);
         border: 0;
     }
+
     [dir="rtl"] .track-btn {
         right: auto;
         left: 20px;
@@ -399,6 +490,178 @@
 
     .refunded-status-class {
         color: #dc3545;
+    }
+
+    /* Timeline Styles */
+    .order__timeline {
+        position: relative;
+        padding: 20px 0;
+    }
+
+    .timeline-item {
+        margin-bottom: 0;
+    }
+
+    .timeline-item-last {
+        margin-bottom: 0;
+    }
+
+    .timeline-icon-wrapper {
+        position: relative;
+        width: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .timeline-icon {
+        width: 50px;
+        height: 50px;
+        background: #fff;
+        border: 3px solid #e0e0e0;
+        color: #666;
+        font-size: 20px;
+        z-index: 2;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .timeline-line {
+        width: 3px;
+        height: calc(100% - 10px);
+        background: linear-gradient(to bottom, #dc3545, #e0e0e0);
+        position: absolute;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+    }
+
+    [dir="rtl"] .timeline-line {
+        left: auto;
+        right: 50%;
+        transform: translateX(50%);
+    }
+
+    .timeline-item-last .timeline-line {
+        display: none;
+    }
+
+    .timeline-content {
+        min-height: 80px;
+    }
+
+    .timeline-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .timeline-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Status Icon Colors */
+    .pending-status-icon {
+        border-color: #ffc107 !important;
+        color: #ffc107 !important;
+        background: #fffbf0 !important;
+    }
+
+    .accepted-status-icon {
+        border-color: #17a2b8 !important;
+        color: #17a2b8 !important;
+        background: #e8f4f8 !important;
+    }
+
+    .on_the_way-status-icon {
+        border-color: #6f42c1 !important;
+        color: #6f42c1 !important;
+        background: #f3f0f9 !important;
+    }
+
+    .completed-status-icon {
+        border-color: #28a745 !important;
+        color: #28a745 !important;
+        background: #e8f5e9 !important;
+    }
+
+    .rejected-status-icon {
+        border-color: #ff0000 !important;
+        color: #ff0000 !important;
+        background: #ffe8e8 !important;
+    }
+
+    .refunded-status-icon {
+        border-color: #dc3545 !important;
+        color: #dc3545 !important;
+        background: #ffe8e8 !important;
+    }
+
+    /* Status Text Colors */
+    .pending-status-text {
+        color: #ffc107;
+    }
+
+    .accepted-status-text {
+        color: #17a2b8;
+    }
+
+    .on_the_way-status-text {
+        color: #6f42c1;
+    }
+
+    .completed-status-text {
+        color: #28a745;
+    }
+
+    .rejected-status-text {
+        color: #ff0000;
+    }
+
+    .refunded-status-text {
+        color: #dc3545;
+    }
+
+    /* RTL Support */
+    [dir="rtl"] .timeline-content {
+        text-align: right;
+    }
+
+    [dir="rtl"] .timeline-date {
+        flex-direction: row-reverse;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+
+        .timeline-icon-wrapper {
+            width: 40px;
+        }
+
+        .timeline-line {
+            top: 40px;
+        }
+
+        .timeline-content {
+            min-height: 70px;
+        }
+
+        .timeline-card {
+            padding: 12px !important;
+        }
+
+        .timeline-status {
+            font-size: 1rem !important;
+        }
+
+        .timeline-date {
+            font-size: 0.85rem !important;
+        }
     }
 </style>
 @endpush

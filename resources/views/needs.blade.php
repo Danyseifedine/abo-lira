@@ -29,7 +29,7 @@
                 <h2 class="contact__section--heading__maintitle">{{ __('needs.request_your_needs') }}</h2>
                 <!-- <p class="contact__section--heading__desc">Beyond more stoic this along goodness this sed wow manatee mongos flusterd impressive man farcrud opened.</p> -->
             </div>
-            <div class="main__contact--area position__relative">
+            <div class="main__contact--area position__relative" style="padding-bottom: 100px;">
                 <div class="contact__form">
                     <!-- <h3 class="contact__form--title mb-30">Request your needs</h3> -->
                     <form class="contact__form--inner" id="needs-form" action="{{ route('request-product') }}" method="POST" enctype="multipart/form-data">
@@ -89,7 +89,7 @@
                             </div>
                             <div class="col-12">
                                 <div class="contact__form--list mb-15">
-                                    <label class="" for="input5">{{ __('needs.write_your_message') }} <span class="contact__form--label__star">*</span></label>
+                                    <label class="" for="input5">{{ __('needs.write_your_message') }} <span class="contact__form--label__star"></span></label>
                                     <textarea class="contact__form--textarea @error('message') is-invalid @enderror" name="message" id="input5" placeholder="{{ __('needs.write_your_message_placeholder') }}" required>{{ old('message') }}</textarea>
                                     @error('message')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
@@ -102,8 +102,8 @@
                         </button>
                     </form>
 
-                    <div id="image-preview-container" class="mt-3" style="display: none;">
-                        <img id="image-preview" src="" alt="Preview" class="border-radius-5" style="max-width: 100%; max-height: 300px; object-fit: contain; border: 1px solid #ddd; padding: 8px;">
+                    <div id="image-preview-container" class="mt-3" style="display: none; width: 100%;">
+                        <img id="image-preview" src="" alt="Preview" class="border-radius-5 w-100" style="max-width: 100%; max-height: 300px; object-fit: contain; border: 1px solid #ddd; padding: 8px;">
                     </div>
                 </div>
                 <div class="contact__info border-radius-5">
@@ -222,6 +222,7 @@
                 reader.onload = function(e) {
                     preview.src = e.target.result;
                     previewContainer.style.display = 'block';
+                    previewContainer.style.width = '100%';  
                 };
 
                 reader.readAsDataURL(file);

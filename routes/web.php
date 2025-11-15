@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Portal\HomeController;
-use App\Http\Controllers\Portal\OrderController;
+use App\Http\Controllers\Portal\TrackOrderController;
 
 if (config('app.features.multi_lang')) {
     Route::group(
@@ -49,7 +49,7 @@ function registerWebRoutes()
         Route::post('/', 'store')->name('checkout.store');
     });
 
-    Route::controller(OrderController::class)->group(function () {
+    Route::controller(TrackOrderController::class)->group(function () {
         Route::get('/track-order', 'trackOrder')->name('track-order');
         Route::post('/get-order', 'getOrder')->name('get-order');
     });
