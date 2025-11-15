@@ -8,6 +8,7 @@ return [
     'users' => 'Users',
     'sales_orders' => 'Sales & Orders',
     'orders' => 'Orders',
+    'needs' => 'Product Requests',
     'catalog_inventory' => 'Catalog & Inventory',
     'products' => 'Products',
     'product_categories' => 'Product Categories',

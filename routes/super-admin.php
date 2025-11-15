@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SuperAdmin\IndexController;
+use App\Http\Controllers\SuperAdmin\NeedController;
 use App\Http\Controllers\SuperAdmin\OrderController;
 use App\Http\Controllers\SuperAdmin\Privileges\PermissionsController;
 use App\Http\Controllers\SuperAdmin\Privileges\RolesController;
@@ -83,6 +84,28 @@ Route::prefix('dashboard')->name('super-admin.')->group(function () {
 
     // ================================================
     // ---------------- End Orders -------------------
+    // ================================================
+
+    // ================================================
+    // ---------------- Start Needs ------------------
+    // ================================================
+
+    Route::prefix('needs')->name('needs.')->middleware('permission:access-super-admin-needs')->group(function () {
+        Route::resource('/', NeedController::class)
+            ->parameters(['' => 'need'])
+            ->only(['index', 'show', 'destroy'])
+            ->names([
+                'index' => 'index',
+                'show' => 'show',
+                'destroy' => 'destroy',
+            ]);
+
+        // Custom route for marking as read
+        Route::patch('/{need}/mark-as-read', [NeedController::class, 'markAsRead'])->name('mark-as-read');
+    });
+
+    // ================================================
+    // ---------------- End Needs --------------------
     // ================================================
 
     // ================================================

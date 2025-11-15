@@ -387,4 +387,25 @@ return [
     'order_details' => 'Order Details',
     'order_number' => 'Order Number',
     'created_at' => 'Created At',
+
+    // Needs
+    'needs' => [
+        'title' => 'Needs',
+        'description' => 'Manage customer needs and requests',
+    ],
+    'needs_columns' => [
+        'number' => '#',
+        'f_name' => 'First Name',
+        'l_name' => 'Last Name',
+        'phone_number' => 'Phone',
+        'status' => 'Status',
+        'created' => 'Created',
+    ],
+    'image' => 'Image',
+    'message' => 'Message',
+    'need_details' => 'Need Details',
+    'unread' => 'Unread',
+    'read' => 'Read',
+    'mark_as_read' => 'Mark as Read',
+    'mark_as_read_confirmation' => 'Are you sure you want to mark this need as read?',
 ];

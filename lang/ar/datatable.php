@@ -387,4 +387,25 @@ return [
     'order_details' => 'تفاصيل الطلب',
     'order_number' => 'رقم الطلب',
     'created_at' => 'تاريخ الإنشاء',
+
+    // Needs
+    'needs' => [
+        'title' => 'الاحتياجات',
+        'description' => 'إدارة احتياجات وطلبات العملاء',
+    ],
+    'needs_columns' => [
+        'number' => '#',
+        'f_name' => 'الاسم الأول',
+        'l_name' => 'اسم العائلة',
+        'phone_number' => 'الهاتف',
+        'status' => 'الحالة',
+        'created' => 'تاريخ الإنشاء',
+    ],
+    'image' => 'الصورة',
+    'message' => 'الرسالة',
+    'need_details' => 'تفاصيل الاحتياج',
+    'unread' => 'غير مقروء',
+    'read' => 'مقروء',
+    'mark_as_read' => 'تحديد كمقروء',
+    'mark_as_read_confirmation' => 'هل أنت متأكد أنك تريد تحديد هذا الاحتياج كمقروء؟',
 ];

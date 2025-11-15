@@ -51,6 +51,9 @@ class PermissionSeeder extends Seeder
 
             // Orders permissions
             'access-super-admin-orders',
+
+            // Needs permissions
+            'access-super-admin-needs',
             // ================================================
             // ---------------- End Super Admin ---------------
             // ================================================

@@ -12,6 +12,7 @@ import {
     Maximize2,
     ShieldAlert,
     ShoppingCart,
+    Bell,
 } from "lucide-vue-next";
 
 const getAdminSidebarMainItems = (): NavItem[] => [
@@ -51,6 +52,15 @@ const getAdminSidebarMainItems = (): NavItem[] => [
         iconColor: '#22c55e', // green-500 (commerce/sales)
         iconSize: '1.25rem',
         permissions: ['access-super-admin-orders'],
+    },
+
+    {
+        title: 'sidebar.needs',
+        href: route('super-admin.needs.index'),
+        icon: Bell,
+        iconColor: '#f97316', // orange-500 (products/inventory)
+        iconSize: '1.25rem',
+        permissions: ['access-super-admin-needs'],
     },
 
     {
