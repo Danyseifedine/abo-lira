@@ -131,24 +131,16 @@ const getAdminSidebarMainItems = (): NavItem[] => [
         iconSize: '1.25rem',
         permissions: ['access-super-admin-permission'],
     },
-    {
-        title: 'sidebar.orders',
-        href: route('super-admin.orders.index'),
-        icon: Package2,
-        iconColor: '#f97316', // orange-500 (products/inventory)
-        iconSize: '1.25rem',
-        permissions: ['access-super-admin-orders'],
-    },
 ];
 
 const getAdminSidebarFooterItems = (): NavItem[] => [
-    {
-        title: 'sidebar.documentation',
-        href: route('super-admin.documentation'),
-        icon: BookOpen,
-        iconColor: '#2563eb', // blue-600 (knowledge/learning)
-        iconSize: '1.25rem',
-    },
+    // {
+    //     title: 'sidebar.documentation',
+    //     href: route('super-admin.documentation'),
+    //     icon: BookOpen,
+    //     iconColor: '#2563eb', // blue-600 (knowledge/learning)
+    //     iconSize: '1.25rem',
+    // },
 ];
 
 export const adminDashboardConfig: DashboardConfig = {

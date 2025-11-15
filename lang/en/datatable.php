@@ -84,6 +84,10 @@ return [
         'created' => 'Created',
     ],
     'status' => 'Status',
+    'select_status' => 'Select Status',
+    'change_status' => 'Change Status',
+    'change_status_description' => 'Select a new status for order',
+    'update_status' => 'Update Status',
     'active' => 'Active',
     'inactive' => 'Inactive',
     'set_whether_the_color_is_active_or_inactive' => 'Set whether the color is active or inactive.',
@@ -364,5 +368,5 @@ return [
     'add_complex_product' => 'Add Complex Product',
 
     'color' => 'Color',
-    'size' => 'Size'
+    'size' => 'Size',
 ];

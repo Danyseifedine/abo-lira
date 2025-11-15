@@ -85,6 +85,10 @@ return [
     ],
 
     'status' => 'الحالة',
+    'select_status' => 'اختر الحالة',
+    'change_status' => 'تغيير الحالة',
+    'change_status_description' => 'اختر حالة جديدة للطلب',
+    'update_status' => 'تحديث الحالة',
     'active' => 'نشط',
     'inactive' => 'غير نشط',
     'set_whether_the_color_is_active_or_inactive' => 'اختر ما إذا كان اللون نشط أو غير نشط.',
