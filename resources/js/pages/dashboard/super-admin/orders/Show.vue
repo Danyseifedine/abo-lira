@@ -166,10 +166,10 @@ const getProductImage = (item: any) => {
                                     class="flex items-start gap-4 rounded-lg border p-4 transition-colors hover:bg-accent/50"
                                 >
                                     <!-- Product Image -->
-                                    <Avatar class="h-20 w-20 rounded-md">
+                                    <Avatar class="h-32 w-32 rounded-md">
                                         <AvatarImage :src="getProductImage(item)" :alt="item.product?.name || 'Product'" class="object-cover" />
                                         <AvatarFallback class="rounded-md bg-muted">
-                                            <Package class="h-8 w-8 text-muted-foreground" />
+                                            <Package class="h-12 w-12 text-muted-foreground" />
                                         </AvatarFallback>
                                     </Avatar>
 
