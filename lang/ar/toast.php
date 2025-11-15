@@ -12,4 +12,5 @@ return [
     'failed_to_update_is_new' => 'فشل تحديث حالة الجِدّة. يرجى المحاولة مرة أخرى.',
     'out_of_stock_updated_successfully' => 'تم تحديث حالة نفاد المخزون بنجاح',
     'failed_to_update_out_of_stock' => 'فشل تحديث حالة نفاد المخزون. يرجى المحاولة مرة أخرى.',
+    'marked_as_read' => 'تم تحديده كمقروء بنجاح',
 ];

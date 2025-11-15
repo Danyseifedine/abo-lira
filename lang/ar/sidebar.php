@@ -8,6 +8,7 @@ return [
     'users' => 'المستخدمين',
     'sales_orders' => 'المبيعات والطلبات',
     'orders' => 'الطلبات',
+    'needs' => 'طلبات المنتجات',
     'catalog_inventory' => 'الكتالوج والمخزون',
     'products' => 'المنتجات',
     'product_categories' => 'فئات المنتجات',

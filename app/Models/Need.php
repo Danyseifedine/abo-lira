@@ -15,5 +15,15 @@ class Need extends Model implements HasMedia
         'l_name',
         'phone_number',
         'message',
+        'status',
     ];
+
+    protected $casts = [
+        'status' => 'string',
+    ];
+
+    public function markAsRead(): void
+    {
+        $this->update(['status' => 'read']);
+    }
 }
