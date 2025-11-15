@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+    @class(['dark' => ($appearance ?? 'light') == 'dark'])>
 
 <head>
     <meta charset="utf-8">
@@ -8,10 +8,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    {{-- Inline script to detect system dark mode preference and apply it immediately --}}
+    {{-- Inline script to detect dark mode preference and apply if selected --}}
     <script>
         (function() {
-            const appearance = '{{ $appearance ?? 'system' }}';
+            const appearance = '{{ $appearance ?? 'light' }}';
 
             if (appearance === 'system') {
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -19,8 +19,14 @@
                 if (prefersDark) {
                     document.documentElement.classList.add('dark');
                 }
+            } else if (appearance === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
             }
         })();
+
+        localStorage.setItem('appearance', 'light');
     </script>
 
     {{-- Inline style to set the HTML background color based on our theme in app.css --}}
