@@ -14,5 +14,6 @@ return [
     'location' => 'لبنان، برجا',
     'first_name_placeholder' => 'الاسم الأول',
     'last_name_placeholder' => 'اسم العائلة',
+    'request_submitted_successfully' => 'تم إرسال طلبك بنجاح. سنتواصل معك قريبا',
 ];
 

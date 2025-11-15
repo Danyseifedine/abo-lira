@@ -111,7 +111,6 @@
                     <aside class="checkout__sidebar sidebar border-radius-10">
                         <h2 class="checkout__order--summary__title text-center mb-15 d-flex justify-content-center align-items-center gap-2">
                             {{ __('checkout.your_order_summary') }}
-                            <span class="badge bg-primary" style="font-size: 1.2rem;">{{ $cartCount }} {{ __('checkout.items') }}</span>
                         </h2>
                         <div class="cart__table checkout__product--table" style="max-height: 250px; overflow-y: auto;">
                             @if($cartCount !== 0)

@@ -7,8 +7,7 @@ const updateCartItemsCount = (newCount) => {
 
     if (countElement.length > 0) {
         countElement.forEach((el) => {
-            el.textContent = '';
-            el.textContent = newCount;
+            el.style.display = newCount > 0 ? 'flex' : 'none';
         });
     }
 };

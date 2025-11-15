@@ -122,7 +122,7 @@
                             <x-language-switcher />
                         </li>
 
-                        <li class="header__account--items header__minicart--items" style="margin: 0 !important;">
+                        <li class="header__account--items header__minicart--items d-none d-lg-block" style="margin: 0 !important;">
                             <div class="header__account--btn minicart__open--btn" style="cursor: pointer;"
                                 data-offcanvas id="minicart-open-btn">
                                 @if(app()->getLocale() === 'ar')
@@ -160,7 +160,11 @@
                                     </g>
                                 </svg>
                                 @endif
-                                <span class="items__count" id="cart_items_count">{{ $cartItemsCount }}</span>
+                                <span style="{{ $cartItemsCount > 0 ? 'display: flex;' : 'display: none;' }}" class="items__count justify-content-center align-items-center" id="cart_items_count" fill="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                    </svg>
+                                </span>
                                 <style>
                                     [dir="rtl"] .items__count {
                                         left: auto !important;
@@ -252,7 +256,7 @@
             </li>
             <li class="offcanvas__stikcy--toolbar__list">
                 <div class="offcanvas__stikcy--toolbar__btn minicart__open--btn""
-                    data-offcanvas id=" minicart-open-btn">
+                    data-offcanvas id="minicart-open-btn">
                     <span class="offcanvas__stikcy--toolbar__icon">
                         @if(app()->getLocale() === 'ar')
                         <svg xmlns="http://www.w3.org/2000/svg" width="22.706" height="22.534"
@@ -291,7 +295,11 @@
                         @endif
                     </span>
                     <span class="offcanvas__stikcy--toolbar__label">{{ __('nav.cart') }}</span>
-                    <span class="items__count" id="cart_items_count">{{ $cartItemsCount }}</span>
+                    <span style="{{ $cartItemsCount > 0 ? 'display: flex;' : 'display: none;' }}" class="items__count justify-content-center align-items-center" id="cart_items_count" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                    </span>
                 </div>
             </li>
         </ul>
