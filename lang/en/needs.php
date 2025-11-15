@@ -14,5 +14,6 @@ return [
     'location' => 'Lebanon, Barja',
     'first_name_placeholder' => 'Your First Name',
     'last_name_placeholder' => 'Your Last Name',
+    'request_submitted_successfully' => 'Your Request Has Been Submitted Successfully. We Will Contact You Soon',
 ];
 

@@ -70,7 +70,7 @@
                                         <span class="d-flex justify-content-center align-items-center"
                                             style="width: 50px; position: absolute; left: 0; top: 0; bottom: 0; margin: auto;">+961
                                         </span>
-                                        <input class="checkout__input--field border-radius-5 @error('phone_number') is-invalid @enderror" id="input3" name="phone_number" placeholder="{{ __('checkout.phone_number_placeholder') }}" type="text" value="{{ old('phone_number') }}" style="padding-left: 50px;" required>
+                                        <input class="checkout__input--field border-radius-5 @error('phone_number') is-invalid @enderror" id="input3" name="phone_number" placeholder="{{ __('checkout.phone_number_placeholder') }}" type="number" value="{{ old('phone_number') }}" style="padding-left: 50px;" required>
                                     </label>
                                     @error('phone_number')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
@@ -101,6 +101,10 @@
                             <span id="submit-text">{{ __('needs.submit_now') }}</span>
                         </button>
                     </form>
+
+                    <div id="image-preview-container" class="mt-3" style="display: none;">
+                        <img id="image-preview" src="" alt="Preview" class="border-radius-5" style="max-width: 100%; max-height: 300px; object-fit: contain; border: 1px solid #ddd; padding: 8px;">
+                    </div>
                 </div>
                 <div class="contact__info border-radius-5">
                     <div class="contact__info--items">
@@ -202,6 +206,33 @@
 
         submitBtn.style.opacity = '0.5';
         submitBtn.disabled = true;
+    });
+
+    // Image preview functionality
+    document.getElementById('input4').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const previewContainer = document.getElementById('image-preview-container');
+        const preview = document.getElementById('image-preview');
+
+        if (file) {
+            // Check if file is an image
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select a valid image file.');
+                e.target.value = '';
+                previewContainer.style.display = 'none';
+            }
+        } else {
+            previewContainer.style.display = 'none';
+        }
     });
 </script>
 @endpush

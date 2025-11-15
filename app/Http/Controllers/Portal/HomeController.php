@@ -69,7 +69,7 @@ class HomeController extends Controller
             $need->addMediaFromRequest('image')->toMediaCollection('request-image');
         }
 
-        return redirect()->route('needs')->with('success', 'Need created successfully');
+        return redirect()->route('needs')->with('success', __('needs.request_submitted_successfully'));
     }
 
     public function shop(ShopRequest $request): View
