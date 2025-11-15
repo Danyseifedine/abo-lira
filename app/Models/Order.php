@@ -38,4 +38,13 @@ class Order extends Model
             'status' => $status,
         ]);
     }
+
+    public function getStatusAttribute($value)
+    {
+        // If accessing the attribute, return translated value
+        // Use getRawOriginal to avoid recursion
+        $rawStatus = $this->getRawOriginal('status') ?? $value;
+
+        return __('order.status.' . $rawStatus);
+    }
 }

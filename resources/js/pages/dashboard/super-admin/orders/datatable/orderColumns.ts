@@ -32,29 +32,6 @@ export function createOrderColumns(
 ) {
     const { showCopyToClipboardToast } = useToast();
 
-    const getStatusVariant = (status: string) => {
-        const statusMap: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info' | 'secondary'> = {
-            pending: 'warning',
-            accepted: 'info',
-            on_the_way: 'default',
-            completed: 'success',
-            rejected: 'danger',
-            refunded: 'secondary',
-        };
-        return statusMap[status] || 'default';
-    };
-
-    const getStatusLabel = (status: string) => {
-        const statusLabels: Record<string, string> = {
-            pending: __('order.status.pending'),
-            accepted: __('order.status.accepted'),
-            on_the_way: __('order.status.on_the_way'),
-            completed: __('order.status.completed'),
-            rejected: __('order.status.rejected'),
-            refunded: __('order.status.refunded'),
-        };
-        return statusLabels[status] || status;
-    };
 
     return createColumns<Order>([
         // Row counter
@@ -108,10 +85,17 @@ export function createOrderColumns(
             headerClassName: 'text-start px-0',
         }),
 
-        // Status Badge
+        // Status Badge - using translated status from backend
         badgeColumn('status', labels.status, {
-            variant: (value) => getStatusVariant(value as string),
-            label: (value) => getStatusLabel(value as string),
+            variants: {
+                [__('order.status.pending')]: 'warning',
+                [__('order.status.accepted')]: 'info',
+                [__('order.status.on_the_way')]: 'default',
+                [__('order.status.completed')]: 'success',
+                [__('order.status.rejected')]: 'destructive',
+                [__('order.status.refunded')]: 'secondary',
+            },
+            defaultVariant: 'secondary',
             headerClassName: 'text-start px-0',
             className: 'text-start',
         }),
