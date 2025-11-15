@@ -11,6 +11,8 @@ return [
     'created_to' => 'إلى تاريخ',
     'select_created_to' => 'اختر تاريخ الإنشاء إلى',
     'filter' => 'فلتر',
+    'orders' => 'الطلبات',
+    'categories' => 'الفئات',
     'filters' => 'فلاتر',
     'applied' => 'تم تطبيق',
     'clear_all' => 'مسح الكل',
@@ -450,4 +452,100 @@ return [
     'select_date' => 'اختر التاريخ',
     'yes' => 'نعم',
     'no' => 'لا',
+
+    // Dashboard
+    'dashboard_description' => 'نظرة عامة على إحصائيات المتجر',
+    'total_orders' => 'إجمالي الطلبات',
+    'total_sales' => 'إجمالي المبيعات',
+    'total_revenue' => 'إجمالي الإيرادات من جميع الطلبات',
+    'total_categories' => 'إجمالي فئات المنتجات',
+    'total_sizes' => 'إجمالي أحجام المنتجات',
+    'total_qualities' => 'إجمالي جودات المنتجات',
+    'needs_unread' => 'الاحتياجات غير المقروءة',
+    'needs_read' => 'الاحتياجات المقروءة',
+    'unread_needs' => 'طلبات العملاء غير المقروءة',
+    'read_needs' => 'طلبات العملاء المقروءة',
+    'most_bought_product' => 'المنتج الأكثر شراءً',
+    'bought_count' => 'عدد المشتريات',
+    'no_data' => 'لا توجد بيانات متاحة',
+    'sizes' => 'الأحجام',
+    'qualities' => 'الجودات',
+
+    // Orders
+    'orders_today' => 'الطلبات اليوم',
+    'orders_today_desc' => 'الطلبات المقدمة اليوم',
+    'orders_this_month' => 'الطلبات هذا الشهر',
+    'orders_this_month_desc' => 'الطلبات المقدمة هذا الشهر',
+    'orders_pending' => 'الطلبات المعلقة',
+    'orders_accepted' => 'الطلبات المقبولة',
+    'orders_on_the_way' => 'الطلبات قيد التوصيل',
+    'orders_completed' => 'الطلبات المكتملة',
+    'orders_rejected' => 'الطلبات المرفوضة',
+    'orders_refunded' => 'الطلبات المسترجعة',
+    'pending_orders' => 'الطلبات في انتظار الموافقة',
+    'accepted_orders' => 'الطلبات التي تم قبولها',
+    'on_the_way_orders' => 'الطلبات قيد التوصيل حالياً',
+    'completed_orders' => 'الطلبات المكتملة بنجاح',
+    'rejected_orders' => 'الطلبات التي تم رفضها',
+    'refunded_orders' => 'الطلبات التي تم استرجاعها',
+
+    // Sales
+    'sales_today' => 'المبيعات اليوم',
+    'sales_today_desc' => 'الإيرادات من طلبات اليوم',
+    'sales_this_month' => 'المبيعات هذا الشهر',
+    'sales_this_month_desc' => 'الإيرادات من طلبات هذا الشهر',
+    'average_order_value' => 'متوسط قيمة الطلب',
+    'avg_order_value_desc' => 'متوسط المبلغ لكل طلب',
+
+    // Products
+    'products' => 'المنتجات',
+    'total_products' => 'إجمالي المنتجات في المتجر',
+    'products_active' => 'المنتجات النشطة',
+    'products_inactive' => 'المنتجات غير النشطة',
+    'products_with_variants' => 'المنتجات مع المتغيرات',
+    'products_without_variants' => 'المنتجات بدون متغيرات',
+    'products_new' => 'المنتجات الجديدة',
+    'products_with_discounts' => 'المنتجات مع التخفيضات',
+    'products_active_discounts' => 'التخفيضات النشطة',
+    'products_scheduled_discounts' => 'التخفيضات المجدولة',
+    'active_products' => 'المنتجات النشطة حالياً',
+    'inactive_products' => 'المنتجات غير النشطة حالياً',
+    'products_with_variants_desc' => 'المنتجات التي تحتوي على متغيرات',
+    'products_without_variants_desc' => 'المنتجات البسيطة بدون متغيرات',
+    'new_products' => 'المنتجات المميزة كجديدة',
+    'products_with_discounts_desc' => 'المنتجات مع أسعار مخفضة',
+    'active_discounts' => 'التخفيضات النشطة حالياً',
+    'scheduled_discounts' => 'التخفيضات المجدولة للمستقبل',
+
+    // Categories
+    'categories_active' => 'الفئات النشطة',
+    'active_categories' => 'الفئات النشطة حالياً',
+
+    // Sizes
+    'sizes_active' => 'الأحجام النشطة',
+    'active_sizes' => 'الأحجام النشطة حالياً',
+
+    // Qualities
+    'qualities_active' => 'الجودات النشطة',
+    'active_qualities' => 'الجودات النشطة حالياً',
+
+    // Colors
+    'colors' => 'الألوان',
+    'total_colors' => 'إجمالي ألوان المنتجات',
+    'colors_active' => 'الألوان النشطة',
+    'active_colors' => 'الألوان النشطة حالياً',
+
+    // Variants
+    'variants' => 'المتغيرات',
+    'total_variants' => 'إجمالي متغيرات المنتجات',
+    'variants_active' => 'المتغيرات النشطة',
+    'variants_inactive' => 'المتغيرات غير النشطة',
+    'active_variants' => 'المتغيرات النشطة حالياً',
+    'inactive_variants' => 'المتغيرات غير النشطة حالياً',
+
+    // Users
+    'users' => 'المستخدمون',
+    'total_users' => 'إجمالي المستخدمين المسجلين',
+    'users_active' => 'المستخدمون النشطون',
+    'active_users' => 'المستخدمون النشطون حالياً',
 ];

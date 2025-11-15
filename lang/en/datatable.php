@@ -7,6 +7,8 @@ return [
     'all_status' => 'All Status',
     'search' => 'Search',
     'product' => 'Product Name',
+    'orders' => 'Order',
+    'categories' => 'Category',
     'created_from' => 'Created From',
     'select_created_from' => 'Select Created From',
     'created_to' => 'Created To',
@@ -451,4 +453,100 @@ return [
     'select_date' => 'Select Date',
     'yes' => 'Yes',
     'no' => 'No',
+
+    // Dashboard
+    'dashboard_description' => 'Overview of your store statistics',
+    'total_orders' => 'Total orders',
+    'total_sales' => 'Total Sales',
+    'total_revenue' => 'Total revenue from all orders',
+    'total_categories' => 'Total product categories',
+    'total_sizes' => 'Total product sizes',
+    'total_qualities' => 'Total product qualities',
+    'needs_unread' => 'Unread Needs',
+    'needs_read' => 'Read Needs',
+    'unread_needs' => 'Unread customer requests',
+    'read_needs' => 'Read customer requests',
+    'most_bought_product' => 'Most Bought Product',
+    'bought_count' => 'Bought Count',
+    'no_data' => 'No data available',
+    'sizes' => 'Sizes',
+    'qualities' => 'Qualities',
+
+    // Orders
+    'orders_today' => 'Orders Today',
+    'orders_today_desc' => 'Orders placed today',
+    'orders_this_month' => 'Orders This Month',
+    'orders_this_month_desc' => 'Orders placed this month',
+    'orders_pending' => 'Pending Orders',
+    'orders_accepted' => 'Accepted Orders',
+    'orders_on_the_way' => 'On The Way Orders',
+    'orders_completed' => 'Completed Orders',
+    'orders_rejected' => 'Rejected Orders',
+    'orders_refunded' => 'Refunded Orders',
+    'pending_orders' => 'Orders waiting for approval',
+    'accepted_orders' => 'Orders that have been accepted',
+    'on_the_way_orders' => 'Orders currently being delivered',
+    'completed_orders' => 'Successfully completed orders',
+    'rejected_orders' => 'Orders that were rejected',
+    'refunded_orders' => 'Orders that were refunded',
+
+    // Sales
+    'sales_today' => 'Sales Today',
+    'sales_today_desc' => 'Revenue from today\'s orders',
+    'sales_this_month' => 'Sales This Month',
+    'sales_this_month_desc' => 'Revenue from this month\'s orders',
+    'average_order_value' => 'Average Order Value',
+    'avg_order_value_desc' => 'Average amount per order',
+
+    // Products
+    'products' => 'Products',
+    'total_products' => 'Total products in store',
+    'products_active' => 'Active Products',
+    'products_inactive' => 'Inactive Products',
+    'products_with_variants' => 'Products With Variants',
+    'products_without_variants' => 'Products Without Variants',
+    'products_new' => 'New Products',
+    'products_with_discounts' => 'Products With Discounts',
+    'products_active_discounts' => 'Active Discounts',
+    'products_scheduled_discounts' => 'Scheduled Discounts',
+    'active_products' => 'Currently active products',
+    'inactive_products' => 'Currently inactive products',
+    'products_with_variants_desc' => 'Products that have variants',
+    'products_without_variants_desc' => 'Simple products without variants',
+    'new_products' => 'Products marked as new',
+    'products_with_discounts_desc' => 'Products with discount prices',
+    'active_discounts' => 'Currently active discounts',
+    'scheduled_discounts' => 'Discounts scheduled for future',
+
+    // Categories
+    'categories_active' => 'Active Categories',
+    'active_categories' => 'Currently active categories',
+
+    // Sizes
+    'sizes_active' => 'Active Sizes',
+    'active_sizes' => 'Currently active sizes',
+
+    // Qualities
+    'qualities_active' => 'Active Qualities',
+    'active_qualities' => 'Currently active qualities',
+
+    // Colors
+    'colors' => 'Colors',
+    'total_colors' => 'Total product colors',
+    'colors_active' => 'Active Colors',
+    'active_colors' => 'Currently active colors',
+
+    // Variants
+    'variants' => 'Variants',
+    'total_variants' => 'Total product variants',
+    'variants_active' => 'Active Variants',
+    'variants_inactive' => 'Inactive Variants',
+    'active_variants' => 'Currently active variants',
+    'inactive_variants' => 'Currently inactive variants',
+
+    // Users
+    'users' => 'Users',
+    'total_users' => 'Total registered users',
+    'users_active' => 'Active Users',
+    'active_users' => 'Currently active users',
 ];
