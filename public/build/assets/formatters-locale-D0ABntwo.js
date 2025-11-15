@@ -1,0 +1,1 @@
+import"./app-C_9PBI8O.js";function u(){return(t,n)=>{const o=n||{year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:!0};return new Date(t).toLocaleDateString("en-US",o)}}function a(){return t=>`$${Number(t).toFixed(2)}`}export{u as a,a as u};
