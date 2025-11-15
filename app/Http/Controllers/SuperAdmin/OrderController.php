@@ -40,7 +40,12 @@ class OrderController extends BaseController
         $order = $this->orderService->findByIdOrFail($order->id);
 
         return Inertia::render(SuperAdminPath::view('orders/Show'), [
-            'order' => $order->load(['items.product', 'items.variant.color', 'items.variant.size']),
+            'order' => $order->load([
+                'items.product',
+                'items.variant.color',
+                'items.variant.size',
+                'histories',
+            ]),
             'statusOptions' => $this->getOrderStatusOptions(),
         ]);
     }

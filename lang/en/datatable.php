@@ -369,4 +369,22 @@ return [
 
     'color' => 'Color',
     'size' => 'Size',
+
+    // Order View Page
+    'order_items' => 'Order Items',
+    'items' => 'items',
+    'quantity' => 'Quantity',
+    'no_items' => 'No items found in this order',
+    'order_history' => 'Order History',
+    'status_changes_timeline' => 'Track all status changes for this order',
+    'no_history' => 'No history available',
+    'order_summary' => 'Order Summary',
+    'subtotal' => 'Subtotal',
+    'total' => 'Total',
+    'customer_information' => 'Customer Information',
+    'phone' => 'Phone Number',
+    'address' => 'Address',
+    'order_details' => 'Order Details',
+    'order_number' => 'Order Number',
+    'created_at' => 'Created At',
 ];

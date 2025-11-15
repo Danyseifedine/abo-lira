@@ -369,4 +369,22 @@ return [
 
     'color' => 'اللون',
     'size' => 'الحجم',
+
+    // Order View Page
+    'order_items' => 'عناصر الطلب',
+    'items' => 'عناصر',
+    'quantity' => 'الكمية',
+    'no_items' => 'لا توجد عناصر في هذا الطلب',
+    'order_history' => 'سجل الطلب',
+    'status_changes_timeline' => 'تتبع جميع تغييرات الحالة لهذا الطلب',
+    'no_history' => 'لا يوجد سجل متاح',
+    'order_summary' => 'ملخص الطلب',
+    'subtotal' => 'المجموع الفرعي',
+    'total' => 'المجموع الكلي',
+    'customer_information' => 'معلومات العميل',
+    'phone' => 'رقم الهاتف',
+    'address' => 'العنوان',
+    'order_details' => 'تفاصيل الطلب',
+    'order_number' => 'رقم الطلب',
+    'created_at' => 'تاريخ الإنشاء',
 ];

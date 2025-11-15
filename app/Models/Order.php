@@ -17,9 +17,18 @@ class Order extends Model
         'status',
     ];
 
+    protected $appends = [
+        'status_raw',
+    ];
+
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function histories()
+    {
+        return $this->hasMany(OrderHistory::class)->orderBy('created_at', 'desc');
     }
 
     public function scopeStatus($query, $status)
@@ -46,5 +55,10 @@ class Order extends Model
         $rawStatus = $this->getRawOriginal('status') ?? $value;
 
         return __('order.status.' . $rawStatus);
+    }
+
+    public function getStatusRawAttribute()
+    {
+        return $this->getRawOriginal('status');
     }
 }
