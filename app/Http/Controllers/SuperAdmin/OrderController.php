@@ -70,7 +70,7 @@ class OrderController extends BaseController
 
             return $this->successWithToast(__('toast.status_updated_successfully'), __('toast.success'), 'super-admin.orders.index');
         } catch (\Exception $e) {
-            return $this->errorWithToast(__('toast.failed_to_update_order_status'), __('toast.error'), 'super-admin.orders.index');
+            return $this->errorWithToast(__('toast.failed_to_update_order_status') . ' ' . $e->getMessage(), __('toast.error'), 'super-admin.orders.index');
         }
     }
 
