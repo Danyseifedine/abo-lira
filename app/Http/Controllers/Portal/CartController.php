@@ -33,11 +33,29 @@ class CartController extends Controller
             ]);
         }
 
+        // Set SEO for cart page
+        $locale = app()->getLocale();
+        $title = $locale === 'ar'
+            ? 'سلة التسوق | أبو ليرة - قطع غيار الدراجات النارية'
+            : 'Shopping Cart | Abo Lira - Motorcycle Parts';
+
+        $description = $locale === 'ar'
+            ? 'راجع منتجاتك في سلة التسوق. قطع غيار دراجات نارية أصلية بأسعار منافسة.'
+            : 'Review your products in the shopping cart. Genuine motorcycle parts at competitive prices.';
+
+        seo_data([
+            'title' => $title,
+            'description' => $description,
+            'type' => 'website',
+        ]);
+
+        seo_breadcrumb($locale === 'ar' ? 'سلة التسوق' : 'Shopping Cart', route('cart'));
+
         // Return view for regular requests
         return view('cart', [
             'cartItems' => $cartData['items'],
             'subtotal' => $cartData['subtotal_formatted'],
-            'cartItemsCount' => $this->cartService->getCartCount()
+            'cartItemsCount' => $this->cartService->getCartCount(),
         ]);
     }
 
@@ -49,7 +67,7 @@ class CartController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => __('cart.added_successfully'),
-                'cartItemsCount' => $this->cartService->getCartCount()
+                'cartItemsCount' => $this->cartService->getCartCount(),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -68,7 +86,7 @@ class CartController extends Controller
                 'success' => true,
                 'message' => __('cart.removed_successfully'),
                 'data' => $result,
-                'cartItemsCount' => $this->cartService->getCartCount()
+                'cartItemsCount' => $this->cartService->getCartCount(),
             ]);
         } catch (\Exception $e) {
             return response()->json([

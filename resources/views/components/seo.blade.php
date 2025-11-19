@@ -108,7 +108,7 @@
 @endif
 
 {{-- JSON-LD Schema --}}
-@if ($schemaData = $generateSchema())
+@if ($schemaData)
     <script type="application/ld+json">
 {!! $schemaData !!}
 </script>

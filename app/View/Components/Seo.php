@@ -2,74 +2,107 @@
 
 namespace App\View\Components;
 
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 use Illuminate\View\View;
-use Illuminate\Support\Str;
 
 class Seo extends Component
 {
     // Basic Meta
     public string $title;
+
     public string $description;
+
     public ?string $keywords;
+
     public ?string $author;
 
     // URLs and Canonical
     public string $url;
+
     public ?string $canonical;
 
     // Images
     public string $image;
+
     public ?string $imageAlt;
+
     public ?int $imageWidth;
+
     public ?int $imageHeight;
 
     // Open Graph
     public string $type;
+
     public ?string $siteName;
+
     public ?string $locale;
+
     public ?array $alternateLocales;
 
     // Twitter
     public string $twitterCard;
+
     public ?string $twitterSite;
+
     public ?string $twitterCreator;
 
     // Article Specific
     public ?string $publishedTime;
+
     public ?string $modifiedTime;
+
     public ?string $section;
+
     public ?array $tags;
 
     // Product Specific
     public ?string $price;
+
     public ?string $currency;
+
     public ?string $availability;
+
     public ?string $brand;
+
     public ?float $rating;
+
     public ?int $reviewCount;
 
     // Video Specific
     public ?string $videoUrl;
+
     public ?int $videoDuration;
+
     public ?string $videoThumbnail;
 
     // Robots & Indexing
     public bool $noindex;
+
     public bool $nofollow;
+
     public bool $noarchive;
+
     public bool $nosnippet;
+
     public ?int $maxSnippet;
+
     public ?int $maxImagePreview;
+
     public ?int $maxVideoPreview;
 
     // Schema.org JSON-LD
     public ?array $schema;
+
     public bool $enableBreadcrumbs;
+
     public ?array $breadcrumbs;
+
+    public ?string $schemaData;
 
     // Additional Meta
     public ?string $facebookAppId;
+
     public ?array $additionalMeta;
 
     // Alternate Languages (hreflang)
@@ -125,57 +158,57 @@ class Seo extends Component
 
         $defaultTitles = [
             'ar' => 'أبو ليرة - قطع غيار الدراجات النارية الأصلية والإصلاح الاحترافي',
-            'en' => 'Abo Lira - Premium Motorcycle Parts & Professional Repair Services'
+            'en' => 'Abo Lira - Premium Motorcycle Parts & Professional Repair Services',
         ];
 
         $defaultDescriptions = [
             'ar' => 'متجرك الموثوق لقطع غيار الدراجات النارية الأصلية، خدمات الصيانة والإصلاح الاحترافية. نوفر قطع غيار لجميع الماركات مع ضمان الجودة وأسعار منافسة. خبرة تمتد لسنوات في عالم الدراجات النارية.',
-            'en' => 'Your trusted destination for authentic motorcycle parts, professional maintenance and repair services. We supply genuine parts for all brands with quality guarantee and competitive prices. Years of expertise in the motorcycle industry.'
+            'en' => 'Your trusted destination for authentic motorcycle parts, professional maintenance and repair services. We supply genuine parts for all brands with quality guarantee and competitive prices. Years of expertise in the motorcycle industry.',
         ];
 
         $defaultKeywords = [
             'ar' => 'قطع غيار دراجات نارية, صيانة دراجات, إصلاح موتور, قطع غيار أصلية, ورشة دراجات نارية, محرك دراجة, فرامل دراجة, إطارات موتور, زيت محرك, فلاتر دراجات',
-            'en' => 'motorcycle parts, bike repair, motor fixing, genuine parts, motorcycle workshop, engine parts, bike brakes, motorcycle tires, engine oil, motorcycle filters, spare parts'
+            'en' => 'motorcycle parts, bike repair, motor fixing, genuine parts, motorcycle workshop, engine parts, bike brakes, motorcycle tires, engine oil, motorcycle filters, spare parts',
         ];
 
         $defaultSiteName = [
             'ar' => 'أبو ليرة',
-            'en' => 'Abo Lira'
+            'en' => 'Abo Lira',
         ];
 
         $defaultAuthor = [
             'ar' => 'أبو ليرة',
-            'en' => 'Abo Lira'
+            'en' => 'Abo Lira',
         ];
 
         $defaultImageAlt = [
             'ar' => 'أبو ليرة - قطع غيار الدراجات النارية الأصلية والإصلاح الاحترافي',
-            'en' => 'Abo Lira - Premium Motorcycle Parts & Professional Repair Services'
+            'en' => 'Abo Lira - Premium Motorcycle Parts & Professional Repair Services',
         ];
 
         $defaultTwitterSite = [
             'ar' => '@abolira',
-            'en' => '@abolira'
+            'en' => '@abolira',
         ];
 
         $defaultTwitterCreator = [
             'ar' => '@abolira',
-            'en' => '@abolira'
+            'en' => '@abolira',
         ];
 
         $defaultAvailability = [
             'ar' => 'متوفر',
-            'en' => 'In Stock'
+            'en' => 'In Stock',
         ];
 
         $defaultSection = [
             'ar' => 'قطع غيار الدراجات النارية الأصلية والإصلاح الاحترافي',
-            'en' => 'Premium Motorcycle Parts & Professional Repair Services'
+            'en' => 'Premium Motorcycle Parts & Professional Repair Services',
         ];
 
         $defaultCurrency = [
             'ar' => 'دولار',
-            'en' => 'USD'
+            'en' => 'USD',
         ];
 
         $this->title = $title ?? $defaultTitles[$currentLocale] ?? $defaultTitles['en'];
@@ -231,6 +264,9 @@ class Seo extends Component
         $this->facebookAppId = $facebookAppId ?? config('seo.facebook_app_id');
         $this->additionalMeta = $additionalMeta;
         $this->hreflang = $hreflang;
+
+        // Generate schema data
+        $this->schemaData = $this->generateSchema();
     }
 
     public function render(): View
@@ -241,7 +277,8 @@ class Seo extends Component
     public function fullTitle(): string
     {
         $separator = config('seo.title_separator', '|');
-        return $this->title . ' ' . $separator . ' ' . $this->siteName;
+
+        return $this->title.' '.$separator.' '.$this->siteName;
     }
 
     public function robotsContent(): string
@@ -251,18 +288,28 @@ class Seo extends Component
         $robots[] = $this->noindex ? 'noindex' : 'index';
         $robots[] = $this->nofollow ? 'nofollow' : 'follow';
 
-        if ($this->noarchive) $robots[] = 'noarchive';
-        if ($this->nosnippet) $robots[] = 'nosnippet';
-        if ($this->maxSnippet) $robots[] = "max-snippet:{$this->maxSnippet}";
-        if ($this->maxImagePreview) $robots[] = "max-image-preview:{$this->maxImagePreview}";
-        if ($this->maxVideoPreview) $robots[] = "max-video-preview:{$this->maxVideoPreview}";
+        if ($this->noarchive) {
+            $robots[] = 'noarchive';
+        }
+        if ($this->nosnippet) {
+            $robots[] = 'nosnippet';
+        }
+        if ($this->maxSnippet) {
+            $robots[] = "max-snippet:{$this->maxSnippet}";
+        }
+        if ($this->maxImagePreview) {
+            $robots[] = "max-image-preview:{$this->maxImagePreview}";
+        }
+        if ($this->maxVideoPreview) {
+            $robots[] = "max-video-preview:{$this->maxVideoPreview}";
+        }
 
         return implode(', ', $robots);
     }
 
     public function generateSchema(): ?string
     {
-        if (!$this->schema && !$this->enableBreadcrumbs && $this->type === 'website') {
+        if (! $this->schema && ! $this->enableBreadcrumbs && $this->type === 'website') {
             return null;
         }
 
@@ -303,7 +350,7 @@ class Seo extends Component
             $schemas = array_merge($schemas, (array) $this->schema);
         }
 
-        return !empty($schemas) ? json_encode($schemas, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : null;
+        return ! empty($schemas) ? json_encode($schemas, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : null;
     }
 
     protected function organizationSchema(): array
@@ -333,10 +380,10 @@ class Seo extends Component
                 '@type' => 'SearchAction',
                 'target' => [
                     '@type' => 'EntryPoint',
-                    'urlTemplate' => config('app.url') . '/search?q={search_term_string}'
+                    'urlTemplate' => config('app.url').'/search?q={search_term_string}',
                 ],
-                'query-input' => 'required name=search_term_string'
-            ]
+                'query-input' => 'required name=search_term_string',
+            ],
         ];
     }
 
@@ -355,7 +402,7 @@ class Seo extends Component
         return [
             '@context' => 'https://schema.org',
             '@type' => 'BreadcrumbList',
-            'itemListElement' => $items
+            'itemListElement' => $items,
         ];
     }
 
@@ -371,20 +418,20 @@ class Seo extends Component
             'dateModified' => $this->modifiedTime ?? $this->publishedTime,
             'author' => [
                 '@type' => 'Person',
-                'name' => $this->author
+                'name' => $this->author,
             ],
             'publisher' => [
                 '@type' => 'Organization',
                 'name' => $this->siteName,
                 'logo' => [
                     '@type' => 'ImageObject',
-                    'url' => config('seo.organization.logo')
-                ]
+                    'url' => config('seo.organization.logo'),
+                ],
             ],
             'mainEntityOfPage' => [
                 '@type' => 'WebPage',
-                '@id' => $this->url
-            ]
+                '@id' => $this->url,
+            ],
         ];
 
         if ($this->section) {
@@ -411,14 +458,14 @@ class Seo extends Component
                 'price' => $this->price,
                 'priceCurrency' => $this->currency,
                 'availability' => $this->availability ? "https://schema.org/{$this->availability}" : 'https://schema.org/InStock',
-                'url' => $this->url
-            ]
+                'url' => $this->url,
+            ],
         ];
 
         if ($this->brand) {
             $schema['brand'] = [
                 '@type' => 'Brand',
-                'name' => $this->brand
+                'name' => $this->brand,
             ];
         }
 
@@ -426,7 +473,7 @@ class Seo extends Component
             $schema['aggregateRating'] = [
                 '@type' => 'AggregateRating',
                 'ratingValue' => $this->rating,
-                'reviewCount' => $this->reviewCount
+                'reviewCount' => $this->reviewCount,
             ];
         }
 

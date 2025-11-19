@@ -19,6 +19,24 @@ class TrackOrderController extends Controller
 
     public function trackOrder(Request $request): View
     {
+        $locale = app()->getLocale();
+
+        $title = $locale === 'ar'
+            ? 'تتبع الطلب | أبو ليرة - قطع غيار الدراجات النارية'
+            : 'Track Order | Abo Lira - Motorcycle Parts';
+
+        $description = $locale === 'ar'
+            ? 'تتبع حالة طلبك بسهولة. أدخل رقم الطلب لمعرفة آخر التحديثات.'
+            : 'Track your order status easily. Enter your order number to see the latest updates.';
+
+        seo_data([
+            'title' => $title,
+            'description' => $description,
+            'type' => 'website',
+        ]);
+
+        seo_breadcrumb($locale === 'ar' ? 'تتبع الطلب' : 'Track Order', route('track-order'));
+
         $cartItemsCount = $this->cartService->getCartCount();
         $orderNumber = $request->query('order_number');
 

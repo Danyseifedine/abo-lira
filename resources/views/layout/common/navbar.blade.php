@@ -64,14 +64,14 @@
         <div class="container-fluid">
             <div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
                 <div class="offcanvas__header--menu__open ">
-                    <a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+                    <button type="button" class="offcanvas__header--menu__open--btn" data-offcanvas aria-label="{{ __('nav.offcanvas_menu_open') }}" style="background: none; border: none; padding: 0; cursor: pointer;">
                         <svg xmlns="http://www.w3.org/2000/svg" class="ionicon offcanvas__header--menu__open--svg"
                             viewBox="0 0 512 512">
                             <path fill="currentColor" stroke="currentColor" stroke-linecap="round"
                                 stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352" />
                         </svg>
                         <span class="visually-hidden">{{ __('nav.offcanvas_menu_open') }}</span>
-                    </a>
+                    </button>
                 </div>
                 <div class="main__logo">
                     <h1 class="main__logo--title"><a class="main__logo--link" href="{{ route('home') }}"><img

@@ -18,6 +18,25 @@ class CheckoutController extends Controller
 
     public function checkout(): View
     {
+        $locale = app()->getLocale();
+
+        $title = $locale === 'ar'
+            ? 'إتمام الشراء | أبو ليرة - قطع غيار الدراجات النارية'
+            : 'Checkout | Abo Lira - Motorcycle Parts';
+
+        $description = $locale === 'ar'
+            ? 'أكمل عملية الشراء الخاصة بك. قطع غيار دراجات نارية أصلية مع خدمة توصيل سريعة.'
+            : 'Complete your purchase. Genuine motorcycle parts with fast delivery service.';
+
+        seo_data([
+            'title' => $title,
+            'description' => $description,
+            'type' => 'website',
+        ]);
+
+        seo_breadcrumb($locale === 'ar' ? 'سلة التسوق' : 'Shopping Cart', route('cart'));
+        seo_breadcrumb($locale === 'ar' ? 'إتمام الشراء' : 'Checkout', route('checkout'));
+
         $cartCount = $this->cartService->getCartCount();
 
         $cartData = null;
@@ -49,7 +68,7 @@ class CheckoutController extends Controller
 
         } catch (\Exception $e) {
             return redirect()->route('checkout')
-                ->with('error', __('checkout.order_failed') . ' ' . $e->getMessage())
+                ->with('error', __('checkout.order_failed').' '.$e->getMessage())
                 ->withInput();
         }
     }
