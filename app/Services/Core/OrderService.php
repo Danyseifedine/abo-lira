@@ -93,7 +93,13 @@ class OrderService
      */
     public function changeStatus(Order $order, OrderStatus|string $status): void
     {
-        $order->changeStatus($status);
+        // Convert OrderStatus enum to string if needed
+        $statusValue = $status instanceof OrderStatus ? $status->value : (string) $status;
+
+        // Trim whitespace
+        $statusValue = trim($statusValue);
+
+        $order->changeStatus($statusValue);
     }
 
     /**

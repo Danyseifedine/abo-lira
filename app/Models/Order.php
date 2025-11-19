@@ -21,6 +21,13 @@ class Order extends Model
         'status_raw',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'status' => 'string',
+        ];
+    }
+
     public function items()
     {
         return $this->hasMany(OrderItem::class);
@@ -36,8 +43,17 @@ class Order extends Model
         return $query->where('status', $status);
     }
 
-    public function changeStatus($status)
+    public function changeStatus($status): void
     {
+        // Ensure status is a string and trim any whitespace
+        $status = is_string($status) ? trim($status) : (string) $status;
+
+        // Validate status value
+        $allowedStatuses = ['pending', 'accepted', 'on_the_way', 'completed', 'rejected', 'refunded'];
+        if (! in_array($status, $allowedStatuses, true)) {
+            throw new \InvalidArgumentException("Invalid status: {$status}");
+        }
+
         $this->update([
             'status' => $status,
         ]);
@@ -54,7 +70,7 @@ class Order extends Model
         // Use getRawOriginal to avoid recursion
         $rawStatus = $this->getRawOriginal('status') ?? $value;
 
-        return __('order.status.' . $rawStatus);
+        return __('order.status.'.$rawStatus);
     }
 
     public function getStatusRawAttribute()

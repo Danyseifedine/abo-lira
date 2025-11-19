@@ -65,6 +65,15 @@ class OrderController extends BaseController
             return $this->errorWithToast(__('toast.status_is_required'), __('toast.error'), 'super-admin.orders.index');
         }
 
+        // Ensure status is a string and trim whitespace
+        $status = is_string($status) ? trim($status) : (string) $status;
+
+        // Validate against allowed statuses
+        $allowedStatuses = array_column($this->getOrderStatusOptions(), 'value');
+        if (! in_array($status, $allowedStatuses, true)) {
+            return $this->errorWithToast(__('toast.invalid_status'), __('toast.error'), 'super-admin.orders.index');
+        }
+
         try {
             $this->orderService->changeStatus($order, $status);
 
