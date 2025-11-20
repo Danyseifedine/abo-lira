@@ -73,11 +73,11 @@
                             </div>
                             <div class="counterup__items text-center">
                                 <h2 class="counterup__title">{!! __('about.happy_customers') !!}</h2>
-                                <span class="counterup__number js-counter" data-count="15000">0</span>
+                                <span class="counterup__number js-counter" data-count="15000">15000</span>
                             </div>
                             <div class="counterup__items text-center">
                                 <h2 class="counterup__title">{!! __('about.monthly_orders') !!}</h2>
-                                <span class="counterup__number js-counter" data-count="70">0</span>
+                                <span class="counterup__number js-counter" data-count="500">500</span>
                             </div>
                         </div>
                     </div>
