@@ -298,7 +298,7 @@
                                                                     data-variant-ids="{{ implode(',', $variantIds) }}"
                                                                     @if ($loop->first) checked @endif
                                                                     class="@error('size_id') is-invalid @enderror">
-                                                                <label class="variant__size--value"
+                                                                <label class="variant__size--value px-3" style="width: fit-content !important;"
                                                                     for="size-{{ $size->id }}"
                                                                     title="{{ $size->name ?? __('detail.size') }}">
                                                                     {{ $size->name ?? __('detail.size') }}
